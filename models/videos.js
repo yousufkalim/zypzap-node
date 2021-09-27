@@ -24,11 +24,7 @@ const videoSchema = new Schema(
         type: String,
       },
     ],
-    Level: [
-      {
-        type: String,
-      },
-    ],
+
     game_id: [
       {
         type: Schema.Types.ObjectId,

@@ -48,20 +48,20 @@ const creatorSchema = new Schema(
         required: true,
       },
     },
-    courses: {
-      course_id: {
+    courses: [
+      {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "Courses",
       },
-    },
-    content_requests: {
-      requests_id: {
+    ],
+    content_requests: [
+      {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "Content_Requests",
       },
-    },
+    ],
   },
   {
     timeStamp: true,

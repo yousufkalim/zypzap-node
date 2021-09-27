@@ -16,12 +16,7 @@ const userSchema = new Schema(
         required: true,
       },
     ],
-    phone_number: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+
     password: {
       type: String,
       required: true,
@@ -43,6 +38,18 @@ const userSchema = new Schema(
         },
       },
     ],
+    enrolled_courses: [
+      {
+        course_id: {
+          type: Schema.Types.ObjectId,
+          ref: "Courses",
+        },
+      },
+    ],
+    subscriptions: {
+      type: String,
+      enum: ["Platform Based", "Per Course"],
+    },
   },
   {
     timeStamp: true,
