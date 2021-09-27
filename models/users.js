@@ -35,7 +35,12 @@ const userSchema = new Schema(
     },
     social_ids: [
       {
-        type: String,
+        platform: {
+          type: String,
+        },
+        url: {
+          type: String,
+        },
       },
     ],
   },

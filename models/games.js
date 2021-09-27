@@ -9,6 +9,11 @@ const gameSchema = new Schema({
     type: String,
     required: true,
   },
+  thumbnails: [
+    {
+      type: string,
+    },
+  ],
 });
 
 module.exports = model("Games", gameSchema);
