@@ -5,11 +5,10 @@ const { validateExample, isValidated } = require("../middleware/validators");
 
 // Routes
 router.get("/", getAllUsers);
-router.post("/", validateExample, isValidated, postAllUsers);
-router.post("/:id", validateExample, isValidated, postOneUser);
-router.get("/:id", getAllUsers);
-router.put("/:id", validateExample, isValidated, updateUser);
-router.delete("/:id", validateExample, isValidated, deleteUser);
+router.post("/", isValidated, createUser);
+router.get("/:id", getOneUser);
+router.put("/:id", validateExample, isValidated, updateOneUser);
+router.delete("/:id", validateExample, isValidated, deleteOneUser);
 
 // Export
 module.exports = router;
