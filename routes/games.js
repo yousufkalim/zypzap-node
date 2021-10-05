@@ -1,13 +1,21 @@
 // Init
 const router = require("express").Router();
-const { getAll } = require("../controllers/example");
-const { validateExample, isValidated } = require("../middleware/validators");
+const {
+  getAllGames,
+  getOneGame,
+  createGame,
+  updateGame,
+} = require("../controllers/games");
+const {
+  validateGames,
+  isValidated,
+} = require("../middleware/validators/games");
 
 // Routes
 router.get("/", getAllGames);
 router.get("/:id", getOneGame);
-router.post("/", isValidated, createGame);
-router.put("/:id", isValidated, updateGame);
+router.post("/", validateGames, isValidated, createGame);
+router.put("/:id", validateGames, isValidated, updateGame);
 
 // Export
 module.exports = router;
