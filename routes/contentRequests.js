@@ -1,14 +1,23 @@
 // Init
 const router = require("express").Router();
-const { getAll } = require("../controllers/example");
-const { isValidated } = require("../middleware/validators");
+const {
+  createContentRequest,
+  getAllContentRequests,
+  getOneContentRequest,
+  updateContentRequest,
+  deleteContentRequest,
+} = require("../controllers/contentRequests");
+const {
+  validateContentRequests,
+  isValidated,
+} = require("../middleware/validators/contentRequests");
 
 // Routes
-router.get("/", isValidated, getAllContentRequests);
-router.get("/:id", isValidated, getOneContentRequest);
-router.post("/", isValidated, createContentRequest);
-router.put("/:id", isValidated, updateContentRequest);
-router.delete("/:id", isValidated, deleteContentRequest);
+router.post("/", validateContentRequests, isValidated, createContentRequest);
+router.get("/", getAllContentRequests);
+router.get("/:id", getOneContentRequest);
+router.put("/:id", validateContentRequests, isValidated, updateContentRequest);
+router.delete("/:id", deleteContentRequest);
 
 // Export
 module.exports = router;
