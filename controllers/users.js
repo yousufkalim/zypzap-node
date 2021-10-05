@@ -28,7 +28,8 @@ exports.getOneUser = async (req, res) => {
   const _id = req.params.id;
   try {
     const user = await User.findOneById(_id);
-    if (!user) return res.status(404).send("Not Found");
+    if (!user) return res.status(404).send("User Not Found");
+    res.send(user);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -41,7 +42,8 @@ exports.updateOneUser = async (req, res) => {
       new: true,
       runValidators: true,
     });
-    if (!updatedUser) return res.status(404).send("Not Found");
+    if (!updatedUser) return res.status(404).send("User Can't Update");
+    res.send(updatedUser);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -51,7 +53,8 @@ exports.deleteOneUser = async (req, res) => {
   const _id = req.params.id;
   try {
     const deletedUser = await User.findByIdAndDelete(_id);
-    if (!deletedUser) return res.status(404).send("Not Found");
+    if (!deletedUser) return res.status(404).send("User Not Found");
+    res.send(deletedUser);
   } catch (error) {
     res.status(500).send(error);
   }
