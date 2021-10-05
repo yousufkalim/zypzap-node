@@ -51,14 +51,12 @@ const creatorSchema = new Schema(
     courses: [
       {
         type: Schema.Types.ObjectId,
-        required: true,
         ref: "Courses",
       },
     ],
     content_requests: [
       {
         type: Schema.Types.ObjectId,
-        required: true,
         ref: "Content_Requests",
       },
     ],

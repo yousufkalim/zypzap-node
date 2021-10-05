@@ -11,7 +11,7 @@ const gameSchema = new Schema({
   },
   thumbnails: [
     {
-      type: string,
+      type: String,
     },
   ],
 });

@@ -1,11 +1,13 @@
 // Init
 const router = require("express").Router();
-const { getAll } = require("../controllers/example");
-const { validateExample, isValidated } = require("../middleware/validators");
+const {
+  getAllSearchResults,
+  getAllSearchByFilter,
+} = require("../controllers/search");
 
 // Routes
 router.get("/", getAllSearchResults);
-router.get("/filter", isValidated, getAllSearchByFilter);
+router.get("/filter", getAllSearchByFilter);
 
 // Export
 module.exports = router;

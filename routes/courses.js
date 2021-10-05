@@ -1,14 +1,23 @@
 // Init
 const router = require("express").Router();
-const { getAll } = require("../controllers/example");
-const { validateExample, isValidated } = require("../middleware/validators");
+const {
+  getAllCourses,
+  getOneCourse,
+  createCourse,
+  updateCourse,
+  deleteCourse,
+} = require("../controllers/courses");
+const {
+  validateCourses,
+  isValidated,
+} = require("../middleware/validators/courses");
 
 // Routes
+router.post("/", validateCourses, isValidated, createCourse);
 router.get("/", getAllCourses);
 router.get("/:id", getOneCourse);
-router.post("/", isValidated, createCourse);
-router.put("/:id", isValidated, updateCourse);
-router.delete("/:id", isValidated, deleteCourse);
+router.put("/:id", validateCourses, isValidated, updateCourse);
+router.delete("/:id", deleteCourse);
 
 // Export
 module.exports = router;

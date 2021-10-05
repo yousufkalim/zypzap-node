@@ -1,10 +1,13 @@
 // Init
 const router = require("express").Router();
-const { getAll } = require("../controllers/example");
-const { isValidated } = require("../middleware/validators");
+const { postCreator } = require("../controllers/creators");
+const {
+  validateCreators,
+  isValidated,
+} = require("../middleware/validators/creators");
 
 // Routes
-router.post("/:id", isValidated, postCreator);
+router.post("/:id", validateCreators, isValidated, postCreator);
 
 // Export
 module.exports = router;

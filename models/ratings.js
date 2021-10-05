@@ -16,6 +16,7 @@ const ratingSchema = new Schema(
     rating_by: {
       type: Schema.Types.ObjectId,
       ref: "Users",
+      required: true,
     },
   },
   {

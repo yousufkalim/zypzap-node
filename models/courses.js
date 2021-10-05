@@ -14,13 +14,11 @@ const courseSchema = new Schema(
     videos: [
       {
         type: Schema.Types.ObjectId,
-        required: true,
         ref: "Videos",
       },
     ],
     duration: {
       type: String,
-      required: true,
     },
 
     price: {

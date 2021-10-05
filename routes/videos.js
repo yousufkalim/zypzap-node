@@ -1,13 +1,22 @@
 // Init
 const router = require("express").Router();
-const { getAll } = require("../controllers/example");
-const { validateExample, isValidated } = require("../middleware/validators");
+const {
+  getAllVideos,
+  getOneVideo,
+  postVideo,
+  updateVideo,
+  deleteVideo,
+} = require("../controllers/videos");
+const {
+  validateVideos,
+  isValidated,
+} = require("../middleware/validators/videos");
 
 // Routes
 router.get("/", getAllVideos);
 router.get("/:id", getOneVideo);
-router.post("/", validateExample, isValidated, postVideo);
-router.put("/:id", isValidated, updateVideo);
-router.delete("/:id", isValidated, deleteVideo);
+router.post("/", validateVideos, isValidated, postVideo);
+router.put("/:id", validateVideos, isValidated, updateVideo);
+router.delete("/:id", deleteVideo);
 // Export
 module.exports = router;
