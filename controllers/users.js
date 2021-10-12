@@ -1,15 +1,18 @@
 const User = require("../models/users");
+const { auth } = require("../middleware/auth");
 
 exports.createUser = async (req, res) => {
   try {
     const { email } = req.body;
-    const isAlreadyRegistered = await User.find({ email });
+    const isAlreadyRegistered = await User.findOne({ email });
     if (isAlreadyRegistered)
-      return res.status(400).send({ message: "Email is already exist" });
+      return res
+        .status(400)
+        .send({ message: "Email is already exist", user: isAlreadyRegistered });
 
     const user = new User(req.body);
     await user.save();
-    res.send(user);
+    res.status(201).send({ user });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -27,7 +30,7 @@ exports.getAllUsers = async (req, res) => {
 exports.getOneUser = async (req, res) => {
   const _id = req.params.id;
   try {
-    const user = await User.findOneById(_id);
+    const user = await User.findOne({ _id });
     if (!user) return res.status(404).send("User Not Found");
     res.send(user);
   } catch (error) {
@@ -37,13 +40,15 @@ exports.getOneUser = async (req, res) => {
 
 exports.updateOneUser = async (req, res) => {
   const _id = req.params.id;
+  const updates = Object.keys(req.body);
   try {
-    const updatedUser = await User.findByIdAndUpdate(_id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!updatedUser) return res.status(404).send("User Can't Update");
-    res.send(updatedUser);
+    console.log("updating");
+    const user = await req.user;
+    updates.forEach((update) => (user[update] = req.body[update]));
+    console.log(user);
+    await user.save();
+    console.log("updated");
+    res.send(user);
   } catch (error) {
     res.status(500).send(error);
   }
