@@ -18,8 +18,8 @@ exports.validateUsers = [
   check("role", "Role is required.").notEmpty(),
   check(
     "subscription",
-    "Subscription should be Platform Based or Per Course."
-  ).isIn(["Platform Based", "Per Course"]),
+    "Subscription should be Free, Platform Based or Per Course."
+  ),
 ];
 
 /*
