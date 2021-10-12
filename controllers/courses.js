@@ -21,6 +21,8 @@ exports.createCourse = async (req, res) => {
 exports.getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find();
+    if (!courses) res.status(404).send("Courses Not Found");
+
     res.send(courses);
   } catch (error) {
     res.status(500).send(error);
@@ -44,6 +46,8 @@ exports.updateCourse = async (req, res) => {
       new: true,
       runValidators: true,
     });
+    if (!course) return res.status(404).send("Course Not Found");
+    res.send(course);
   } catch (error) {
     res.status(500).send(error);
   }
