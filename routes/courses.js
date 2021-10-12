@@ -1,5 +1,6 @@
 // Init
 const router = require("express").Router();
+const { auth } = require("../middleware/auth");
 const {
   getAllCourses,
   getOneCourse,
@@ -13,11 +14,11 @@ const {
 } = require("../middleware/validators/courses");
 
 // Routes
-router.post("/", validateCourses, isValidated, createCourse);
+router.post("/", auth, validateCourses, isValidated, createCourse);
 router.get("/", getAllCourses);
-router.get("/:id", getOneCourse);
-router.put("/:id", validateCourses, isValidated, updateCourse);
-router.delete("/:id", deleteCourse);
+router.get("/:id", auth, getOneCourse);
+router.put("/:id", auth, validateCourses, isValidated, updateCourse);
+router.delete("/:id", auth, deleteCourse);
 
 // Export
 module.exports = router;

@@ -11,12 +11,13 @@ const {
   validateVideos,
   isValidated,
 } = require("../middleware/validators/videos");
+const { auth } = require("../middleware/auth");
 
 // Routes
-router.get("/", getAllVideos);
+router.get("/", auth, getAllVideos);
 router.get("/:id", getOneVideo);
-router.post("/", validateVideos, isValidated, postVideo);
-router.put("/:id", validateVideos, isValidated, updateVideo);
-router.delete("/:id", deleteVideo);
+router.post("/", auth, validateVideos, isValidated, postVideo);
+router.put("/:id", auth, validateVideos, isValidated, updateVideo);
+router.delete("/:id", auth, deleteVideo);
 // Export
 module.exports = router;

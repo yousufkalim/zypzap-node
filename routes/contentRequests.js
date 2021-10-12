@@ -1,5 +1,6 @@
 // Init
 const router = require("express").Router();
+const { auth } = require("../middleware/auth");
 const {
   createContentRequest,
   getAllContentRequests,
@@ -13,11 +14,23 @@ const {
 } = require("../middleware/validators/contentRequests");
 
 // Routes
-router.post("/", validateContentRequests, isValidated, createContentRequest);
+router.post(
+  "/",
+  auth,
+  validateContentRequests,
+  isValidated,
+  createContentRequest
+);
 router.get("/", getAllContentRequests);
 router.get("/:id", getOneContentRequest);
-router.put("/:id", validateContentRequests, isValidated, updateContentRequest);
-router.delete("/:id", deleteContentRequest);
+router.put(
+  "/:id",
+  auth,
+  validateContentRequests,
+  isValidated,
+  updateContentRequest
+);
+router.delete("/:id", auth, deleteContentRequest);
 
 // Export
 module.exports = router;

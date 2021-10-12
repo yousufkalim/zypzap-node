@@ -1,3 +1,4 @@
+// Note: All these need to be done
 exports.getAllVideos = (req, res) => {
   res.send("Getting All videos");
 };

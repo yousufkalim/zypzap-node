@@ -1,5 +1,6 @@
 // Init
 const router = require("express").Router();
+const { auth } = require("../middleware/auth");
 const {
   getAllGames,
   getOneGame,
@@ -14,8 +15,8 @@ const {
 // Routes
 router.get("/", getAllGames);
 router.get("/:id", getOneGame);
-router.post("/", validateGames, isValidated, createGame);
-router.put("/:id", validateGames, isValidated, updateGame);
+router.post("/", auth, validateGames, isValidated, createGame);
+router.put("/:id", auth, validateGames, isValidated, updateGame);
 
 // Export
 module.exports = router;

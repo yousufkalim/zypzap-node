@@ -1,4 +1,6 @@
 const { Schema, model } = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new Schema(
   {
@@ -47,14 +49,38 @@ const userSchema = new Schema(
         },
       },
     ],
-    subscriptions: {
+    subscription: {
       type: String,
-      enum: ["Platform Based", "Per Course"],
     },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
   {
     timeStamp: true,
   }
 );
+
+userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
+  delete userObject.password;
+  delete userObject.tokens;
+  return userObject;
+};
+
+userSchema.pre("save", async function (next) {
+  console.log("encrypting the password");
+  const user = this;
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+  next();
+});
 
 module.exports = model("Users", userSchema);

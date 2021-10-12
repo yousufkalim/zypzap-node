@@ -7,6 +7,8 @@ const {
   updateOneUser,
   deleteOneUser,
 } = require("../controllers/users");
+const { loginUser, logoutUser, logoutAll } = require("../controllers/login");
+const { auth } = require("../middleware/auth");
 const {
   validateUsers,
   isValidated,
@@ -16,8 +18,14 @@ const {
 router.get("/", getAllUsers);
 router.post("/", validateUsers, isValidated, createUser);
 router.get("/:id", getOneUser);
-router.put("/:id", validateUsers, isValidated, updateOneUser);
-router.delete("/:id", deleteOneUser);
+router.put("/:id", auth, updateOneUser);
+router.delete("/:id", auth, deleteOneUser);
+
+router.post("/login", loginUser);
+
+router.post("/logout", auth, logoutUser);
+
+router.post("/logout/all", auth, logoutAll);
 
 // Export
 module.exports = router;

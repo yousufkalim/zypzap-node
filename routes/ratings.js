@@ -1,5 +1,6 @@
 // Init
 const router = require("express").Router();
+const { auth } = require("../middleware/auth");
 const {
   getAllRatings,
   getOneRating,
@@ -15,9 +16,9 @@ const {
 // Routes
 router.get("/", getAllRatings);
 router.get("/:id", getOneRating);
-router.post("/", validateRatings, isValidated, createRatings);
-router.put("/:id", validateRatings, isValidated, updateRating);
-router.delete("/:id", validateRatings, isValidated, deleteRating);
+router.post("/", auth, validateRatings, isValidated, createRatings);
+router.put("/:id", auth, validateRatings, isValidated, updateRating);
+router.delete("/:id", auth, validateRatings, isValidated, deleteRating);
 
 // Export
 module.exports = router;

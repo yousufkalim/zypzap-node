@@ -1,5 +1,6 @@
 // Init
 const router = require("express").Router();
+const { auth } = require("../middleware/auth");
 const { postCreator } = require("../controllers/creators");
 const {
   validateCreators,
@@ -7,7 +8,7 @@ const {
 } = require("../middleware/validators/creators");
 
 // Routes
-router.post("/:id", validateCreators, isValidated, postCreator);
+router.post("/:id", auth, validateCreators, isValidated, postCreator);
 
 // Export
 module.exports = router;
