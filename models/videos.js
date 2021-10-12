@@ -15,16 +15,40 @@ const videoSchema = new Schema(
       required: true,
       ref: "Creators",
     },
-
     description: {
       type: String,
+    },
+    file_props: {
+      fieldname: {
+        type: String,
+      },
+      originalname: {
+        type: String,
+      },
+      encoding: {
+        type: String,
+      },
+      mimetype: {
+        type: String,
+      },
+      destination: {
+        type: String,
+      },
+      filename: {
+        type: String,
+      },
+      path: {
+        type: String,
+      },
+      size: {
+        type: Number,
+      },
     },
     tags: [
       {
         type: String,
       },
     ],
-
     game_id: [
       {
         type: Schema.Types.ObjectId,
@@ -33,11 +57,9 @@ const videoSchema = new Schema(
     ],
     views: {
       type: Number,
-      required: true,
     },
     status: {
       type: String,
-      required: true,
       enum: ["Publish", "Process", "Private", "Restricted", "Edited", "Review"],
     },
     thumbnail: {
