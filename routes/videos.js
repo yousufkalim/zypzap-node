@@ -1,3 +1,4 @@
+const videoUpload = require("../middleware/videoUpload");
 // Init
 const router = require("express").Router();
 const {
@@ -16,7 +17,14 @@ const { auth } = require("../middleware/auth");
 // Routes
 router.get("/", auth, getAllVideos);
 router.get("/:id", getOneVideo);
-router.post("/", auth, validateVideos, isValidated, postVideo);
+router.post(
+  "/",
+  auth,
+  validateVideos,
+  isValidated,
+  videoUpload.single("video"),
+  postVideo
+);
 router.put("/:id", auth, validateVideos, isValidated, updateVideo);
 router.delete("/:id", auth, deleteVideo);
 // Export

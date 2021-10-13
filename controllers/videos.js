@@ -1,16 +1,65 @@
+const fs = require("fs");
+
 // Note: All these need to be done
-exports.getAllVideos = (req, res) => {
-  res.send("Getting All videos");
+const Video = require("../models/videos");
+
+exports.getAllVideos = async (req, res) => {
+  try {
+    const videos = await Video.find();
+    if (!videos) res.status(404).send("Videos Not Found");
+    res.send(videos);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
-exports.getOneVideo = (req, res) => {
-  res.send("Getting One video");
+exports.getOneVideo = async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const video = await Video.findById(_id);
+    if (!video) res.status(404).send("Not Found");
+    res.send(video);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
-exports.postVideo = (req, res) => {
-  res.send("Creating video");
+exports.postVideo = async (req, res) => {
+  const video = new Video({
+    ...req.body,
+    src_url: req.file.path,
+    file_props: {
+      ...req.file,
+    },
+  });
+  await video.save();
+  res.send(video);
 };
-exports.updateVideo = (req, res) => {
-  res.send("Updating video");
+
+exports.updateVideo = async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const video = await Video.findByIdAndUpdate(_id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!video) return res.status(404).send("Video Not Found");
+    res.send(video);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
-exports.deleteVideo = (req, res) => {
-  res.send("Deleting video");
+
+exports.deleteVideo = async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const deletedVideo = await Video.findByIdAndDelete(_id);
+    fs.unlink(deletedVideo.src_url, function (errorUnlink) {
+      if (errorUnlink) {
+        console.log(errorUnlink);
+      }
+    });
+    if (!deletedVideo) return res.status(404).send("Video Not Found");
+    res.send(deletedVideo);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
