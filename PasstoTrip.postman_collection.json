@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"shan\",\n    \"email\": \"shan@gmail.com\",\n    \"password\": \"shan@gmail.com\",\n    \"role\": \"User\"\n}",
+							"raw": "{\n    \"username\": \"ali\",\n    \"email\": \"shan23@gmail.com\",\n    \"password\": \"shan23@gmail.com\",\n    \"role\": \"User\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -206,7 +206,7 @@
 								{
 									"key": "video",
 									"type": "file",
-									"src": "/Users/usmanhaiderfalcon/Downloads/Girl sitting on the ladder holds paintbrush with red paint_preview.mp4"
+									"src": "/Users/usmanhaiderfalcon/Downloads/test.mp4"
 								},
 								{
 									"key": "title",
@@ -665,14 +665,51 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": {\n        \"street_name\": \"Johar Town, E1\",\n        \"postal_code\": \"58200\",\n        \"state\": \"Punjab\",\n        \"city\": \"Lahore\",\n        \"country\": \"Pakistan\",\n        \"billing_address\": \"Lahore\",\n        \"mailing_address\": \"Lahore\"\n    },\n    \"bank_info\": {\n        \"bank_name\": \"MCB\",\n        \"account_number\": \"124\",\n        \"branch_number\": \"22\",\n        \"IBAN\": \"23443jreoghfd34\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{url}}/creators/",
+							"raw": "{{url}}/creators/6166e0b96a053ffe4e327ff3",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"creators",
-								""
+								"6166e0b96a053ffe4e327ff3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search",
+			"item": [
+				{
+					"name": "Search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/search?search=g",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "g"
+								}
 							]
 						}
 					},
