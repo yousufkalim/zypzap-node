@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Users = require("../models/users.js");
+
 async function Search(collectionName, query) {
   try {
     mongoose.connection.db.collection(
