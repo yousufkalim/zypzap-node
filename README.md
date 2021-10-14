@@ -1,3 +1,3 @@
 # PassToTrip-nodejs
 
-# A Video Streaming backend application
+## A Video Streaming application backend
