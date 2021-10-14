@@ -4,7 +4,7 @@ async function Search(DBName, query, cb) {
   try {
     mongoose.connection.db.collection(DBName, (err, collection) => {
       if (err) console.log(err);
-      collection.find({ $text: { $search: "shan@gmail.com" } }).toArray(cb);
+      collection.find({ $text: { $search: query } }).toArray(cb);
     });
   } catch (error) {
     console.log(error);

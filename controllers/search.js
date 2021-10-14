@@ -10,7 +10,7 @@ exports.getAllSearchResults = async (req, res) => {
         return res.send(docs);
       });
     } else {
-      response.end();
+      res.status(403).send();
     }
   } catch (error) {
     res.status(500).send(error);
