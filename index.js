@@ -11,7 +11,7 @@ require("./middleware/common")(app);
 app.use("/api", require("./routes"));
 
 app.get("/", (req, res) => {
-  res.send("up");
+  res.sendFile(__dirname + "/index.html");
 });
 
 // Server
