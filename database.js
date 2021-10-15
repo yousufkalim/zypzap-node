@@ -13,6 +13,7 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
     ignoreUndefined: true,
+    autoIndex: true,
   })
   .then(() => console.log("We are connected with database :)"))
   .catch((err) => {

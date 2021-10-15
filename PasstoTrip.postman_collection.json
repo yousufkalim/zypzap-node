@@ -1,0 +1,755 @@
+{
+	"info": {
+		"_postman_id": "d36d6646-2f3d-4c41-a649-0387750e6e38",
+		"name": "PasstoTrip",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"ali\",\n    \"email\": \"shan23@gmail.com\",\n    \"password\": \"shan23@gmail.com\",\n    \"role\": \"User\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/61655dba27e9e216b640c39e",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"61655dba27e9e216b640c39e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"usmanhaider\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/61655dba27e9e216b640c39e",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"61655dba27e9e216b640c39e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/61655dba27e9e216b640c39e",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"61655dba27e9e216b640c39e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"email\": \"shan@gmail.com\", \n   \"password\": \"shan@gmail.com\" \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout All",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/logout/all",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"logout",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Videos",
+			"item": [
+				{
+					"name": "Upload Video",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "video",
+									"type": "file",
+									"src": "/Users/usmanhaiderfalcon/Downloads/test.mp4"
+								},
+								{
+									"key": "title",
+									"value": "Girl",
+									"type": "text"
+								},
+								{
+									"key": "creator",
+									"value": "61655dba27e9e216b640c39e",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/videos",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"videos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Video",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/videos/61658490c7275d32e70c8abb",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"videos",
+								"61658490c7275d32e70c8abb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Videos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/videos",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"videos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One Video",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/videos",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"videos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Video",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/videos",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"videos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Courses",
+			"item": [
+				{
+					"name": "Get Courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/courses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Course By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/courses/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"courses",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Course",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/courses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Course",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/courses/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"courses",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Course",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/courses/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"courses",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Games",
+			"item": [
+				{
+					"name": "Get Games",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/games",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"games"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Games By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/games/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"games",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Games",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/games",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"games"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Games",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/games/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"games",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ratings",
+			"item": [
+				{
+					"name": "Get Ratings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/ratings",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"ratings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ratings By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/ratings/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"ratings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Ratings",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/ratings",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"ratings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Ratings",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/ratings/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"ratings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Ratings",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/Ratings/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Ratings",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Content Requests",
+			"item": [
+				{
+					"name": "Get Content Requests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/contentRequests",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"contentRequests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get contentRequests By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/contentRequests/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"contentRequests",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create contentRequests",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/contentRequests",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"contentRequests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update contentRequests",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/contentRequests/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"contentRequests",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete contentRequests",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/contentRequests/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"contentRequests",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Creators",
+			"item": [
+				{
+					"name": "Make User as Content Creator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": {\n        \"street_name\": \"Johar Town, E1\",\n        \"postal_code\": \"58200\",\n        \"state\": \"Punjab\",\n        \"city\": \"Lahore\",\n        \"country\": \"Pakistan\",\n        \"billing_address\": \"Lahore\",\n        \"mailing_address\": \"Lahore\"\n    },\n    \"bank_info\": {\n        \"bank_name\": \"MCB\",\n        \"account_number\": \"124\",\n        \"branch_number\": \"22\",\n        \"IBAN\": \"23443jreoghfd34\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/creators/6166e0b96a053ffe4e327ff3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"creators",
+								"6166e0b96a053ffe4e327ff3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search",
+			"item": [
+				{
+					"name": "Search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/search?search=g",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "g"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"",
+					"",
+					"",
+					"",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

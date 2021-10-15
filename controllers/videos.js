@@ -12,6 +12,7 @@ exports.getAllVideos = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
 exports.getOneVideo = async (req, res) => {
   const _id = req.params.id;
   try {
@@ -22,6 +23,35 @@ exports.getOneVideo = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+exports.watchVideo = async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const video = await Video.findById(_id);
+    if (!video) res.status(404).send("Not Found");
+    const range = req.headers.range;
+    const videoPath = "./video_1634042961607.mp4";
+    const videoSize = fs.statSync(videoPath).size;
+    const chunkSize = 1 * 1e6;
+    const start = Number(range.replace(/\D/g, ""));
+    const end = Math.min(start + chunkSize, videoSize - 1);
+
+    contentLength = end - start + 1;
+    const headers = {
+      "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+      "Accept-Ranges": "bytes",
+      "Content-Length": contentLength,
+      "Content-Type": "video/mp4",
+    };
+    res.writeHead(206, headers);
+
+    const stream = fs.createReadStream(videoPath, { start, end });
+    stream.pipe(res);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
 exports.postVideo = async (req, res) => {
   const video = new Video({
     ...req.body,
