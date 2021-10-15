@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 
 // Note: All these need to be done
 const Video = require("../models/videos");
@@ -30,7 +31,7 @@ exports.watchVideo = async (req, res) => {
     const video = await Video.findById(_id);
     if (!video) res.status(404).send("Not Found");
     const range = req.headers.range;
-    const videoPath = "./video_1634042961607.mp4";
+    const videoPath = path.resolve(video.src_url);
     const videoSize = fs.statSync(videoPath).size;
     const chunkSize = 1 * 1e6;
     const start = Number(range.replace(/\D/g, ""));
