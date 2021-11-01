@@ -206,7 +206,7 @@
 								{
 									"key": "video",
 									"type": "file",
-									"src": "/Users/usmanhaiderfalcon/Downloads/test.mp4"
+									"src": "/Users/usmanhaiderfalcon/Downloads/How To Code A Video Stream using MongoDB.mp4"
 								},
 								{
 									"key": "title",
@@ -227,24 +227,6 @@
 							],
 							"path": [
 								"videos"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Video",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/videos/61658490c7275d32e70c8abb",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"videos",
-								"61658490c7275d32e70c8abb"
 							]
 						}
 					},
@@ -285,6 +267,25 @@
 					"response": []
 				},
 				{
+					"name": "Watch Video",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/videos/watch/6167dc1f61a35432697cc4a9",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"videos",
+								"watch",
+								"6167dc1f61a35432697cc4a9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Update Video",
 					"request": {
 						"method": "PUT",
@@ -300,12 +301,47 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Delete Video",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/videos/61658490c7275d32e70c8abb",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"videos",
+								"61658490c7275d32e70c8abb"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Courses",
 			"item": [
+				{
+					"name": "Create Course",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/courses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "Get Courses",
 					"request": {
@@ -336,23 +372,6 @@
 							"path": [
 								"courses",
 								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Course",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/courses",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"courses"
 							]
 						}
 					},
@@ -400,6 +419,23 @@
 			"name": "Games",
 			"item": [
 				{
+					"name": "Create Games",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/games",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"games"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Games",
 					"request": {
 						"method": "GET",
@@ -429,23 +465,6 @@
 							"path": [
 								"games",
 								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Games",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/games",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"games"
 							]
 						}
 					},
@@ -710,6 +729,117 @@
 									"key": "search",
 									"value": "g"
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Blog",
+			"item": [
+				{
+					"name": "Create Blog",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"blog_title\": \"blog 1\",\n    \"blog_desc\": \"new blog is here\",\n    \"blog_author\": \"6166e0b96a053ffe4e327ff3\",\n    \"blog_content\": \"jfkhdkdfjlahkdjflahjkfhdaskjhfdkjs\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/blogs",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"blogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Blogs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/blogs",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"blogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Blog By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/blogs/617fa1e6fe02f11800198500",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"blogs",
+								"617fa1e6fe02f11800198500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Blog",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"blog_content\": \"updated\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/blogs/617fa1e6fe02f11800198500",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"blogs",
+								"617fa1e6fe02f11800198500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Blog",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/blogs/617fa1e6fe02f11800198500",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"blogs",
+								"617fa1e6fe02f11800198500"
 							]
 						}
 					},
