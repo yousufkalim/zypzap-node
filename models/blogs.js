@@ -1,0 +1,53 @@
+const { Schema, model } = require("mongoose");
+
+const blogSchema = new Schema(
+  {
+    blog_title: {
+      type: String,
+      required: true,
+    },
+    blog_desc: {
+      type: String,
+      required: true,
+    },
+    blog_author: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "Creators",
+    },
+    blog_content: {
+      type: String,
+      required: true,
+    },
+    is_featured: {
+      type: Boolean,
+      default: false,
+    },
+    comments: [
+      {
+        text: {
+          type: String,
+        },
+        userId: {
+          type: Schema.Types.ObjectId,
+          required: true,
+          ref: "Users",
+        },
+      },
+    ],
+    blog_images: {
+      type: String,
+    },
+
+    tags: [
+      {
+        type: String,
+      },
+    ],
+  },
+  {
+    timeStamp: true,
+  }
+);
+
+module.exports = model("blogs", blogSchema);
