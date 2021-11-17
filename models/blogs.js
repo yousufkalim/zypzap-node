@@ -46,7 +46,7 @@ const blogSchema = new Schema(
     ],
   },
   {
-    timeStamp: true,
+    timestamps: true,
   }
 );
 

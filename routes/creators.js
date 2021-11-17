@@ -8,7 +8,7 @@ const {
 } = require("../middleware/validators/creators");
 
 // Routes
-router.post("/:id", auth, validateCreators, isValidated, postCreator);
+router.post("/:id", validateCreators, isValidated, postCreator);
 
 // Export
 module.exports = router;

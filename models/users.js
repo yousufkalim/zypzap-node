@@ -77,7 +77,6 @@ userSchema.methods.toJSON = function () {
 };
 
 userSchema.pre("save", async function (next) {
-  console.log("encrypting the password");
   const user = this;
   if (user.isModified("password")) {
     user.password = await bcrypt.hash(user.password, 8);

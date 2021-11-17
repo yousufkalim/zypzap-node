@@ -1,12 +1,12 @@
 const Blog = require("../models/blogs");
-const User = require("../models/users");
+const Creator = require("../models/creators");
 
 exports.createBlog = async (req, res) => {
   const { blog_author: creator } = req.body;
   try {
-    const user = await User.findById(creator);
-    if (!user) return res.status(404).send("User does not found");
-    const blog = new Blog(req.body);
+    const user = await Creator.findById(creator);
+    if (!user) return res.status(404).send("Creator does not found");
+    const blog = new Blog({ ...req.body, blog_images: req.file.path });
     await blog.save();
     res.send(blog);
   } catch (error) {
@@ -20,9 +20,14 @@ exports.createBlog = async (req, res) => {
 
 exports.getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find();
-    if (!blogs) res.status(404).send("Courses Not Found");
-
+    const blogs = await Blog.find().populate({
+      path: "blog_author",
+      populate: {
+        path: "user_id",
+      },
+    });
+    if (!blogs) res.status(404).send("Blog Not Found");
+    blogs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.send(blogs);
   } catch (error) {
     res.status(500).send(error);

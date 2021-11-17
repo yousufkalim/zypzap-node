@@ -1,6 +1,7 @@
 // Init
 const router = require("express").Router();
 const { auth } = require("../middleware/auth");
+const imageUpload = require("../middleware/imageUpload");
 const {
   getAllBlogs,
   getOneBlog,
@@ -11,7 +12,13 @@ const {
 const { validateBlog, isValidated } = require("../middleware/validators/blogs");
 
 // Routes
-router.post("/", validateBlog, isValidated, createBlog);
+router.post(
+  "/",
+  imageUpload.single("blog_images"),
+  validateBlog,
+  isValidated,
+  createBlog
+);
 router.get("/", getAllBlogs);
 router.get("/:id", getOneBlog);
 router.put("/:id", isValidated, updateBlog);

@@ -7,7 +7,6 @@ async function Search(collectionName, query) {
       async (err, collection) => {
         if (err) console.log(err);
         const result = await collection.find({ $text: { $search: query } });
-        console.log(result);
         return result;
       }
     );
