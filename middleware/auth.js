@@ -25,6 +25,7 @@ exports.generateAuthToken = async (user) => {
     { _id: user._id.toString() },
     process.env.TOKEN_SECRET
   );
+
   user.tokens = user.tokens.concat({
     token,
   });

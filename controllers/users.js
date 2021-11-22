@@ -42,12 +42,9 @@ exports.updateOneUser = async (req, res) => {
   const _id = req.params.id;
   const updates = Object.keys(req.body);
   try {
-    console.log("updating");
     const user = await req.user;
     updates.forEach((update) => (user[update] = req.body[update]));
-    console.log(user);
     await user.save();
-    console.log("updated");
     res.send(user);
   } catch (error) {
     res.status(500).send(error);

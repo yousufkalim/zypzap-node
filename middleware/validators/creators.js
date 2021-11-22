@@ -7,10 +7,7 @@ Validations
 ====================
 */
 
-exports.validateCreators = [
-  check("user_id", "User Id is required.").notEmpty().trim(),
-  check("courses", "Courses is required.").trim(),
-];
+exports.validateCreators = [check("user_id", "User Id is required.").trim()];
 
 /*
 ======================
