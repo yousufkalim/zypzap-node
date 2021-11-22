@@ -21,7 +21,7 @@ router.post(
 );
 router.get("/", getAllBlogs);
 router.get("/:id", getOneBlog);
-router.put("/:id", isValidated, updateBlog);
+router.put("/:id", imageUpload.single("blog_images"), isValidated, updateBlog);
 router.delete("/:id", deleteBlog);
 
 // Export
