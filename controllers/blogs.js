@@ -51,8 +51,10 @@ exports.getOneBlog = async (req, res) => {
 
 exports.updateBlog = async (req, res) => {
   const _id = req.params.id;
+
   try {
-    const blog = await Blog.findByIdAndUpdate(_id, req.body, {
+    let updatedBlog = { ...req.body, blog_images: req.file.path };
+    const blog = await Blog.findByIdAndUpdate(_id, updatedBlog, {
       new: true,
       runValidators: true,
     });
