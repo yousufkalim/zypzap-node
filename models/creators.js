@@ -7,6 +7,18 @@ const creatorSchema = new Schema(
       required: true,
       ref: "Users",
     },
+    gameyouaregoodat: {
+      type: String,
+    },
+    onlineTeaching: {
+      type: Boolean,
+    },
+    gameLevel: {
+      type: String,
+    },
+    audience: {
+      type: String,
+    },
     address: {
       street_name: {
         type: String,
@@ -33,19 +45,15 @@ const creatorSchema = new Schema(
     bank_info: {
       bank_name: {
         type: String,
-        required: true,
       },
       account_number: {
         type: String,
-        required: true,
       },
       branch_number: {
         type: String,
-        required: true,
       },
       IBAN: {
         type: String,
-        required: true,
       },
     },
     courses: [

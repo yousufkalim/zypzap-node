@@ -7,7 +7,12 @@ const {
   updateOneUser,
   deleteOneUser,
 } = require("../controllers/users");
-const { loginUser, logoutUser, logoutAll } = require("../controllers/login");
+const {
+  loginUser,
+  logoutUser,
+  logoutAll,
+  getData,
+} = require("../controllers/login");
 const { auth } = require("../middleware/auth");
 const {
   validateUsers,
@@ -15,12 +20,12 @@ const {
 } = require("../middleware/validators/users");
 
 // Routes
+router.get("/getuserbytoken", auth, getData);
 router.get("/", getAllUsers);
 router.post("/", validateUsers, isValidated, createUser);
 router.get("/:id", getOneUser);
 router.put("/:id", auth, updateOneUser);
 router.delete("/:id", auth, deleteOneUser);
-
 router.post("/login", loginUser);
 
 router.post("/logout", auth, logoutUser);
