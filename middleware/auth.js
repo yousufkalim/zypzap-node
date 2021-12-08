@@ -4,7 +4,9 @@ const User = require("../models/users");
 exports.auth = async (req, res, next) => {
   try {
     const token = await req.header("Authorization").replace("Bearer ", "");
+    console.log("decode is 1");
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+    console.log("decode is ", decoded);
     const user = await User.findOne({
       _id: decoded._id,
       "tokens.token": token,

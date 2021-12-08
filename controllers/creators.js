@@ -3,11 +3,37 @@ const User = require("../models/users");
 
 exports.postCreator = async (req, res) => {
   try {
-    const user = User.findById(req.params.id);
+    const user = await User.findById(req.params.id);
+    let creator = await Creator.findOne({ user_id: req.params.id });
+    console.log("creator", creator);
+    if (creator)
+      return res.status(400).send({ message: "User is already a creator" });
+
     if (!user) return res.status(400).send("User Not Found");
-    const creator = new Creator({ ...req.body, user_id: req.params.id });
-    res.status(201).send(creator);
+    creator = new Creator({ ...req.body, user_id: req.params.id });
+
+    let newUser = {
+      creator: creator._id,
+    };
+    await User.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: newUser,
+      },
+      {
+        new: true,
+      }
+    );
     await creator.save();
-    if (!user) return res.status(400).send("User Not Found");
+
+    res.status(201).send(creator);
+  } catch (error) {}
+};
+exports.getCreator = async (req, res) => {
+  try {
+    let creator = await Creator.findOne({ user_id: req.params.id });
+    console.log("creator", creator);
+    if (!creator) return res.status(400).send({ message: "creator not found" });
+    res.json({ creator });
   } catch (error) {}
 };
