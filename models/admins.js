@@ -23,6 +23,10 @@ const adminSchema = new Schema(
       type: String,
       default: "admin",
     },
+    active: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

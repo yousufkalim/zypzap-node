@@ -51,6 +51,11 @@ exports.login = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, message: "Admin not found" });
+    } else if (!admin.active) {
+      // If admin not found
+      return res
+        .status(400)
+        .json({ success: false, message: "Your account is not activated" });
     }
 
     // Comparing password
