@@ -1,12 +1,17 @@
 const Blog = require("../models/blogs");
-const Creator = require("../models/creators");
+const Admins = require("../models/admins");
 
 exports.createBlog = async (req, res) => {
-  const { blog_author: creator } = req.body;
+  const admin = req.admin._id;
   try {
-    const user = await Creator.findById(creator);
-    if (!user) return res.status(404).send("Creator does not found");
-    const blog = new Blog({ ...req.body, blog_images: req.file.path });
+    const user = await Admins.findById(admin);
+    if (!user) return res.status(404).send("User does not found");
+    const blog = new Blog({
+      ...req.body,
+      blog_author: user._id,
+      blog_images: req.file.path,
+    });
+
     await blog.save();
     res.send(blog);
   } catch (error) {
@@ -53,14 +58,22 @@ exports.updateBlog = async (req, res) => {
   const _id = req.params.id;
 
   try {
-    let updatedBlog = { ...req.body, blog_images: req.file.path };
-    const blog = await Blog.findByIdAndUpdate(_id, updatedBlog, {
-      new: true,
-      runValidators: true,
-    });
-    if (!blog) return res.status(404).send("Course Not Found");
+    if (req.file) {
+      req.body.blog_images = req.file.path;
+    }
+
+    const blog = await Blog.findByIdAndUpdate(
+      _id,
+      { ...req.body, blog_author: req.body.blog_author._id },
+      {
+        new: true,
+      }
+    );
+
+    if (!blog) return res.status(404).send("blog Not Found");
     res.send(blog);
   } catch (error) {
+    console.log("Error ---> ", error);
     res.status(500).send(error);
   }
 };

@@ -2,6 +2,7 @@
 const router = require("express").Router();
 const { auth } = require("../middleware/auth");
 const { blogImageUpload } = require("../middleware/imageUpload");
+const { checkAdminAuth } = require("../middleware/adminAuth");
 const {
   getAllBlogs,
   getOneBlog,
@@ -14,6 +15,7 @@ const { validateBlog, isValidated } = require("../middleware/validators/blogs");
 // Routes
 router.post(
   "/",
+  checkAdminAuth,
   blogImageUpload.single("blog_images"),
   validateBlog,
   isValidated,
@@ -21,12 +23,7 @@ router.post(
 );
 router.get("/", getAllBlogs);
 router.get("/:id", getOneBlog);
-router.put(
-  "/:id",
-  blogImageUpload.single("blog_images"),
-  isValidated,
-  updateBlog
-);
+router.put("/:id", blogImageUpload.single("blog_images"), updateBlog);
 router.delete("/:id", deleteBlog);
 
 // Export

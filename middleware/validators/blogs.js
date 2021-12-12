@@ -10,7 +10,6 @@ Validations
 exports.validateBlog = [
   check("blog_title", "Blog Title is required.").notEmpty().trim(),
   check("blog_desc", "Blog Description is required.").notEmpty().trim(),
-  check("blog_author", "Blog Author is required.").notEmpty().trim(),
   check("blog_content", "Blog Content is required.").notEmpty().trim(),
 ];
 

@@ -23,6 +23,10 @@ const blogSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: String,
+      default: "published",
+    },
     comments: [
       {
         text: {
