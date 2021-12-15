@@ -25,12 +25,7 @@ exports.createBlog = async (req, res) => {
 
 exports.getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find().populate({
-      path: "blog_author",
-      populate: {
-        path: "user_id",
-      },
-    });
+    const blogs = await Blog.find().populate("blog_author");
     if (!blogs) res.status(404).send("Blog Not Found");
     blogs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.send(blogs);

@@ -13,7 +13,7 @@ const blogSchema = new Schema(
     blog_author: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "Creators",
+      ref: "admins",
     },
     blog_content: {
       type: String,
