@@ -3,6 +3,7 @@ const User = require("../models/users");
 const { generateAuthToken } = require("../middleware/auth");
 
 exports.loginUser = async (req, res) => {
+  console.log("login");
   const { email, password } = req.body;
   try {
     // Check User Exists

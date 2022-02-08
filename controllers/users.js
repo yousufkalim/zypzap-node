@@ -1,9 +1,11 @@
 const User = require("../models/users");
+const Course = require("../models/courses");
 const bcrypt = require("bcryptjs");
 const { auth } = require("../middleware/auth");
 
 exports.createUser = async (req, res) => {
   try {
+    console.log("create User");
     const { username, email, password, role } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
@@ -34,6 +36,30 @@ exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
     res.send(users);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+exports.postFavoriteCourse = async (req, res) => {
+  const { course_id, user_id } = req.body;
+  try {
+    const users = await User.findById(user_id);
+    const course = await Course.findById(course_id);
+    console.log(course, "course");
+    if (!users || !course) {
+      return res.status(404).send("User Not Found");
+    } else {
+      console.log("cjhkacbdlsk");
+      const user = await User.updateOne(
+        { _id: user_id },
+        {
+          $push: { wishlist_courses: course_id },
+        },
+        { new: true }
+      );
+      console.log(user);
+      res.send(user);
+    }
   } catch (error) {
     res.status(500).send(error);
   }

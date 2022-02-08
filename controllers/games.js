@@ -12,7 +12,9 @@ exports.getAllGames = async (req, res) => {
 
 exports.getOneGame = async (req, res) => {
   try {
-    const game = await Game.findOneById(req.params.id);
+    console.log(req.params.id);
+    const game = await Game.findById(req.params.id);
+    console.log("game", game);
     if (!game) return res.status(404).send("Not Found");
     res.send(game);
   } catch (error) {
@@ -23,6 +25,7 @@ exports.getOneGame = async (req, res) => {
 exports.createGame = async (req, res) => {
   try {
     const newGame = new Game(req.body);
+    newGame.created_at = Date.now();
     await newGame.save();
     res.status(201).send(newGame);
   } catch (error) {
@@ -42,6 +45,16 @@ exports.updateGame = async (req, res) => {
       new: true,
       runValidators: true,
     });
+    if (!game) return res.status(404).send("Not Found");
+    res.send(game);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+exports.category = async (req, res) => {
+  const { Category } = req.body;
+  try {
+    const game = await Game.find({ category: Category });
     if (!game) return res.status(404).send("Not Found");
     res.send(game);
   } catch (error) {

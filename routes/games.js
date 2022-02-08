@@ -6,6 +6,12 @@ const {
   getOneGame,
   createGame,
   updateGame,
+  topTen,
+  topTenTrendy,
+  topTenNFT,
+  topTenMetaverse,
+  topTenNew,
+  topTenReality,
 } = require("../controllers/games");
 const {
   validateGames,
@@ -13,6 +19,7 @@ const {
 } = require("../middleware/validators/games");
 
 // Routes
+
 router.get("/", getAllGames);
 router.get("/:id", getOneGame);
 router.post("/", auth, validateGames, isValidated, createGame);

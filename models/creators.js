@@ -16,6 +16,18 @@ const creatorSchema = new Schema(
     gameLevel: {
       type: String,
     },
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
     audience: {
       type: String,
     },
@@ -70,7 +82,7 @@ const creatorSchema = new Schema(
     ],
   },
   {
-    timeStamp: true,
+    timestamps: true,
   }
 );
 

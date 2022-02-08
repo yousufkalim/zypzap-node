@@ -6,6 +6,7 @@ const {
   getOneUser,
   updateOneUser,
   deleteOneUser,
+  postFavoriteCourse,
 } = require("../controllers/users");
 const {
   loginUser,
@@ -22,6 +23,7 @@ const {
 // Routes
 router.get("/getuserbytoken", auth, getData);
 router.get("/", getAllUsers);
+router.post("/favoriteCourse", auth, postFavoriteCourse);
 router.post("/", validateUsers, isValidated, createUser);
 router.get("/:id", getOneUser);
 router.put("/:id", auth, updateOneUser);

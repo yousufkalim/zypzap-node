@@ -24,6 +24,12 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
     creator: {
       type: Schema.Types.ObjectId,
       ref: "Creators",
@@ -49,6 +55,12 @@ const userSchema = new Schema(
         },
       },
     ],
+    wishlist_courses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Courses",
+      },
+    ],
     subscription: {
       type: String,
     },
@@ -62,7 +74,7 @@ const userSchema = new Schema(
     ],
   },
   {
-    timeStamp: true,
+    timestamps: true,
   }
 );
 

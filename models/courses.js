@@ -20,25 +20,37 @@ const courseSchema = new Schema(
     duration: {
       type: String,
     },
-
+    rating: {
+      type: Number,
+    },
     price: {
       type: Number,
+    },
+    views: {
+      type: String,
     },
     level: {
       type: String,
     },
-    game_id: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Games",
-      },
-    ],
+    game_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Games",
+    },
     description: {
+      type: String,
+    },
+    plateform: {
+      type: String,
+    },
+    mood: {
+      type: String,
+    },
+    type: {
       type: String,
     },
   },
   {
-    timeStamp: true,
+    timestamps: true,
   }
 );
 
