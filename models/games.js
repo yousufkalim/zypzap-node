@@ -10,6 +10,12 @@ const gameSchema = new Schema(
       type: String,
       required: true,
     },
+    vote: {
+      type: Number,
+    },
+    Description: {
+      type: String,
+    },
     thumbnails: [
       {
         type: String,

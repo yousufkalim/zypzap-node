@@ -10,11 +10,23 @@ exports.getAllGames = async (req, res) => {
   }
 };
 
+exports.giveVote = async (req, res) => {
+  const game_id = req.params.id;
+  try {
+    const game = await Game.findById(game_id);
+    if (!game) return res.status(404).send("Not Found");
+    if (game.vote === "" || game.vote === undefined) game.vote = 0;
+    game.vote = game.vote + 1;
+    game.save();
+    res.send({ message: "vote post successfully" });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
 exports.getOneGame = async (req, res) => {
   try {
-    console.log(req.params.id);
     const game = await Game.findById(req.params.id);
-    console.log("game", game);
     if (!game) return res.status(404).send("Not Found");
     res.send(game);
   } catch (error) {
@@ -25,7 +37,6 @@ exports.getOneGame = async (req, res) => {
 exports.createGame = async (req, res) => {
   try {
     const newGame = new Game(req.body);
-    newGame.created_at = Date.now();
     await newGame.save();
     res.status(201).send(newGame);
   } catch (error) {
@@ -51,6 +62,7 @@ exports.updateGame = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
 exports.category = async (req, res) => {
   const { Category } = req.body;
   try {
@@ -61,3 +73,4 @@ exports.category = async (req, res) => {
     res.status(500).send(error);
   }
 };
+//  missing delete API

@@ -21,11 +21,9 @@ const { auth } = require("../middleware/auth");
 router.get("/getviews/:id", getviews);
 router.get("/", auth, getAllVideos);
 router.get("/:id", getOneVideo);
-//router.get("/getviews/:id", getviews);
 router.get("/watch/:id", watchVideo);
 router.post("/", auth, videoUpload.single("video"), postVideo);
 router.post("/addviews/:id", addViews);
-getviews;
 router.put("/:id", auth, validateVideos, isValidated, updateVideo);
 router.delete("/:id", auth, deleteVideo);
 // Export

@@ -3,7 +3,6 @@ const User = require("../models/users");
 const { generateAuthToken } = require("../middleware/auth");
 
 exports.loginUser = async (req, res) => {
-  console.log("login");
   const { email, password } = req.body;
   try {
     // Check User Exists
@@ -25,14 +24,12 @@ exports.loginUser = async (req, res) => {
     res.status(400).send(error);
   }
 };
-exports.getData = async (req, res) => {
-  console.log("get is", req.user);
 
+exports.getData = async (req, res) => {
   res.status(200).send(req.user);
 };
 
 exports.logoutUser = async (req, res) => {
-  console.log("req body is ", req.user);
   try {
     req.user.tokens = req.user.tokens.filter((token) => {
       return token.token !== req.token;

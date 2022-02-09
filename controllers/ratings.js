@@ -13,25 +13,24 @@ exports.getAllRatings = async (req, res) => {
 exports.getOneRating = async (req, res) => {
   const _Id = req.params.id;
   try {
-    const rating = await Rating.findOneById(_id);
+    const rating = await Rating.findOneById(_Id);
     if (!rating) return res.status(404).send("Rating Not Found");
   } catch (error) {
     res.status(500).send(error);
   }
 };
 exports.createRatings = async (req, res) => {
-  const { rating, comment, Course, rating_by } = req.body;
+  const { Rating, Course, rating_by } = req.body;
   try {
     const user = await User.findById(rating_by);
     const newCourse = await Course.findById(Course);
     if (!user || !newCourse)
       return res.status(400).send({ message: "Invalid user or course" });
     const preRating = await Rating.find({ course: Course });
-    const length = preRating.length;
-    if (length === 0) {
+    if (preRating.length === 0) {
       const course = await Course.findByIdAndUpdate(
         req.body.course,
-        { rating: req.body.rating },
+        { rating: Rating },
         {
           new: true,
           runValidators: true,
@@ -74,6 +73,7 @@ exports.deleteRating = async (req, res) => {
   try {
     const deleteRating = await Rating.findByIdAndDelete(_id);
     if (!deleteRating) return res.status(404).send("Rating not found");
+    res.send({ message: "Delete Successfully" });
   } catch (error) {
     res.status(500).send(error);
   }

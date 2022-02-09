@@ -49,7 +49,6 @@ exports.getAllSearchResults = async (req, res) => {
       res.status(403).send();
     }
   } catch (error) {
-    console.log(error.message);
     res.status(500).send(error);
   }
 };

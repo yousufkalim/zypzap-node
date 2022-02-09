@@ -24,5 +24,4 @@ const videoUpload = multer({
     cb(undefined, true);
   },
 });
-console.log(videoUpload);
 module.exports = videoUpload;

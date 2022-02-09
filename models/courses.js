@@ -30,7 +30,7 @@ const courseSchema = new Schema(
       type: String,
     },
     level: {
-      type: String,
+      type: Number,
     },
     game_id: {
       type: Schema.Types.ObjectId,

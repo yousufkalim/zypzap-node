@@ -5,7 +5,6 @@ const { auth } = require("../middleware/auth");
 
 exports.createUser = async (req, res) => {
   try {
-
     const { username, email, password, role } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
@@ -22,7 +21,6 @@ exports.createUser = async (req, res) => {
     });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
-    console.log("user is user", user);
 
     await user.save();
     res.json({ message: "User Registered Successfully" });
@@ -32,14 +30,34 @@ exports.createUser = async (req, res) => {
   }
 };
 
+exports.setSubscription = async (req, res) => {
+  const { user_id, subscription_type } = req.body;
+
+  try {
+    let user = await User.findByIdAndUpdate(user_id, {
+      subscription: subscription_type,
+    });
+
+    if (!user) {
+      return res.status(400).send({ message: "User Not Exists" });
+    } else {
+      res.json({ message: "Get Subscription", User: user });
+    }
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
+
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
+    if (!users) return res.status(404).send("Users Not Found");
     res.send(users);
   } catch (error) {
     res.status(500).send(error);
   }
 };
+
 exports.postFavoriteCourse = async (req, res) => {
   const { course_id, user_id } = req.body;
   try {
@@ -66,7 +84,7 @@ exports.getOneUser = async (req, res) => {
   const _id = req.params.id;
   try {
     const user = await User.findOne({ _id });
-    if (!user) return res.status(404).send("Usemr Not Found");
+    if (!user) return res.status(404).send("User Not Found");
     res.send(user);
   } catch (error) {
     res.status(500).send(error);

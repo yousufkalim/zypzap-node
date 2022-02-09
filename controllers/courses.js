@@ -74,11 +74,10 @@ exports.searchCourse = async (req, res) => {
     const course = await Course.find({
       course_name: { $regex: name, $options: "$i" },
     });
-    console.log(course, "course");
+    
     if (!course) res.status(404).send("Not Found");
     res.send(course);
   } catch (error) {
-    console.log("error");
     res.status(500).send(error);
   }
 };

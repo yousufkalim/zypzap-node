@@ -7,6 +7,7 @@ const {
   updateOneUser,
   deleteOneUser,
   postFavoriteCourse,
+  setSubscription,
 } = require("../controllers/users");
 const {
   loginUser,
@@ -21,9 +22,11 @@ const {
 } = require("../middleware/validators/users");
 
 // Routes
+router.post("/setSubscription", auth, setSubscription);
 router.get("/getuserbytoken", auth, getData);
 router.get("/", getAllUsers);
 router.post("/favoriteCourse", auth, postFavoriteCourse);
+// SignUp
 router.post("/", validateUsers, isValidated, createUser);
 router.get("/:id", getOneUser);
 router.put("/:id", auth, updateOneUser);

@@ -51,8 +51,8 @@ exports.watchVideo = async (req, res) => {
   }
 };
 exports.postVideo = async (req, res) => {
+  // console.log("file info", req.file);
   try {
-    console.log(req.file);
     const video = new Video({
       ...req.body,
       src_url: req.file.path,
@@ -70,12 +70,12 @@ exports.postVideo = async (req, res) => {
 exports.addViews = async (req, res) => {
   const video_id = req.params.id;
   try {
-    const vedio = await Video.findById(video_id);
-    if (!vedio)
+    const video = await Video.findById(video_id);
+    if (!video)
       return res.status(400).send({ message: "Vedio Id is not valid" });
-    vedio.views = vedio.views + 1;
+    video.views = video.views + 1;
     vedio.save();
-    res.send(vedio);
+    res.send(video);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -83,10 +83,10 @@ exports.addViews = async (req, res) => {
 exports.getviews = async (req, res) => {
   const video_id = req.params.id;
   try {
-    const vedio = await Video.findById(video_id);
-    if (!vedio)
+    const video = await Video.findById(video_id);
+    if (!video)
       return res.status(400).send({ message: "Vedio Id is not valid" });
-    let views = vedio.views;
+    let views = video.views;
     res.send({ "Total Views": views });
   } catch (error) {
     res.status(500).send(error);

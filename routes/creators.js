@@ -6,6 +6,7 @@ const {
   getCreator,
   getsearch,
   addFollower,
+  addDetails,
 } = require("../controllers/creators");
 const {
   validateCreators,
@@ -15,6 +16,7 @@ const {
 // Routes   addFollower
 router.get("/addFollower", auth, addFollower);
 router.get("/search", auth, getsearch);
+router.post("/addDetails/:id", auth, addDetails);
 router.post("/:id", validateCreators, isValidated, auth, postCreator);
 router.get("/:id", auth, getCreator);
 
