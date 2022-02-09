@@ -1,5 +1,6 @@
 const Rating = require("../models/ratings");
 const Course = require("../models/courses");
+const User = require("../models/users");
 
 exports.getAllRatings = async (req, res) => {
   try {
@@ -19,9 +20,13 @@ exports.getOneRating = async (req, res) => {
   }
 };
 exports.createRatings = async (req, res) => {
+  const { rating, comment, Course, rating_by } = req.body;
   try {
-    console.log(req.body.course);
-    const preRating = await Rating.find({ course: req.body.course });
+    const user = await User.findById(rating_by);
+    const newCourse = await Course.findById(Course);
+    if (!user || !newCourse)
+      return res.status(400).send({ message: "Invalid user or course" });
+    const preRating = await Rating.find({ course: Course });
     const length = preRating.length;
     if (length === 0) {
       const course = await Course.findByIdAndUpdate(
@@ -32,20 +37,16 @@ exports.createRatings = async (req, res) => {
           runValidators: true,
         }
       );
-      console.log("course", course);
     } else {
       let point = 0;
       preRating.map((rate) => {
         console.log(rate.rating, "rate", point);
         point += rate.rating;
       });
-      console.log("avg rating", point);
       const avr = (point / length).toFixed(2);
-
       const course = await Course.findByIdAndUpdate(req.body.course, {
         rating: avr,
       });
-      console.log("course", avr);
     }
 
     const rating = new Rating(req.body);

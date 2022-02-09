@@ -14,7 +14,6 @@ exports.createCourse = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
 exports.getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find();
@@ -96,7 +95,6 @@ exports.updateCourse = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
 exports.deleteCourse = async (req, res) => {
   const _id = req.params.id;
   try {

@@ -5,7 +5,7 @@ const { auth } = require("../middleware/auth");
 
 exports.createUser = async (req, res) => {
   try {
-    console.log("create User");
+
     const { username, email, password, role } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
@@ -45,11 +45,9 @@ exports.postFavoriteCourse = async (req, res) => {
   try {
     const users = await User.findById(user_id);
     const course = await Course.findById(course_id);
-    console.log(course, "course");
     if (!users || !course) {
       return res.status(404).send("User Not Found");
     } else {
-      console.log("cjhkacbdlsk");
       const user = await User.updateOne(
         { _id: user_id },
         {
@@ -57,7 +55,6 @@ exports.postFavoriteCourse = async (req, res) => {
         },
         { new: true }
       );
-      console.log(user);
       res.send(user);
     }
   } catch (error) {

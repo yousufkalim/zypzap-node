@@ -13,7 +13,6 @@ exports.getAllVideos = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
 exports.getOneVideo = async (req, res) => {
   const _id = req.params.id;
   try {
@@ -24,7 +23,6 @@ exports.getOneVideo = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
 exports.watchVideo = async (req, res) => {
   const _id = req.params.id;
   try {
@@ -52,19 +50,48 @@ exports.watchVideo = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
 exports.postVideo = async (req, res) => {
-  const video = new Video({
-    ...req.body,
-    src_url: req.file.path,
-    file_props: {
-      ...req.file,
-    },
-  });
-  await video.save();
-  res.send(video);
+  try {
+    console.log(req.file);
+    const video = new Video({
+      ...req.body,
+      src_url: req.file.path,
+      views: 0,
+      file_props: {
+        ...req.file,
+      },
+    });
+    await video.save();
+    res.send(video);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
-
+exports.addViews = async (req, res) => {
+  const video_id = req.params.id;
+  try {
+    const vedio = await Video.findById(video_id);
+    if (!vedio)
+      return res.status(400).send({ message: "Vedio Id is not valid" });
+    vedio.views = vedio.views + 1;
+    vedio.save();
+    res.send(vedio);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+exports.getviews = async (req, res) => {
+  const video_id = req.params.id;
+  try {
+    const vedio = await Video.findById(video_id);
+    if (!vedio)
+      return res.status(400).send({ message: "Vedio Id is not valid" });
+    let views = vedio.views;
+    res.send({ "Total Views": views });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
 exports.updateVideo = async (req, res) => {
   const _id = req.params.id;
   try {
@@ -78,7 +105,6 @@ exports.updateVideo = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
 exports.deleteVideo = async (req, res) => {
   const _id = req.params.id;
   try {
