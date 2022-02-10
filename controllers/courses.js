@@ -1,17 +1,35 @@
 const Course = require("../models/courses");
 const User = require("../models/users");
 const Creater = require("../models/creators");
+const Notifications = require("../models/notifications");
+let cron = require("node-cron");
 
 exports.createCourse = async (req, res) => {
   const { creator } = req.body;
   try {
-    const user = await User.findById(creator);
-    if (!user) return res.status(404).send("User does not found");
+    const creater = await Creater.findById(creator).populate("followers");
+    if (!creator) return res.status(404).send("User does not found");
     const course = new Course(req.body);
     await course.save();
+    const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
+    const sevenDays = new Date(daysCount); //Set date after 7days
+    const notification = await Notifications.create({
+      title: "New Course added",
+      expiry_date: sevenDays,
+      from: creator,
+    });
+    creater.followers.map(async (follower) => {
+      let Updateuser = await User.findByIdAndUpdate(
+        follower.id,
+        {
+          $push: { notifications: notification.id },
+        },
+        { new: true }
+      );
+    });
     res.send(course);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }
 };
 exports.getAllCourses = async (req, res) => {
@@ -40,18 +58,21 @@ const coursesFilter = (game_type, Plateform, Mode, Price, course_type) => {
   }
   return myFind;
 };
+//   filter Courses by game_type, Plateform, Mode, Price, course_type
 exports.getFilteredCourses = async (req, res) => {
   const { game_type, Plateform, Mode, Price, course_type, Category } = req.body;
   try {
-    let myFind = coursesFilter(game_type, Plateform, Mode, Price, course_type);
+    let myFind = coursesFilter(Plateform, Mode, Price, course_type);
     const courses = await Course.find({
       $and: myFind,
     }).populate("game_id");
     if (!courses) return res.status(404).send("User does not found");
     let GameType = [];
-    GameType = courses.filter(
-      (course) => course?.game_id?.category === game_type
-    );
+    if (game_type) {
+      GameType = courses.filter(
+        (course) => course?.game_id?.category === game_type
+      );
+    }
     res.send(GameType);
   } catch (error) {
     res.status(500).send(error);
@@ -74,7 +95,7 @@ exports.searchCourse = async (req, res) => {
     const course = await Course.find({
       course_name: { $regex: name, $options: "$i" },
     });
-    
+
     if (!course) res.status(404).send("Not Found");
     res.send(course);
   } catch (error) {
@@ -89,6 +110,22 @@ exports.updateCourse = async (req, res) => {
       runValidators: true,
     });
     if (!course) return res.status(404).send("Course Not Found");
+    const creator = await Creater.findById(course.creator).populate(
+      "followers"
+    );
+    const notification = await Notifications.create({
+      title: "Course Updated By Creator",
+      from: creator,
+    });
+    creator.followers.map(async (follower) => {
+      let Updateuser = await User.findByIdAndUpdate(
+        follower.id,
+        {
+          $push: { notifications: notification.id },
+        },
+        { new: true }
+      );
+    });
     res.send(course);
   } catch (error) {
     res.status(500).send(error);
@@ -116,3 +153,10 @@ exports.postViews = async (req, res) => {
     res.status(500).send(error);
   }
 };
+//cron-job that will run after every 10days to delete all expired notifications from DB
+cron.schedule("0 5 */7 * *", async () => {
+  const timeNow = new Date();
+  const delNotifications = await Notifications.deleteMany({
+    expiry_date: { $lt: timeNow },
+  });
+});

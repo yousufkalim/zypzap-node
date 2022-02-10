@@ -33,15 +33,13 @@ exports.postCreator = async (req, res) => {
 exports.addDetails = async (req, res) => {
   const { goodGame, isOnline, level, audience } = req.body;
   try {
-    console.log("xagxhjkhcsjks");
     let creator = await Creator.findOne({ _id: req.params.id });
-    console.log("creator", creator);
     creator.gameyouaregoodat = goodGame;
     creator.onlineTeaching = isOnline;
     creator.level = level;
     creator.audience = audience;
     creator.save();
-    console.log("creator", creator);
+
     res.send(creator);
   } catch (error) {
     res.status(500).send(error);
@@ -91,14 +89,16 @@ exports.addFollower = async (req, res) => {
       Creator.updateOne({ _id: creator_id }, { $push: { follower: user_id } });
       res.send("Following Successfully", creator, creatorAsUser);
     } else {
-      const user1 = await User.updateOne(
+      const updateUser = await User.updateOne(
         { _id: user_id },
         {
           $push: { following: creator.user_id },
         },
         { new: true }
       );
-
+      // console.log(creator, "Creatoor");
+      // creator.followers.push(user_id);
+      // await creator.save();
       const creator1 = await Creator.updateOne(
         { _id: creator_id },
         { $push: { follower: user_id } },
@@ -107,6 +107,6 @@ exports.addFollower = async (req, res) => {
       res.send("Following Successfully");
     }
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }
 };

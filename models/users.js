@@ -52,6 +52,9 @@ const userSchema = new Schema(
           type: Schema.Types.ObjectId,
           ref: "Courses",
         },
+        status: {
+          type: String,
+        },
       },
     ],
     wishlist_courses: [
@@ -71,6 +74,7 @@ const userSchema = new Schema(
         },
       },
     ],
+    notifications: [{ type: Schema.Types.ObjectId, ref: "notifications" }],
   },
   {
     timestamps: true,

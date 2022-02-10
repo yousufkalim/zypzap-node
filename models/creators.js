@@ -19,13 +19,13 @@ const creatorSchema = new Schema(
     followers: [
       {
         type: Schema.Types.ObjectId,
-        ref: "user",
+        ref: "Users",
       },
     ],
     following: [
       {
         type: Schema.Types.ObjectId,
-        ref: "user",
+        ref: "Users",
       },
     ],
     audience: {
