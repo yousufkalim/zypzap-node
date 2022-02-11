@@ -6,13 +6,6 @@ const {
   getOneGame,
   createGame,
   updateGame,
-  topTen,
-  topTenTrendy,
-  topTenNFT,
-  topTenMetaverse,
-  topTenNew,
-  topTenReality,
-  giveVote,
 } = require("../controllers/games");
 const {
   validateGames,
@@ -22,7 +15,6 @@ const {
 // Routes
 
 router.get("/", getAllGames);
-router.get("/giveVote/:id", auth, giveVote);
 router.get("/:id", getOneGame);
 router.post("/", auth, validateGames, isValidated, createGame);
 router.put("/:id", auth, validateGames, isValidated, updateGame);

@@ -8,10 +8,6 @@ const {
   updateCourse,
   deleteCourse,
   searchCourse,
-  getTopTenCourses,
-  getTopTenNFTCourses,
-  getTopTenMetaverse,
-  getTopTenNewCourses,
   getFilteredCourses,
 } = require("../controllers/courses");
 const {

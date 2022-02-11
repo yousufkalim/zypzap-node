@@ -11,9 +11,9 @@ exports.getAllRatings = async (req, res) => {
   }
 };
 exports.getOneRating = async (req, res) => {
-  const _Id = req.params.id;
+  const rating_id = req.params.id;
   try {
-    const rating = await Rating.findOneById(_Id);
+    const rating = await Rating.findOneById(rating_id);
     if (!rating) return res.status(404).send("Rating Not Found");
   } catch (error) {
     res.status(500).send(error);
@@ -42,7 +42,7 @@ exports.createRatings = async (req, res) => {
         console.log(rate.rating, "rate", point);
         point += rate.rating;
       });
-      const avr = (point / length).toFixed(2);
+      const avr = (point / length).toFixed(1);
       const course = await Course.findByIdAndUpdate(req.body.course, {
         rating: avr,
       });

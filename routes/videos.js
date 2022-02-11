@@ -9,7 +9,6 @@ const {
   deleteVideo,
   watchVideo,
   addViews,
-  getviews,
 } = require("../controllers/videos");
 const {
   validateVideos,
@@ -18,7 +17,7 @@ const {
 const { auth } = require("../middleware/auth");
 
 // Routes
-router.get("/getviews/:id", getviews);
+
 router.get("/", auth, getAllVideos);
 router.get("/:id", getOneVideo);
 router.get("/watch/:id", watchVideo);

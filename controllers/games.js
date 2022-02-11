@@ -10,20 +10,6 @@ exports.getAllGames = async (req, res) => {
   }
 };
 
-exports.giveVote = async (req, res) => {
-  const game_id = req.params.id;
-  try {
-    const game = await Game.findById(game_id);
-    if (!game) return res.status(404).send("Not Found");
-    if (game.vote === "" || game.vote === undefined) game.vote = 0;
-    game.vote = game.vote + 1;
-    game.save();
-    res.send({ message: "vote post successfully" });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-};
-
 exports.getOneGame = async (req, res) => {
   try {
     const game = await Game.findById(req.params.id);
@@ -64,9 +50,9 @@ exports.updateGame = async (req, res) => {
 };
 
 exports.category = async (req, res) => {
-  const { Category } = req.body;
+  const { category } = req.body;
   try {
-    const game = await Game.find({ category: Category });
+    const game = await Game.find({ category });
     if (!game) return res.status(404).send("Not Found");
     res.send(game);
   } catch (error) {

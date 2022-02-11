@@ -9,7 +9,7 @@ const notificationSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Users",
     },
-    expiry_date: Date,
+    expiryDate: Date,
   },
   {
     timestamps: true,

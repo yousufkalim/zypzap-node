@@ -26,7 +26,7 @@ const userSchema = new Schema(
     following: [
       {
         type: Schema.Types.ObjectId,
-        ref: "user",
+        ref: "Users",
       },
     ],
     creator: {
@@ -52,8 +52,8 @@ const userSchema = new Schema(
           type: Schema.Types.ObjectId,
           ref: "Courses",
         },
-        status: {
-          type: String,
+        started: {
+          type: Boolean,
         },
       },
     ],
@@ -64,7 +64,9 @@ const userSchema = new Schema(
       },
     ],
     subscription: {
-      type: String,
+      subscribed: { type: Boolean, default: false },
+      start_date: Date,
+      end_date: Date,
     },
     tokens: [
       {

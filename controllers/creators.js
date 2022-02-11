@@ -1,3 +1,4 @@
+const { Query } = require("mongoose");
 const Creator = require("../models/creators");
 const User = require("../models/users");
 
@@ -55,17 +56,14 @@ exports.getCreator = async (req, res) => {
   }
 };
 exports.getsearch = async (req, res) => {
-  const { name } = req.body;
+  const name = req.query.name;
   try {
     const users = await User.find({
       username: { $regex: name, $options: "$i" },
       creator: { $ne: null },
     });
-    if (users.length === 0) {
-      res.status(404).send("Not Found");
-    } else {
-      res.send(users);
-    }
+    const Creator = users.filter((user) => users.creator !== null);
+    res.send(Creator);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -78,34 +76,22 @@ exports.addFollower = async (req, res) => {
     if (!user || !creator) {
       return res.status(400).send({ message: "user or creator not found" });
     }
-    if (user.creator) {
-      const creatorAsUser = Creator.findById(user.creator);
-      Creator.updateOne(
-        { _id: creatorAsUser._id },
-        { $push: { following: creator.user_id } }
-      );
 
-      const creator = Creator.findById(creator_id);
-      Creator.updateOne({ _id: creator_id }, { $push: { follower: user_id } });
-      res.send("Following Successfully", creator, creatorAsUser);
-    } else {
-      const updateUser = await User.updateOne(
-        { _id: user_id },
-        {
-          $push: { following: creator.user_id },
-        },
-        { new: true }
-      );
-      // console.log(creator, "Creatoor");
-      // creator.followers.push(user_id);
-      // await creator.save();
-      const creator1 = await Creator.updateOne(
-        { _id: creator_id },
-        { $push: { follower: user_id } },
-        { new: true }
-      );
-      res.send("Following Successfully");
-    }
+    const updateUser = await User.updateOne(
+      { _id: user_id },
+      {
+        $push: { following: creator.user_id },
+      },
+      { new: true }
+    );
+
+    const creator1 = await Creator.updateOne(
+      { _id: creator_id },
+      { $push: { follower: user_id } },
+      { new: true }
+    );
+
+    res.send("Following Successfully");
   } catch (error) {
     res.status(500).send(error.message);
   }

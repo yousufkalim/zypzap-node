@@ -26,9 +26,6 @@ const courseSchema = new Schema(
     price: {
       type: Number,
     },
-    views: {
-      type: String,
-    },
     level: {
       type: Number,
     },
@@ -41,12 +38,11 @@ const courseSchema = new Schema(
     },
     plateform: {
       type: String,
+      enum: ["xbox", "pc", "mobile", "ps4"],
     },
-    mood: {
+    mode: {
       type: String,
-    },
-    type: {
-      type: String,
+      enum: ["single", "multiplayer"],
     },
   },
   {

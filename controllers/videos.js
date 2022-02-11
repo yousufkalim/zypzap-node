@@ -72,22 +72,10 @@ exports.addViews = async (req, res) => {
   try {
     const video = await Video.findById(video_id);
     if (!video)
-      return res.status(400).send({ message: "Vedio Id is not valid" });
+      return res.status(400).send({ message: "Video Id is not valid" });
     video.views = video.views + 1;
-    vedio.save();
+    video.save();
     res.send(video);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-};
-exports.getviews = async (req, res) => {
-  const video_id = req.params.id;
-  try {
-    const video = await Video.findById(video_id);
-    if (!video)
-      return res.status(400).send({ message: "Vedio Id is not valid" });
-    let views = video.views;
-    res.send({ "Total Views": views });
   } catch (error) {
     res.status(500).send(error);
   }

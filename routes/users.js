@@ -6,8 +6,10 @@ const {
   getOneUser,
   updateOneUser,
   deleteOneUser,
-  postFavoriteCourse,
+  addToWishLists,
   setSubscription,
+  enrolledCourse,
+  enrolledCourseAndStarted,
 } = require("../controllers/users");
 const {
   loginUser,
@@ -22,10 +24,13 @@ const {
 } = require("../middleware/validators/users");
 
 // Routes
+//Enrolled Courses
+router.post("/enrolledCourse", auth, enrolledCourse);
+router.post("/enrolledCourseAndStarted", auth, enrolledCourseAndStarted);
 router.post("/setSubscription", auth, setSubscription);
 router.get("/getuserbytoken", auth, getData);
 router.get("/", getAllUsers);
-router.post("/favoriteCourse", auth, postFavoriteCourse);
+router.post("/addToWishLists", auth, addToWishLists);
 // SignUp
 router.post("/", validateUsers, isValidated, createUser);
 router.get("/:id", getOneUser);

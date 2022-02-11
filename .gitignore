@@ -6,7 +6,7 @@
 .pnp.js
 /.vscode
 /uploads
-/ 
+/videos 
 # testing
 /coverage
 # cache

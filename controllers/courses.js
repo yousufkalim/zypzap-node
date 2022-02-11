@@ -48,7 +48,7 @@ const coursesFilter = (game_type, Plateform, Mode, Price, course_type) => {
     myFind = [...myFind, { plateform: Plateform }];
   }
   if (Mode) {
-    myFind = [...myFind, { mood: Mode }];
+    myFind = [...myFind, { mode: Mode }];
   }
   if (Price) {
     myFind = [...myFind, { price: { $lt: Price } }];
@@ -89,14 +89,11 @@ exports.getOneCourse = async (req, res) => {
   }
 };
 exports.searchCourse = async (req, res) => {
-  //const _id = req.params.id;
-  const { name } = req.body;
+  const name = req.query.name;
   try {
     const course = await Course.find({
       course_name: { $regex: name, $options: "$i" },
     });
-
-    if (!course) res.status(404).send("Not Found");
     res.send(course);
   } catch (error) {
     res.status(500).send(error);
@@ -132,31 +129,30 @@ exports.updateCourse = async (req, res) => {
   }
 };
 exports.deleteCourse = async (req, res) => {
-  const _id = req.params.id;
+  const { course_id } = req.params.id;
   try {
-    const deletedCourse = await Rating.findByIdAndDelete(_id);
-    if (!deletedCourse) return res.status(404).send("Rating not found");
-    res.send(deletedCourse);
+    const deletedCourse = await Course.findByIdAndDelete(course_id);
+    if (!deletedCourse) return res.status(404).send("Course not found");
+    const Creator = await Creater.findById(deletedCourse.creator);
+    if (!Creator) return res.status(404).send("Creator not found");
+    const courses = Creator.courses;
+    const newCourses = courses.filter((course) => course !== course_id);
+    Creater.courses = newCourses;
+    Creator.save();
+    const users = await User.updateMany(
+      { enrolled_courses: course_id },
+      {
+        $pull: {
+          enrolled_courses: {
+            course_id: {
+              $in: course_id,
+            },
+          },
+        },
+      }
+    );
+    res.send(users);
   } catch (error) {
     res.status(500).send(error);
   }
 };
-// when a new viewer see a course
-exports.postViews = async (req, res) => {
-  const _id = req.params.id;
-  try {
-    const Course = await Rating.findById(_id);
-    Course.views = Course.views + 1;
-    await Course.save();
-    res.send(Course);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-};
-//cron-job that will run after every 10days to delete all expired notifications from DB
-cron.schedule("0 5 */7 * *", async () => {
-  const timeNow = new Date();
-  const delNotifications = await Notifications.deleteMany({
-    expiry_date: { $lt: timeNow },
-  });
-});

@@ -22,12 +22,6 @@ const creatorSchema = new Schema(
         ref: "Users",
       },
     ],
-    following: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Users",
-      },
-    ],
     audience: {
       type: String,
     },
