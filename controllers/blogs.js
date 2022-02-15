@@ -22,7 +22,6 @@ exports.createBlog = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
 exports.getAllBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find().populate("blog_author");
@@ -48,7 +47,6 @@ exports.getOneBlog = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
 exports.updateBlog = async (req, res) => {
   const _id = req.params.id;
 
@@ -72,7 +70,6 @@ exports.updateBlog = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
 exports.deleteBlog = async (req, res) => {
   const _id = req.params.id;
   try {

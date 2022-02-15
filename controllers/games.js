@@ -12,7 +12,7 @@ exports.getAllGames = async (req, res) => {
 
 exports.getOneGame = async (req, res) => {
   try {
-    const game = await Game.findOneById(req.params.id);
+    const game = await Game.findById(req.params.id);
     if (!game) return res.status(404).send("Not Found");
     res.send(game);
   } catch (error) {
@@ -48,3 +48,15 @@ exports.updateGame = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+exports.category = async (req, res) => {
+  const { category } = req.body;
+  try {
+    const game = await Game.find({ category });
+    if (!game) return res.status(404).send("Not Found");
+    res.send(game);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+//  missing delete API

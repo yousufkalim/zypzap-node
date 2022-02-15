@@ -27,7 +27,7 @@ const contentRequestSchema = new Schema(
     ],
   },
   {
-    timeStamp: true,
+    timestamps: true,
   }
 );
 

@@ -1,4 +1,5 @@
 const User = require("../models/users");
+const Course = require("../models/courses");
 const bcrypt = require("bcryptjs");
 const { auth } = require("../middleware/auth");
 
@@ -20,7 +21,6 @@ exports.createUser = async (req, res) => {
     });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
-    console.log("user is user", user);
 
     await user.save();
     res.json({ message: "User Registered Successfully" });
@@ -29,27 +29,100 @@ exports.createUser = async (req, res) => {
     res.status(500).send(error);
   }
 };
+exports.setSubscription = async (req, res) => {
+  const { user_id } = req.body;
+  try {
+    let user = await User.findById(user_id);
+    if (!user) return res.status(404).send("User Not Found");
 
+    const daysCount = new Date().getTime() + 2592000000; //To set Expiry date for notification (!month)
+    const thirthyDays = new Date(daysCount);
+    user.subscription.subscribed = true;
+    user.subscription.start_date = new Date.now();
+    user.subscription.end_date = thirthyDays;
+    res.json({ message: "Get Subscription" });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
+exports.enrolledCourseAndStarted = async (req, res) => {
+  const { course_id, user_id } = req.body;
+  //console.log("Enter");
+  try {
+    const course = await Course.findById(course_id);
+    if (!course) return res.send({ message: "Course not found" });
+    const user = await User.findByIdAndUpdate(
+      user_id,
+      {
+        $set: { enrolled_courses: { started: true } },
+      },
+      { new: true }
+    );
+    if (user === null) return res.send({ message: "User not found" });
+    res.send(user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
+exports.enrolledCourse = async (req, res) => {
+  const { course_id, user_id } = req.body;
+  //console.log("Enter");
+  try {
+    const course = await Course.findById(course_id);
+    if (!course) return res.send({ message: "Course not found" });
+    const user = await User.findByIdAndUpdate(
+      user_id,
+      {
+        $push: { enrolled_courses: { course_id, started: false } },
+      },
+      { new: true }
+    );
+    if (user === null) return res.send({ message: "User not found" });
+    res.send(user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
+    if (!users) return res.status(404).send("Users Not Found");
     res.send(users);
   } catch (error) {
     res.status(500).send(error);
   }
 };
-
+exports.addToWishLists = async (req, res) => {
+  const { course_id, user_id } = req.body;
+  try {
+    const users = await User.findById(user_id);
+    const course = await Course.findById(course_id);
+    if (!users || !course) {
+      return res.status(404).send("User Not Found");
+    } else {
+      const user = await User.updateOne(
+        { _id: user_id },
+        {
+          $push: { wishlist_courses: course_id },
+        },
+        { new: true }
+      );
+      res.send(user);
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
 exports.getOneUser = async (req, res) => {
   const _id = req.params.id;
   try {
     const user = await User.findOne({ _id });
-    if (!user) return res.status(404).send("Usemr Not Found");
+    if (!user) return res.status(404).send("User Not Found");
     res.send(user);
   } catch (error) {
     res.status(500).send(error);
   }
 };
-
 exports.updateOneUser = async (req, res) => {
   const _id = req.params.id;
   const updates = Object.keys(req.body);
@@ -62,7 +135,6 @@ exports.updateOneUser = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
 exports.deleteOneUser = async (req, res) => {
   const _id = req.params.id;
   try {

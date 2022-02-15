@@ -20,7 +20,7 @@ const ratingSchema = new Schema(
     },
   },
   {
-    timeStamp: true,
+    timestamps: true,
   }
 );
 

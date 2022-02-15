@@ -7,6 +7,8 @@ const {
   createCourse,
   updateCourse,
   deleteCourse,
+  searchCourse,
+  getFilteredCourses,
 } = require("../controllers/courses");
 const {
   validateCourses,
@@ -14,7 +16,9 @@ const {
 } = require("../middleware/validators/courses");
 
 // Routes
+router.get("/search", auth, searchCourse);
 router.post("/", auth, validateCourses, isValidated, createCourse);
+router.get("/filteredCourses", auth, getFilteredCourses);
 router.get("/", auth, getAllCourses);
 router.get("/:id", auth, getOneCourse);
 router.put("/:id", auth, validateCourses, isValidated, updateCourse);

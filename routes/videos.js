@@ -8,6 +8,7 @@ const {
   updateVideo,
   deleteVideo,
   watchVideo,
+  addViews,
 } = require("../controllers/videos");
 const {
   validateVideos,
@@ -16,10 +17,12 @@ const {
 const { auth } = require("../middleware/auth");
 
 // Routes
+
 router.get("/", auth, getAllVideos);
 router.get("/:id", getOneVideo);
 router.get("/watch/:id", watchVideo);
 router.post("/", auth, videoUpload.single("video"), postVideo);
+router.post("/addviews/:id", addViews);
 router.put("/:id", auth, validateVideos, isValidated, updateVideo);
 router.delete("/:id", auth, deleteVideo);
 // Export

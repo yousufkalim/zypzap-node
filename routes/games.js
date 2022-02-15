@@ -13,6 +13,7 @@ const {
 } = require("../middleware/validators/games");
 
 // Routes
+
 router.get("/", getAllGames);
 router.get("/:id", getOneGame);
 router.post("/", auth, validateGames, isValidated, createGame);

@@ -20,25 +20,33 @@ const courseSchema = new Schema(
     duration: {
       type: String,
     },
-
+    rating: {
+      type: Number,
+    },
     price: {
       type: Number,
     },
     level: {
-      type: String,
+      type: Number,
     },
-    game_id: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Games",
-      },
-    ],
+    game_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Games",
+    },
     description: {
       type: String,
     },
+    plateform: {
+      type: String,
+      enum: ["xbox", "pc", "mobile", "ps4"],
+    },
+    mode: {
+      type: String,
+      enum: ["single", "multiplayer"],
+    },
   },
   {
-    timeStamp: true,
+    timestamps: true,
   }
 );
 

@@ -19,11 +19,16 @@ const userSchema = new Schema(
         unique: true,
       },
     ],
-
     password: {
       type: String,
       required: true,
     },
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Users",
+      },
+    ],
     creator: {
       type: Schema.Types.ObjectId,
       ref: "Creators",
@@ -47,10 +52,21 @@ const userSchema = new Schema(
           type: Schema.Types.ObjectId,
           ref: "Courses",
         },
+        started: {
+          type: Boolean,
+        },
+      },
+    ],
+    wishlist_courses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Courses",
       },
     ],
     subscription: {
-      type: String,
+      subscribed: { type: Boolean, default: false },
+      start_date: Date,
+      end_date: Date,
     },
     tokens: [
       {
@@ -60,9 +76,10 @@ const userSchema = new Schema(
         },
       },
     ],
+    notifications: [{ type: Schema.Types.ObjectId, ref: "notifications" }],
   },
   {
-    timeStamp: true,
+    timestamps: true,
   }
 );
 
