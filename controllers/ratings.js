@@ -20,17 +20,17 @@ exports.getOneRating = async (req, res) => {
   }
 };
 exports.createRatings = async (req, res) => {
-  const { Rating, Course, rating_by } = req.body;
+  const { rating, course, rating_by } = req.body;
   try {
     const user = await User.findById(rating_by);
-    const newCourse = await Course.findById(Course);
+    const newCourse = await Course.findById(course);
     if (!user || !newCourse)
       return res.status(400).send({ message: "Invalid user or course" });
-    const preRating = await Rating.find({ course: Course });
+    const preRating = await Rating.find({ course: course });
     if (preRating.length === 0) {
       const course = await Course.findByIdAndUpdate(
         req.body.course,
-        { rating: Rating },
+        { rating: rating },
         {
           new: true,
           runValidators: true,

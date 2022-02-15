@@ -2,10 +2,11 @@ const User = require("../models/users");
 const Course = require("../models/courses");
 const bcrypt = require("bcryptjs");
 const { auth } = require("../middleware/auth");
+const passport = require("../middleware/socialLogin/withGoogle");
 
 exports.createUser = async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    const { user_name, email, password, role } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
     if (user)
@@ -13,7 +14,7 @@ exports.createUser = async (req, res) => {
 
     // Create User Object
     user = new User({
-      username,
+      user_name,
       email,
       password,
       role,
@@ -29,18 +30,28 @@ exports.createUser = async (req, res) => {
     res.status(500).send(error);
   }
 };
+// return a message if subscribed successfully
 exports.setSubscription = async (req, res) => {
   const { user_id } = req.body;
   try {
     let user = await User.findById(user_id);
     if (!user) return res.status(404).send("User Not Found");
 
-    const daysCount = new Date().getTime() + 2592000000; //To set Expiry date for notification (!month)
+    const daysCount = new Date().getTime() + 2592000000; //To set Expiry date for subscription (!month)
     const thirthyDays = new Date(daysCount);
     user.subscription.subscribed = true;
     user.subscription.start_date = new Date.now();
     user.subscription.end_date = thirthyDays;
-    res.json({ message: "Get Subscription" });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
+exports.addProfileInfo = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
+    res.json(user);
   } catch (error) {
     res.status(400).send(error);
   }
@@ -127,7 +138,7 @@ exports.updateOneUser = async (req, res) => {
   const _id = req.params.id;
   const updates = Object.keys(req.body);
   try {
-    const user = await req.user;
+    const user = req.user;
     updates.forEach((update) => (user[update] = req.body[update]));
     await user.save();
     res.send(user);

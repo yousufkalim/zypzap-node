@@ -1,5 +1,6 @@
 // Init
 const router = require("express").Router();
+const passport = require("../middleware/socialLogin/withGoogle");
 const {
   getAllUsers,
   createUser,
@@ -10,6 +11,8 @@ const {
   setSubscription,
   enrolledCourse,
   enrolledCourseAndStarted,
+  addProfileInfo,
+  googleLoging,
 } = require("../controllers/users");
 const {
   loginUser,
@@ -31,6 +34,7 @@ router.post("/setSubscription", auth, setSubscription);
 router.get("/getuserbytoken", auth, getData);
 router.get("/", getAllUsers);
 router.post("/addToWishLists", auth, addToWishLists);
+router.post("/addProfileInfo/:id", auth, addProfileInfo);
 // SignUp
 router.post("/", validateUsers, isValidated, createUser);
 router.get("/:id", getOneUser);

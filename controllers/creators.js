@@ -1,14 +1,13 @@
-const { Query } = require("mongoose");
 const Creator = require("../models/creators");
 const User = require("../models/users");
 
 exports.postCreator = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    let creator = await Creator.findOne({ user_id: req.params.id });
+    const _id = req.params.id;
+    const user = await User.findById(_id);
+    let creator = await Creator.findById(_id);
     if (creator)
       return res.status(400).send({ message: "User is already a creator" });
-
     if (!user) return res.status(400).send("User Not Found");
     creator = new Creator({ ...req.body, user_id: req.params.id });
 
@@ -32,14 +31,14 @@ exports.postCreator = async (req, res) => {
   }
 };
 exports.addDetails = async (req, res) => {
-  const { goodGame, isOnline, level, audience } = req.body;
+  const { goodGame, is_Online, level, audience } = req.body;
   try {
     let creator = await Creator.findOne({ _id: req.params.id });
     creator.gameyouaregoodat = goodGame;
-    creator.onlineTeaching = isOnline;
+    creator.onlineTeaching = is_Online;
     creator.level = level;
     creator.audience = audience;
-    creator.save();
+    await creator.save();
 
     res.send(creator);
   } catch (error) {
@@ -91,7 +90,7 @@ exports.addFollower = async (req, res) => {
       { new: true }
     );
 
-    res.send("Following Successfully");
+    res.send({ success: "Following Successfully" });
   } catch (error) {
     res.status(500).send(error.message);
   }

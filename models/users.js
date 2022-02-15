@@ -68,6 +68,21 @@ const userSchema = new Schema(
       start_date: Date,
       end_date: Date,
     },
+    prefrence_games: {
+      favourite_games: [{ type: Schema.Types.ObjectId, ref: "Games" }],
+      play_period: {
+        type: String,
+      },
+      play_time_per_perioad: {
+        type: Number,
+      },
+      current_level: {
+        type: String,
+      },
+      target_level: {
+        type: String,
+      },
+    },
     tokens: [
       {
         token: {
@@ -92,13 +107,4 @@ userSchema.methods.toJSON = function () {
   delete userObject.tokens;
   return userObject;
 };
-
-// userSchema.pre("save", async function (next) {
-//   const user = this;
-//   if (user.isModified("password")) {
-//     user.password = await bcrypt.hash(user.password, 8);
-//   }
-//   next();
-// });
-
 module.exports = model("Users", userSchema);
