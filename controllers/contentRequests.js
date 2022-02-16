@@ -61,3 +61,17 @@ exports.deleteContentRequest = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+exports.contentRequestVote = async (req, res) => {
+  const { course_request_id, user_id } = req.body;
+  try {
+    const contentRequest = await ContentRequest.findByIdAndUpdate(
+      course_request_id,
+      {
+        $push: { likes: user_id },
+      },
+      { new: true }
+    );
+    res.send(contentRequest);
+  } catch (error) {}
+};

@@ -7,6 +7,7 @@ const {
   getOneContentRequest,
   updateContentRequest,
   deleteContentRequest,
+  contentRequestVote,
 } = require("../controllers/contentRequests");
 const {
   validateContentRequests,
@@ -23,6 +24,7 @@ router.post(
 );
 router.get("/", getAllContentRequests);
 router.get("/:id", getOneContentRequest);
+router.put("/postCoursesVote", contentRequestVote);
 router.put(
   "/:id",
   auth,

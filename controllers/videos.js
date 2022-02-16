@@ -51,7 +51,6 @@ exports.watchVideo = async (req, res) => {
   }
 };
 exports.postVideo = async (req, res) => {
-  // console.log("file info", req.file);
   try {
     const video = new Video({
       ...req.body,
@@ -71,8 +70,7 @@ exports.addViews = async (req, res) => {
   const video_id = req.params.id;
   try {
     const video = await Video.findById(video_id);
-    if (!video)
-      return res.status(400).send({ message: "Video Id is not valid" });
+    if (!video) return res.status(400).send({ message: "Video not found" });
     video.views = video.views + 1;
     video.save();
     res.send(video);

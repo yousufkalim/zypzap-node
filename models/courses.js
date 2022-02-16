@@ -28,6 +28,7 @@ const courseSchema = new Schema(
     },
     level: {
       type: Number,
+      enum: ["1", "2", "3", "4", "5"],
     },
     game_id: {
       type: Schema.Types.ObjectId,
@@ -38,7 +39,7 @@ const courseSchema = new Schema(
     },
     plateform: {
       type: String,
-      enum: ["xbox", "pc", "mobile", "ps4"],
+      enum: ["xbox", "pc", "mobile", "ps1"],
     },
     mode: {
       type: String,

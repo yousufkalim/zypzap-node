@@ -2,6 +2,7 @@ const Course = require("../models/courses");
 const User = require("../models/users");
 const Creater = require("../models/creators");
 const Notifications = require("../models/notifications");
+const mongoose = require("mongoose");
 let cron = require("node-cron");
 
 exports.createCourse = async (req, res) => {
@@ -34,9 +35,16 @@ exports.createCourse = async (req, res) => {
 };
 exports.getAllCourses = async (req, res) => {
   try {
-    const courses = await Course.find();
+    console.log("i am here");
+    const courses = await Course.find().populate({
+      path: "creator",
+      populate: {
+        path: "user_id",
+        model: "Users",
+      },
+    });
     if (!courses) res.status(404).send("Courses Not Found");
-
+    console.log("courses", courses);
     res.send(courses);
   } catch (error) {
     res.status(500).send(error);
@@ -58,7 +66,7 @@ const coursesFilter = (game_type, Plateform, Mode, Price, course_type) => {
   }
   return myFind;
 };
-//   filter Courses by game_type, Plateform, Mode, Price, course_type
+// filter Courses by game_type, Plateform, Mode, Price, course_type
 exports.getFilteredCourses = async (req, res) => {
   const { game_type, Plateform, Mode, Price, course_type, Category } = req.body;
   try {
@@ -72,8 +80,10 @@ exports.getFilteredCourses = async (req, res) => {
       GameType = courses.filter(
         (course) => course?.game_id?.category === game_type
       );
+      res.send(GameType);
+    } else {
+      res.send(courses);
     }
-    res.send(GameType);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -129,7 +139,7 @@ exports.updateCourse = async (req, res) => {
   }
 };
 exports.deleteCourse = async (req, res) => {
-  const { course_id } = req.params.id;
+  const course_id = req.params.id;
   try {
     const deletedCourse = await Course.findByIdAndDelete(course_id);
     if (!deletedCourse) return res.status(404).send("Course not found");
@@ -138,20 +148,12 @@ exports.deleteCourse = async (req, res) => {
     const courses = Creator.courses;
     const newCourses = courses.filter((course) => course !== course_id);
     Creater.courses = newCourses;
-    Creator.save();
-    const users = await User.updateMany(
-      { enrolled_courses: course_id },
-      {
-        $pull: {
-          enrolled_courses: {
-            course_id: {
-              $in: course_id,
-            },
-          },
-        },
-      }
+    const creator = await Creator.save();
+    const user = await User.updateMany(
+      { "enrolled_courses.course_id": course_id },
+      { $pull: { enrolled_courses: { course_id: course_id } } }
     );
-    res.send(users);
+    res.send(deletedCourse);
   } catch (error) {
     res.status(500).send(error);
   }

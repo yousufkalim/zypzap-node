@@ -15,6 +15,7 @@ const creatorSchema = new Schema(
     },
     gameLevel: {
       type: String,
+      enum: ["initial", "medium", "pro"],
     },
     followers: [
       {
