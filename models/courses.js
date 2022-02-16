@@ -27,12 +27,16 @@ const courseSchema = new Schema(
       type: Number,
     },
     level: {
-      type: Number,
-      enum: ["1", "2", "3", "4", "5"],
+      type: String,
+      enum: ["inital Level", "medium Level", "Advance Level"],
     },
     game_id: {
       type: Schema.Types.ObjectId,
       ref: "Games",
+    },
+    student: {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
     },
     description: {
       type: String,

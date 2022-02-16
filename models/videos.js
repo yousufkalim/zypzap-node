@@ -62,6 +62,7 @@ const videoSchema = new Schema(
       type: String,
       enum: ["Publish", "Process", "Private", "Restricted", "Edited", "Review"],
     },
+    duration: { type: Number },
     thumbnail: {
       type: String,
     },

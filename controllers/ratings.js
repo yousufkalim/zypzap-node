@@ -20,20 +20,21 @@ exports.getOneRating = async (req, res) => {
   }
 };
 exports.createRatings = async (req, res) => {
-  const { rating, course, rating_by } = req.body;
+  const { rating, course, rating_by, comment } = req.body;
   try {
     const user = await User.findById(rating_by);
     const newCourse = await Course.findById(course);
+
     if (!user || !newCourse)
       return res.status(400).send({ message: "Invalid user or course" });
     const preRating = await Rating.find({ course: course });
     if (preRating.length === 0) {
-      const course = await Course.findByIdAndUpdate(
-        req.body.course,
+      const newCourse = await Course.findByIdAndUpdate(
+        course,
         { rating: rating },
         {
-          new: true,
-          runValidators: true,
+            new: true,
+            runValidators: true,
         }
       );
     } else {
@@ -43,14 +44,14 @@ exports.createRatings = async (req, res) => {
         point += rate.rating;
       });
       const avr = (point / length).toFixed(1);
-      const course = await Course.findByIdAndUpdate(req.body.course, {
+      const course = await Course.findByIdAndUpdate(course, {
         rating: avr,
       });
     }
 
-    const rating = new Rating(req.body);
-    await rating.save();
-    res.send(rating);
+    const newRating = new Rating(req.body);
+    await newRating.save();
+    res.send(newRating);
   } catch (error) {
     res.status(500).send(error);
   }

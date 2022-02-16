@@ -6,7 +6,7 @@ const passport = require("./auth/withGoogle");
 
 exports.createUser = async (req, res) => {
   try {
-    const { user_name, email, password, role } = req.body;
+    const { username, email, password, role } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
     if (user)
@@ -14,7 +14,7 @@ exports.createUser = async (req, res) => {
 
     // Create User Object
     user = new User({
-      user_name,
+      username,
       email,
       password,
       role,
@@ -77,9 +77,11 @@ exports.enrolledCourseAndStarted = async (req, res) => {
 };
 exports.enrolledCourse = async (req, res) => {
   const { course_id, user_id } = req.body;
-  //console.log("Enter");
+  console.log("Enter", user_id);
   try {
-    const course = await Course.findById(course_id);
+    const course = await Course.findByIdAndUpdate(course_id, {
+      $push: { student: user_id },
+    });
     if (!course) return res.send({ message: "Course not found" });
     const user = await User.findByIdAndUpdate(
       user_id,
@@ -89,7 +91,11 @@ exports.enrolledCourse = async (req, res) => {
       { new: true }
     );
     if (user === null) return res.send({ message: "User not found" });
-    res.send(user);
+    console.log("user", user);
+    // course.student.push(user_id);
+    // await course.save();
+    console.log("course", course);
+    res.send(course);
   } catch (error) {
     res.status(400).send(error);
   }

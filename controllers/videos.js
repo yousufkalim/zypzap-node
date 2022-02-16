@@ -1,8 +1,10 @@
 const fs = require("fs");
 const path = require("path");
+const { getVideoDurationInSeconds } = require("get-video-duration");
 
 // Note: All these need to be done
 const Video = require("../models/videos");
+const Course = require("../models/courses");
 
 exports.getAllVideos = async (req, res) => {
   try {
@@ -52,16 +54,35 @@ exports.watchVideo = async (req, res) => {
 };
 exports.postVideo = async (req, res) => {
   try {
+    const { course_id } = req.body;
+    const path = req.file.path;
+    let duration;
+    await getVideoDurationInSeconds(path).then((d) => {
+      // console.log("duration", d);
+      duration = d;
+    });
+    console.log("duration", duration);
     const video = new Video({
       ...req.body,
       src_url: req.file.path,
       views: 0,
+      duration: duration,
       file_props: {
         ...req.file,
       },
     });
+    console.log("Video", video);
     await video.save();
-    res.send(video);
+    const course = await Course.findByIdAndUpdate(
+      course_id,
+      {
+        $push: { videos: video._id },
+      },
+      {
+        new: true,
+      }
+    );
+    res.send(course);
   } catch (error) {
     res.status(500).send(error);
   }
