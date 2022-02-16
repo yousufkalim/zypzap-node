@@ -62,7 +62,7 @@ exports.deleteContentRequest = async (req, res) => {
   }
 };
 
-exports.postCoursesVote = async (req, res) => {
+exports.contentRequestVote = async (req, res) => {
   const { course_request_id, user_id } = req.body;
   try {
     const contentRequest = await ContentRequest.findByIdAndUpdate(

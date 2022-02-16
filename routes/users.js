@@ -1,6 +1,6 @@
 // Init
 const router = require("express").Router();
-const passport = require("../middleware/socialLogin/withGoogle");
+const passport = require("../controllers/auth/withGoogle");
 const {
   getAllUsers,
   createUser,

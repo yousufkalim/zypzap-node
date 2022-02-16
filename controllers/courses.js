@@ -35,9 +35,16 @@ exports.createCourse = async (req, res) => {
 };
 exports.getAllCourses = async (req, res) => {
   try {
-    const courses = await Course.find();
+    console.log("i am here");
+    const courses = await Course.find().populate({
+      path: "creator",
+      populate: {
+        path: "user_id",
+        model: "Users",
+      },
+    });
     if (!courses) res.status(404).send("Courses Not Found");
-
+    console.log("courses", courses);
     res.send(courses);
   } catch (error) {
     res.status(500).send(error);

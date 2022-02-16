@@ -2,7 +2,7 @@ const User = require("../models/users");
 const Course = require("../models/courses");
 const bcrypt = require("bcryptjs");
 const { auth } = require("../middleware/auth");
-const passport = require("../middleware/socialLogin/withGoogle");
+const passport = require("./auth/withGoogle");
 
 exports.createUser = async (req, res) => {
   try {
