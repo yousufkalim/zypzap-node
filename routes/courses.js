@@ -17,7 +17,7 @@ const {
 
 // Routes
 router.get("/", getAllCourses);
-router.get("/search", auth, searchCourse);
+router.get("/search", searchCourse);
 router.post("/", auth, validateCourses, isValidated, createCourse);
 router.get("/filteredCourses", auth, getFilteredCourses);
 router.get("/:id", auth, getOneCourse);

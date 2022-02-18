@@ -58,10 +58,9 @@ exports.postVideo = async (req, res) => {
     const path = req.file.path;
     let duration;
     await getVideoDurationInSeconds(path).then((d) => {
-      // console.log("duration", d);
       duration = d;
     });
-    console.log("duration", duration);
+
     const video = new Video({
       ...req.body,
       src_url: req.file.path,
