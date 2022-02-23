@@ -16,7 +16,7 @@ exports.createContentRequest = async (req, res) => {
 
 exports.getAllContentRequests = async (req, res) => {
   try {
-    const contentRequests = await ContentRequest.find();
+    const contentRequests = await ContentRequest.find().populate("game");
     if (!contentRequests)
       return res.status(404).send("Content Requests does not Found");
     res.send(contentRequests);

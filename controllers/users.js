@@ -14,7 +14,7 @@ exports.createUser = async (req, res) => {
 
     // Create User Object
     user = new User({
-      userName,
+      username,
       email,
       password,
       role,
@@ -159,7 +159,7 @@ exports.deleteOneUser = async (req, res) => {
 // upload image
 exports.uploadProfileImage = async (req, res) => {
   try {
-    console.log("req.file.location", req.file);
+
     const _id = req.params.id;
     const path = req.file.location;
     const user = await User.findByIdAndUpdate(

@@ -9,6 +9,21 @@ const gameSchema = new Schema(
     category: {
       type: String,
       required: true,
+      enum: [
+        "Action",
+        "Adventure",
+        "Metaverse",
+        "MMOG",
+        "Car Racing",
+        "FPS",
+        "RTS",
+        "RPG",
+        "Turn by Turn Strategy",
+        "Simulation",
+        "Sport",
+        "Trading card",
+        "Puzzle",
+      ],
     },
     vote: {
       type: Number,

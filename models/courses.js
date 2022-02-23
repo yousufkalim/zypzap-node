@@ -43,7 +43,14 @@ const courseSchema = new Schema(
     },
     plateform: {
       type: String,
-      enum: ["xbox", "pc", "mobile", "ps1"],
+      enum: [
+        "PC",
+        "Mobile Games",
+        "PS1/2/3/4/5",
+        "Xbox/360/One/X",
+        "Retro Consoles",
+        "Portable Consoles",
+      ],
     },
     thumbnail: {
       type: String,
