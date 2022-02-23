@@ -9,6 +9,8 @@ const User = require("./models/users");
 require("./database");
 app.use(passport.initialize());
 app.use(passport.session());
+const cors = require("cors");
+app.use(cors());
 // Middleware
 require("./middleware/common")(app);
 

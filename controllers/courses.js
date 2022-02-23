@@ -3,23 +3,49 @@ const User = require("../models/users");
 const Creater = require("../models/creators");
 const Notifications = require("../models/notifications");
 const mongoose = require("mongoose");
-let cron = require("node-cron");
 
 exports.createCourse = async (req, res) => {
-  const { creator } = req.body;
+  console.log("shcgjvchn", req.body);
+
   try {
-    const creater = await Creater.findById(creator).populate("followers");
-    if (!creator) return res.status(404).send("User does not found");
-    const course = new Course(req.body);
+    const {
+      game_id,
+      course_name,
+      creator,
+      price,
+      mode,
+      type,
+      plateform,
+      description,
+      level,
+    } = req.body;
+    const data = {
+      game_id,
+      course_name,
+      creator,
+      price,
+      mode,
+      type,
+      plateform,
+      description,
+      level,
+    };
+    const file = req.file;
+    console.log("file ", file);
+    const newCreator = await Creater.findById(creator).populate("followers");
+
+    if (!newCreator) return res.status(404).send("User does not found");
+    const course = new Course(data);
+    course.thumbnail = file.location;
     await course.save();
     const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
     const sevenDays = new Date(daysCount); //Set date after 7days
     const notification = await Notifications.create({
       title: "New Course added",
       expiry_date: sevenDays,
-      from: creator,
+      from: data.creator,
     });
-    creater.followers.map(async (follower) => {
+    newCreator.followers.map(async (follower) => {
       let Updateuser = await User.findByIdAndUpdate(
         follower.id,
         {
@@ -50,37 +76,38 @@ exports.getAllCourses = async (req, res) => {
     res.status(500).send(error);
   }
 };
-const coursesFilter = (game_type, Plateform, Mode, Price, course_type) => {
+const coursesFilter = (plateForm, mode, price) => {
   let myFind = [];
-  if (Plateform) {
-    myFind = [...myFind, { plateform: Plateform }];
+  if (plateForm) {
+    myFind = [...myFind, { plateform: plateForm }];
   }
-  if (Mode) {
-    myFind = [...myFind, { mode: Mode }];
+  if (mode) {
+    myFind = [...myFind, { mode: mode }];
   }
-  if (Price) {
-    myFind = [...myFind, { price: { $lt: Price } }];
-  }
-  if (course_type) {
-    myFind = [...myFind, { type: course_type }];
+  if (price) {
+    myFind = [...myFind, { price: { $lt: price } }];
   }
   return myFind;
 };
 // filter Courses by game_type, Plateform, Mode, Price, course_type
 exports.getFilteredCourses = async (req, res) => {
-  const { game_type, Plateform, Mode, Price, course_type, Category } = req.body;
   try {
-    let myFind = coursesFilter(Plateform, Mode, Price, course_type);
+    const gameType = req.query.gameType;
+    const plateForm = req.query.plateForm;
+    const mode = req.query.mode;
+    const price = req.query.price;
+    let myFind = coursesFilter(plateForm, mode, price);
     const courses = await Course.find({
-      $and: myFind,
-    }).populate("game_id");
-    if (!courses) return res.status(404).send("User does not found");
-    let GameType = [];
-    if (game_type) {
-      GameType = courses.filter(
-        (course) => course?.game_id?.category === game_type
+      $or: myFind,
+    }).populate("videos");
+
+    if (!courses) return res.status(404).send("Courses does not found");
+    let CoursesOfGame = [];
+    if (gameType) {
+      CoursesOfGame = courses.filter(
+        (course) => course?.game_id?.category === gameType
       );
-      res.send(GameType);
+      res.send(courses);
     } else {
       res.send(courses);
     }
@@ -103,7 +130,7 @@ exports.searchCourse = async (req, res) => {
   try {
     const course = await Course.find({
       course_name: { $regex: name, $options: "$i" },
-    });
+    }).populate("videos");
     res.send(course);
   } catch (error) {
     res.status(500).send(error);
@@ -111,11 +138,15 @@ exports.searchCourse = async (req, res) => {
 };
 exports.updateCourse = async (req, res) => {
   const _id = req.params.id;
+  const { mode } = req.body;
+  console.log("nbkcn", mode, "id", _id);
   try {
-    const course = await Course.findByIdAndUpdate(_id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const course = await Course.findByIdAndUpdate(
+      _id,
+      { mode: mode },
+      { new: true }
+    );
+    console.log("course", course);
     if (!course) return res.status(404).send("Course Not Found");
     const creator = await Creater.findById(course.creator).populate(
       "followers"
@@ -139,21 +170,44 @@ exports.updateCourse = async (req, res) => {
   }
 };
 exports.deleteCourse = async (req, res) => {
-  const course_id = req.params.id;
+  const courseId = req.params.id;
   try {
-    const deletedCourse = await Course.findByIdAndDelete(course_id);
+    const deletedCourse = await Course.findByIdAndDelete(courseId);
     if (!deletedCourse) return res.status(404).send("Course not found");
     const Creator = await Creater.findById(deletedCourse.creator);
     if (!Creator) return res.status(404).send("Creator not found");
     const courses = Creator.courses;
-    const newCourses = courses.filter((course) => course !== course_id);
+    const newCourses = courses.filter((course) => course !== courseId);
     Creater.courses = newCourses;
     const creator = await Creator.save();
-    const user = await User.updateMany(
-      { "enrolled_courses.course_id": course_id },
+    await User.updateMany(
+      { "enrolled_courses.course_id": courseId },
       { $pull: { enrolled_courses: { course_id: course_id } } }
     );
     res.send(deletedCourse);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+exports.getTopGames = async (req, res) => {
+  try {
+    const number = req.query.type;
+
+    if (number == 1) {
+      console.log("number", number);
+      const courses = await Course.find({})
+        .populate("videos")
+        .sort({ rating: -1 })
+        .limit(10);
+      res.send(courses);
+    }
+    if (number == 2) {
+      const courses = await Course.find({})
+        .populate("videos")
+        .sort({ createdAt: 1 })
+        .limit(10);
+      res.send(courses);
+    }
   } catch (error) {
     res.status(500).send(error);
   }

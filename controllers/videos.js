@@ -26,8 +26,8 @@ exports.getOneVideo = async (req, res) => {
   }
 };
 exports.watchVideo = async (req, res) => {
-  const _id = req.params.id;
   try {
+    const _id = req.params.id;
     const video = await Video.findById(_id);
     if (!video) res.status(404).send("Not Found");
     const range = req.headers.range;
@@ -54,7 +54,7 @@ exports.watchVideo = async (req, res) => {
 };
 exports.postVideo = async (req, res) => {
   try {
-    const { course_id } = req.body;
+    const { courseId } = req.body;
     const path = req.file.path;
     let duration;
     await getVideoDurationInSeconds(path).then((d) => {
@@ -66,11 +66,11 @@ exports.postVideo = async (req, res) => {
       src_url: req.file.path,
       views: 0,
       duration: duration,
+      course: courseId,
       file_props: {
         ...req.file,
       },
     });
-    console.log("Video", video);
     await video.save();
     const course = await Course.findByIdAndUpdate(
       course_id,
@@ -87,9 +87,9 @@ exports.postVideo = async (req, res) => {
   }
 };
 exports.addViews = async (req, res) => {
-  const video_id = req.params.id;
   try {
-    const video = await Video.findById(video_id);
+    const videoId = req.params.id;
+    const video = await Video.findById(videoId);
     if (!video) return res.status(400).send({ message: "Video not found" });
     video.views = video.views + 1;
     video.save();

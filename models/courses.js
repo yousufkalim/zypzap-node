@@ -45,9 +45,12 @@ const courseSchema = new Schema(
       type: String,
       enum: ["xbox", "pc", "mobile", "ps1"],
     },
+    thumbnail: {
+      type: String,
+    },
     mode: {
       type: String,
-      enum: ["single", "multiplayer"],
+      enum: ["Single", "Multiplayer"],
     },
   },
   {

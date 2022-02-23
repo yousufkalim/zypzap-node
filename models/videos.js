@@ -66,12 +66,10 @@ const videoSchema = new Schema(
     thumbnail: {
       type: String,
     },
-    course: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Courses",
-      },
-    ],
+    course: {
+      type: Schema.Types.ObjectId,
+      ref: "Courses",
+    },
   },
   {
     timestamps: true,
