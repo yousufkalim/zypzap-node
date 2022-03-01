@@ -40,7 +40,6 @@ exports.createRatings = async (req, res) => {
     } else {
       let point = 0;
       preRating.map((rate) => {
-        console.log(rate.rating, "rate", point);
         point += rate.rating;
       });
       const avr = (point / length).toFixed(1);

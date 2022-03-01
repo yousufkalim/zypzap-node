@@ -5,7 +5,6 @@ const { auth } = require("../middleware/auth");
 const passport = require("./auth/withGoogle");
 
 exports.createUser = async (req, res) => {
-  console.log("dddd", req.body);
   try {
     const { username, email, password, role } = req.body;
     // Check User Already Exists
@@ -51,7 +50,6 @@ exports.setSubscription = async (req, res) => {
 exports.addProfileInfo = async (req, res) => {
   try {
     const _id = req.params.id;
-    console.log("id", _id);
     const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
     res.json(user);
   } catch (error) {
@@ -161,7 +159,6 @@ exports.deleteOneUser = async (req, res) => {
 // upload image
 exports.uploadProfileImage = async (req, res) => {
   try {
-    console.log("user", req.file.location);
     const _id = req.params.id;
     const path = req.file.location;
     const user = await User.findByIdAndUpdate(

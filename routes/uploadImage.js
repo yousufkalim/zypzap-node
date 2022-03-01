@@ -6,7 +6,7 @@ const { imageUpload, upload } = require("../middleware/imageUpload");
 router.post("/", upload.array("file"), async (req, res) => {
   try {
     let files = req.files;
-    console.log(files);
+
     res.json({ file: files[0].location });
   } catch (error) {
     console.log("error message----->", error.message);

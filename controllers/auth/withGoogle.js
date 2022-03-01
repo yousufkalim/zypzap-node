@@ -12,7 +12,6 @@ const pass_port = passport.use(
     },
     async function (request, accessToken, refreshToken, profile, done) {
       const email = profile.email;
-      console.log("Profile", profile);
       return done({ profile });
     }
   )

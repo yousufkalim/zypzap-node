@@ -6,8 +6,6 @@ const Game = require("../models/games");
 const mongoose = require("mongoose");
 
 exports.createCourse = async (req, res) => {
-  console.log("shcgjvchn", req.body);
-
   try {
     const {
       game_id,
@@ -31,7 +29,6 @@ exports.createCourse = async (req, res) => {
       level,
     };
     const file = req.file;
-    console.log("file ", file);
     const newCreator = await Creater.findById(creator).populate("followers");
 
     if (!newCreator) return res.status(404).send("User does not found");
@@ -97,7 +94,6 @@ const coursesFilter = (plateForm, mode, price) => {
       myFind = [...myFind, { price: { $lte: price } }];
     }
   }
-  console.log(" my Find", myFind);
   return myFind;
 };
 // filter Courses by game_type, Plateform, Mode, Price, course_type
@@ -112,30 +108,29 @@ exports.getFilteredCourses = async (req, res) => {
       return res.send(myFind);
     }
     if (myFind.length === 0 && gameType) {
-      const games = await Game.find({ category: gameType }, "_id");
-      let courses = [""];
-      games.map(async (g) => {
-        const c = await Course.find({ game_id: g._id });
-        courses = [...courses, c];
-      });
-      return res.send(courses);
-    }
-    const courses = await Course.find({
-      $and: myFind,
-    })
-      .populate("videos")
-      .populate("game_id");
-    if (!courses) return res.status(404).send("Courses does not found");
+      const games = await Game.find({ category: gameType });
+      const gameIds = games.map((a) => a._id);
 
-    if (gameType) {
-      console.log("Courses", courses);
-      const newCourses = courses.filter(
-        (course) => course?.game_id?.category === gameType
-      );
-      console.log("Courses", newCourses);
-      res.send(newCourses);
+      let foundGames = await Course.find({ game_id: { $in: gameIds } })
+        .populate("videos")
+        .populate("game_id");
+
+      return res.send(foundGames);
     } else {
-      res.send(courses);
+      const courses = await Course.find({
+        $and: myFind,
+      })
+        .populate("videos")
+        .populate("game_id");
+      if (!courses) return res.status(404).send("Courses does not found");
+      if (gameType) {
+        const newCourses = courses.filter(
+          (course) => course?.game_id?.category === gameType
+        );
+        res.send(newCourses);
+      } else {
+        res.send(courses);
+      }
     }
   } catch (error) {
     res.status(500).send(error);
@@ -165,14 +160,12 @@ exports.searchCourse = async (req, res) => {
 exports.updateCourse = async (req, res) => {
   const _id = req.params.id;
   const { mode } = req.body;
-  console.log("nbkcn", mode, "id", _id);
   try {
     const course = await Course.findByIdAndUpdate(
       _id,
       { mode: mode },
       { new: true }
     );
-    console.log("course", course);
     if (!course) return res.status(404).send("Course Not Found");
     const creator = await Creater.findById(course.creator).populate(
       "followers"
@@ -220,7 +213,6 @@ exports.getTopGames = async (req, res) => {
     const number = req.query.type;
 
     if (number == 1) {
-      console.log("number", number);
       const courses = await Course.find({})
         .populate("videos")
         .sort({ rating: -1 })
