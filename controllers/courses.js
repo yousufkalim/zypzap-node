@@ -2,6 +2,7 @@ const Course = require("../models/courses");
 const User = require("../models/users");
 const Creater = require("../models/creators");
 const Notifications = require("../models/notifications");
+const Game = require("../models/games");
 const mongoose = require("mongoose");
 
 exports.createCourse = async (req, res) => {
@@ -41,6 +42,7 @@ exports.createCourse = async (req, res) => {
     } else {
       course.price = price;
     }
+
     await course.save();
     const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
     const sevenDays = new Date(daysCount); //Set date after 7days
@@ -92,7 +94,7 @@ const coursesFilter = (plateForm, mode, price) => {
     if (price === "all") {
       myFind = [...myFind, { price: { $gt: 0 } }];
     } else {
-      myFind = [...myFind, { price: { $lt: price } }];
+      myFind = [...myFind, { price: { $lte: price } }];
     }
   }
   console.log(" my Find", myFind);
@@ -106,19 +108,32 @@ exports.getFilteredCourses = async (req, res) => {
     const mode = req.query.mode;
     const price = req.query.price;
     let myFind = coursesFilter(plateForm, mode, price);
-    console.log("nvksdk", myFind);
+    if (myFind.length === 0 && gameType === "") {
+      return res.send(myFind);
+    }
+    if (myFind.length === 0 && gameType) {
+      const games = await Game.find({ category: gameType }, "_id");
+      let courses = [""];
+      games.map(async (g) => {
+        const c = await Course.find({ game_id: g._id });
+        courses = [...courses, c];
+      });
+      return res.send(courses);
+    }
     const courses = await Course.find({
       $and: myFind,
-    }).populate("videos");
-
+    })
+      .populate("videos")
+      .populate("game_id");
     if (!courses) return res.status(404).send("Courses does not found");
-    console.log("i am here", courses);
+
     if (gameType) {
-      courses = courses.filter(
+      console.log("Courses", courses);
+      const newCourses = courses.filter(
         (course) => course?.game_id?.category === gameType
       );
-      console.log("After type Courses", courses);
-      res.send(courses);
+      console.log("Courses", newCourses);
+      res.send(newCourses);
     } else {
       res.send(courses);
     }
