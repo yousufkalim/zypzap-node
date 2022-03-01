@@ -22,6 +22,7 @@ const courseSchema = new Schema(
     },
     rating: {
       type: Number,
+      default: 0,
     },
     price: {
       type: Number,

@@ -23,7 +23,6 @@ exports.createCourse = async (req, res) => {
       game_id,
       course_name,
       creator,
-      price,
       mode,
       type,
       plateform,
@@ -37,6 +36,11 @@ exports.createCourse = async (req, res) => {
     if (!newCreator) return res.status(404).send("User does not found");
     const course = new Course(data);
     course.thumbnail = file.location;
+    if (price === "free") {
+      course.price = 0;
+    } else {
+      course.price = price;
+    }
     await course.save();
     const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
     const sevenDays = new Date(daysCount); //Set date after 7days
@@ -85,7 +89,11 @@ const coursesFilter = (plateForm, mode, price) => {
     myFind = [...myFind, { mode: mode }];
   }
   if (price) {
-    myFind = [...myFind, { price: { $lt: price } }];
+    if (price === "all") {
+      myFind = [...myFind, { price: { $gt: 0 } }];
+    } else {
+      myFind = [...myFind, { price: { $lt: price } }];
+    }
   }
   console.log(" my Find", myFind);
   return myFind;
@@ -97,28 +105,19 @@ exports.getFilteredCourses = async (req, res) => {
     const plateForm = req.query.plateForm;
     const mode = req.query.mode;
     const price = req.query.price;
-    console.log(
-      "gameType",
-      gameType,
-      "plateForm",
-      plateForm,
-      "mode",
-      mode,
-      "price",
-      price
-    );
     let myFind = coursesFilter(plateForm, mode, price);
     console.log("nvksdk", myFind);
     const courses = await Course.find({
       $and: myFind,
     }).populate("videos");
-    console.log("Courses", courses);
+
     if (!courses) return res.status(404).send("Courses does not found");
-    let CoursesOfGame = [];
+    console.log("i am here", courses);
     if (gameType) {
-      CoursesOfGame = courses.filter(
+      courses = courses.filter(
         (course) => course?.game_id?.category === gameType
       );
+      console.log("After type Courses", courses);
       res.send(courses);
     } else {
       res.send(courses);

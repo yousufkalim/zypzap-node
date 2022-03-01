@@ -39,7 +39,7 @@ router.get("/", getAllUsers);
 router.post("/addToWishLists", auth, addToWishLists);
 router.put("/addProfileInfo/:id", addProfileInfo);
 //  upload image
-router.put("/uploadprofileimage/:id", auth, uploadProfileImage);
+router.put("/uploadprofileimage/:id", singleUpload, uploadProfileImage);
 //router.put("/uploadimage/:id", auth, imageUpload, uploadProfileImage);
 // SignUp
 router.post("/", validateUsers, isValidated, createUser);

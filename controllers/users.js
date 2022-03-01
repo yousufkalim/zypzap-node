@@ -161,6 +161,7 @@ exports.deleteOneUser = async (req, res) => {
 // upload image
 exports.uploadProfileImage = async (req, res) => {
   try {
+    console.log("user", req.file.location);
     const _id = req.params.id;
     const path = req.file.location;
     const user = await User.findByIdAndUpdate(

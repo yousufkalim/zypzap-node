@@ -11,7 +11,7 @@ const {
   deleteCourse,
   searchCourse,
   getFilteredCourses,
-  getTopGames
+  getTopGames,
 } = require("../controllers/courses");
 const {
   validateCourses,
@@ -21,14 +21,7 @@ const {
 // Routes
 router.get("/", getAllCourses);
 router.get("/search", searchCourse);
-router.post(
-  "/",
-  auth,
-  singleUpload,
-  validateCourses,
-  isValidated,
-  createCourse
-);
+router.post("/", auth, singleUpload, createCourse);
 router.get("/filteredCourses", getFilteredCourses);
 router.get("/topGames", getTopGames);
 router.get("/:id", auth, getOneCourse);
