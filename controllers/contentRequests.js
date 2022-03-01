@@ -65,13 +65,15 @@ exports.deleteContentRequest = async (req, res) => {
 exports.contentRequestVote = async (req, res) => {
   const { course_request_id, user_id } = req.body;
   try {
-    const contentRequest = await ContentRequest.findByIdAndUpdate(
-      course_request_id,
-      {
-        $push: { likes: user_id },
-      },
-      { new: true }
-    );
+    console.log("jhsfcghgjahb", user_id);
+    const contentRequest = await ContentRequest.findById(course_request_id);
+    console.log("contentRequest", contentRequest);
+    const likes = contentRequest.likes;
+    console.log("likes", likes);
+    const like = likes.filter((_) => _.equals(user_id));
+    console.log("hgcjscbk", like);
+    if (!like) contentRequest.likes.push(user_id);
+    await contentRequest.save();
     res.send(contentRequest);
   } catch (error) {}
 };

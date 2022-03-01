@@ -87,6 +87,7 @@ const coursesFilter = (plateForm, mode, price) => {
   if (price) {
     myFind = [...myFind, { price: { $lt: price } }];
   }
+  console.log(" my Find", myFind);
   return myFind;
 };
 // filter Courses by game_type, Plateform, Mode, Price, course_type
@@ -96,11 +97,22 @@ exports.getFilteredCourses = async (req, res) => {
     const plateForm = req.query.plateForm;
     const mode = req.query.mode;
     const price = req.query.price;
+    console.log(
+      "gameType",
+      gameType,
+      "plateForm",
+      plateForm,
+      "mode",
+      mode,
+      "price",
+      price
+    );
     let myFind = coursesFilter(plateForm, mode, price);
+    console.log("nvksdk", myFind);
     const courses = await Course.find({
-      $or: myFind,
+      $and: myFind,
     }).populate("videos");
-
+    console.log("Courses", courses);
     if (!courses) return res.status(404).send("Courses does not found");
     let CoursesOfGame = [];
     if (gameType) {

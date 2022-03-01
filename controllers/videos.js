@@ -73,7 +73,7 @@ exports.postVideo = async (req, res) => {
     });
     await video.save();
     const course = await Course.findByIdAndUpdate(
-      course_id,
+      courseId,
       {
         $push: { videos: video._id },
       },

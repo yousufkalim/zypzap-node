@@ -1,16 +1,16 @@
 const multer = require("multer");
-const multerS3 = require("multer-s3");
-const aws = require("aws-sdk");
+// const multerS3 = require("multer-s3");
+// const aws = require("aws-sdk");
 const path = require("path");
 
-aws.config.update({
-  // Your SECRET ACCESS KEY from AWS should go here,
+// aws.config.update({
+//   // Your SECRET ACCESS KEY from AWS should go here,
 
-  secretAccessKey: "LDlMQoEk3fg/m25anC7klW/w42GuDTbOpSlS4HNp",
-  // Not working key, Your ACCESS KEY ID from AWS should go here,
-  accessKeyId: "AWS_ACCESS_KEY_ID_REDACTED",
-  region: "eu-west-3", // region of your bucket
-});
+//   secretAccessKey: "LDlMQoEk3fg/m25anC7klW/w42GuDTbOpSlS4HNp",
+//   // Not working key, Your ACCESS KEY ID from AWS should go here,
+//   accessKeyId: "AWS_ACCESS_KEY_ID_REDACTED",
+//   region: "eu-west-3", // region of your bucket
+// });
 const videoStorage = multer.diskStorage({
   destination: "videos", // Destination to store video
   filename: (req, file, cb) => {
