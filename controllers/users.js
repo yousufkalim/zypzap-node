@@ -77,9 +77,12 @@ exports.enrolledCourseAndStarted = async (req, res) => {
 exports.enrolledCourse = async (req, res) => {
   const { courseId, userId } = req.body;
   try {
-    const course = await Course.findByIdAndUpdate(courseId, {
-      $push: { student: userId },
-    });
+    const course = await Course.findByIdAndUpdate( courseId, {
+        $push: { student: userId },
+      },
+      { new: true }
+    );
+
     if (!course) return res.send({ message: "Course not found" });
     const user = await User.findByIdAndUpdate(
       userId,

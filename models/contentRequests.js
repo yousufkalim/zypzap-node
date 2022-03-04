@@ -18,6 +18,10 @@ const contentRequestSchema = new Schema(
       type: String,
       required: true,
     },
+    level: {
+      type: String,
+      enum: ["Intial", "Medium", "Pro"],
+    },
     likes: [
       {
         type: Schema.Types.ObjectId,

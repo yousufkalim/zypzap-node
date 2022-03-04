@@ -66,9 +66,7 @@ exports.contentRequestVote = async (req, res) => {
   const { course_request_id, user_id } = req.body;
   try {
     const contentRequest = await ContentRequest.findById(course_request_id);
-    const likes = contentRequest.likes;
-    const like = likes.filter((_) => _.equals(user_id));
-    if (!like) contentRequest.likes.push(user_id);
+    contentRequest.likes.push(user_id);
     await contentRequest.save();
     res.send(contentRequest);
   } catch (error) {}

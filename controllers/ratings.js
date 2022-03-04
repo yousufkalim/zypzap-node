@@ -27,14 +27,15 @@ exports.createRatings = async (req, res) => {
 
     if (!user || !newCourse)
       return res.status(400).send({ message: "Invalid user or course" });
+
     const preRating = await Rating.find({ course: course });
     if (preRating.length === 0) {
       const newCourse = await Course.findByIdAndUpdate(
         course,
         { rating: rating },
         {
-            new: true,
-            runValidators: true,
+          new: true,
+          runValidators: true,
         }
       );
     } else {
@@ -42,10 +43,16 @@ exports.createRatings = async (req, res) => {
       preRating.map((rate) => {
         point += rate.rating;
       });
-      const avr = (point / length).toFixed(1);
-      const course = await Course.findByIdAndUpdate(course, {
-        rating: avr,
-      });
+
+      const avr = (point / preRating.length).toFixed(1);
+      const newCourse = await Course.findByIdAndUpdate(
+        course,
+        { rating: avr },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
     }
 
     const newRating = new Rating(req.body);

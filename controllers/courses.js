@@ -161,11 +161,14 @@ exports.updateCourse = async (req, res) => {
   const _id = req.params.id;
   const { mode } = req.body;
   try {
+ 
+    
     const course = await Course.findByIdAndUpdate(
       _id,
       { mode: mode },
       { new: true }
     );
+
     if (!course) return res.status(404).send("Course Not Found");
     const creator = await Creater.findById(course.creator).populate(
       "followers"
