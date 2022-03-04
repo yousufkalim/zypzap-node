@@ -4,20 +4,22 @@ const app = require("express")();
 const port = process.env.PORT || 5000;
 var passport = require("passport");
 var GoogleStrategy = require("passport-google-oauth2").Strategy;
-//var FacebookStrategy = require("passport-facebook").Strategy;
+var FacebookStrategy = require("passport-facebook").Strategy;
 const User = require("./models/users");
 require("./database");
 app.use(passport.initialize());
 app.use(passport.session());
+const cors = require("cors");
+app.use(cors({ origin: true, credentials: true }));
 // Middleware
 require("./middleware/common")(app);
 
 // Routes
 app.use("/api", require("./routes"));
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
-});
+// app.get("/", (req, res) => {
+//   res.sendFile(__dirname + "/index.html");
+// });
 
 // Server
 app.listen(port, () => {
@@ -70,33 +72,34 @@ app.get("/auth/google/failure", async (req, res) => {
 
 //////     LognIn with facebook
 
-// passport.use(
-//   new FacebookStrategy(
-//     {
-//       clientID: process.env.FACEBOOK_APP_ID,
-//       clientSecret: process.env.FACEBOOK_APP_SECRET,
-//       callbackURL: "http://localhost:5000/auth/facebook/callback",
-//     },
-//     async function (accessToken, refreshToken, profile, cb) {
-//       return cb(null, profile);
-//     }
-//   )
-// );
-// app.get(
-//   "/login/facebook",
-//   passport.authenticate("facebook", {
-//     scope: ["profile"],
-//   })
-// );
-// app.get(
-//   "/oauth2/redirect/facebook",
-//   passport.authenticate("facebook", {
-//     // successReturnToOrRedirect: "/auth/google/success",
-//     failureRedirect: "/login",
-//     failureMessage: true,
-//   }),
-//   function (req, res) {
-//     const user = req.user;
-//     res.redirect("https://www.w3schools.com");
-//   }
-// );
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_APP_ID,
+      clientSecret: process.env.FACEBOOK_APP_SECRET,
+      callbackURL: "http://localhost:5000/auth/facebook/callback",
+    },
+    async function (accessToken, refreshToken, profile, cb) {
+      console.log("profile", profile);
+      return cb(null, profile);
+    }
+  )
+);
+app.get(
+  "/",
+  passport.authenticate("facebook", {
+    scope: ["profile"],
+  })
+);
+app.get(
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", {
+    successReturnToOrRedirect: "/auth/google/success",
+    failureRedirect: "/login",
+    failureMessage: true,
+  }),
+  function (req, res) {
+    const user = req.user;
+    res.redirect("https://www.w3schools.com");
+  }
+);

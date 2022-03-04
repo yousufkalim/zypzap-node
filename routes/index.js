@@ -9,6 +9,7 @@ router.use("/videos", require("./videos"));
 router.use("/courses", require("./courses"));
 router.use("/blogs", require("./blogs"));
 router.use("/games", require("./games"));
+router.use("/uploadImage", require("./uploadImage"));
 router.use("/ratings", require("./ratings"));
 router.use("/search", require("./search"));
 router.use("/contentRequests", require("./contentRequests"));

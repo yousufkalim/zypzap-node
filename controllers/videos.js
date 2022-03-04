@@ -1,8 +1,10 @@
 const fs = require("fs");
 const path = require("path");
+const { getVideoDurationInSeconds } = require("get-video-duration");
 
 // Note: All these need to be done
 const Video = require("../models/videos");
+const Course = require("../models/courses");
 
 exports.getAllVideos = async (req, res) => {
   try {
@@ -24,8 +26,8 @@ exports.getOneVideo = async (req, res) => {
   }
 };
 exports.watchVideo = async (req, res) => {
-  const _id = req.params.id;
   try {
+    const _id = req.params.id;
     const video = await Video.findById(_id);
     if (!video) res.status(404).send("Not Found");
     const range = req.headers.range;
@@ -52,24 +54,42 @@ exports.watchVideo = async (req, res) => {
 };
 exports.postVideo = async (req, res) => {
   try {
+    const { courseId } = req.body;
+    const path = req.file.path;
+    let duration;
+    await getVideoDurationInSeconds(path).then((d) => {
+      duration = d;
+    });
+
     const video = new Video({
       ...req.body,
       src_url: req.file.path,
       views: 0,
+      duration: duration,
+      course: courseId,
       file_props: {
         ...req.file,
       },
     });
     await video.save();
-    res.send(video);
+    const course = await Course.findByIdAndUpdate(
+      courseId,
+      {
+        $push: { videos: video._id },
+      },
+      {
+        new: true,
+      }
+    );
+    res.send(course);
   } catch (error) {
     res.status(500).send(error);
   }
 };
 exports.addViews = async (req, res) => {
-  const video_id = req.params.id;
   try {
-    const video = await Video.findById(video_id);
+    const videoId = req.params.id;
+    const video = await Video.findById(videoId);
     if (!video) return res.status(400).send({ message: "Video not found" });
     video.views = video.views + 1;
     video.save();

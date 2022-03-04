@@ -1,6 +1,8 @@
 // Init
 const router = require("express").Router();
 const { auth } = require("../middleware/auth");
+const { upload } = require("../middleware/imageUpload");
+const singleUpload = upload.single("image");
 const {
   getAllCourses,
   getOneCourse,
@@ -9,6 +11,7 @@ const {
   deleteCourse,
   searchCourse,
   getFilteredCourses,
+  getTopGames,
 } = require("../controllers/courses");
 const {
   validateCourses,
@@ -16,12 +19,13 @@ const {
 } = require("../middleware/validators/courses");
 
 // Routes
-router.get("/search", auth, searchCourse);
-router.post("/", auth, validateCourses, isValidated, createCourse);
-router.get("/filteredCourses", auth, getFilteredCourses);
-router.get("/", auth, getAllCourses);
+router.get("/", getAllCourses);
+router.get("/search", searchCourse);
+router.post("/", auth, singleUpload, createCourse);
+router.get("/filteredCourses", getFilteredCourses);
+router.get("/topGames", getTopGames);
 router.get("/:id", auth, getOneCourse);
-router.put("/:id", auth, validateCourses, isValidated, updateCourse);
+router.put("/:id", auth, updateCourse);
 router.delete("/:id", auth, deleteCourse);
 
 // Export

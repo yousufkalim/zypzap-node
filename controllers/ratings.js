@@ -20,16 +20,18 @@ exports.getOneRating = async (req, res) => {
   }
 };
 exports.createRatings = async (req, res) => {
-  const { rating, course, rating_by } = req.body;
+  const { rating, course, rating_by, comment } = req.body;
   try {
     const user = await User.findById(rating_by);
     const newCourse = await Course.findById(course);
+
     if (!user || !newCourse)
       return res.status(400).send({ message: "Invalid user or course" });
+
     const preRating = await Rating.find({ course: course });
     if (preRating.length === 0) {
-      const course = await Course.findByIdAndUpdate(
-        req.body.course,
+      const newCourse = await Course.findByIdAndUpdate(
+        course,
         { rating: rating },
         {
           new: true,
@@ -39,18 +41,23 @@ exports.createRatings = async (req, res) => {
     } else {
       let point = 0;
       preRating.map((rate) => {
-        console.log(rate.rating, "rate", point);
         point += rate.rating;
       });
-      const avr = (point / length).toFixed(1);
-      const course = await Course.findByIdAndUpdate(req.body.course, {
-        rating: avr,
-      });
+
+      const avr = (point / preRating.length).toFixed(1);
+      const newCourse = await Course.findByIdAndUpdate(
+        course,
+        { rating: avr },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
     }
 
-    const rating = new Rating(req.body);
-    await rating.save();
-    res.send(rating);
+    const newRating = new Rating(req.body);
+    await newRating.save();
+    res.send(newRating);
   } catch (error) {
     res.status(500).send(error);
   }

@@ -1,5 +1,7 @@
 // Init
 const router = require("express").Router();
+const { imageUpload, upload } = require("../middleware/imageUpload");
+
 const passport = require("../controllers/auth/withGoogle");
 const {
   getAllUsers,
@@ -12,7 +14,7 @@ const {
   enrolledCourse,
   enrolledCourseAndStarted,
   addProfileInfo,
-  googleLoging,
+  uploadProfileImage,
 } = require("../controllers/users");
 const {
   loginUser,
@@ -25,6 +27,7 @@ const {
   validateUsers,
   isValidated,
 } = require("../middleware/validators/users");
+const singleUpload = upload.single("image");
 
 // Routes
 //Enrolled Courses
@@ -34,7 +37,10 @@ router.post("/setSubscription", auth, setSubscription);
 router.get("/getuserbytoken", auth, getData);
 router.get("/", getAllUsers);
 router.post("/addToWishLists", auth, addToWishLists);
-router.post("/addProfileInfo/:id", auth, addProfileInfo);
+router.put("/addProfileInfo/:id", addProfileInfo);
+//  upload image
+router.put("/uploadprofileimage/:id", singleUpload, uploadProfileImage);
+//router.put("/uploadimage/:id", auth, imageUpload, uploadProfileImage);
 // SignUp
 router.post("/", validateUsers, isValidated, createUser);
 router.get("/:id", getOneUser);

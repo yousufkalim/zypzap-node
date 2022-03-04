@@ -16,7 +16,7 @@ exports.createContentRequest = async (req, res) => {
 
 exports.getAllContentRequests = async (req, res) => {
   try {
-    const contentRequests = await ContentRequest.find();
+    const contentRequests = await ContentRequest.find().populate("game");
     if (!contentRequests)
       return res.status(404).send("Content Requests does not Found");
     res.send(contentRequests);
@@ -65,13 +65,9 @@ exports.deleteContentRequest = async (req, res) => {
 exports.contentRequestVote = async (req, res) => {
   const { course_request_id, user_id } = req.body;
   try {
-    const contentRequest = await ContentRequest.findByIdAndUpdate(
-      course_request_id,
-      {
-        $push: { likes: user_id },
-      },
-      { new: true }
-    );
+    const contentRequest = await ContentRequest.findById(course_request_id);
+    contentRequest.likes.push(user_id);
+    await contentRequest.save();
     res.send(contentRequest);
   } catch (error) {}
 };

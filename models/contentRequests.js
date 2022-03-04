@@ -3,12 +3,10 @@ const { Schema, model } = require("mongoose");
 //  Level in content request  in figma
 const contentRequestSchema = new Schema(
   {
-    game: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Games",
-      },
-    ],
+    game: {
+      type: Schema.Types.ObjectId,
+      ref: "Games",
+    },
     request_by: [
       {
         type: Schema.Types.ObjectId,
@@ -19,6 +17,10 @@ const contentRequestSchema = new Schema(
     description: {
       type: String,
       required: true,
+    },
+    level: {
+      type: String,
+      enum: ["Intial", "Medium", "Pro"],
     },
     likes: [
       {

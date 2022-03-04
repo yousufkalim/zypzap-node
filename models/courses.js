@@ -22,28 +22,43 @@ const courseSchema = new Schema(
     },
     rating: {
       type: Number,
+      default: 0,
     },
     price: {
       type: Number,
     },
     level: {
-      type: Number,
-      enum: ["1", "2", "3", "4", "5"],
+      type: String,
+      enum: ["inital Level", "medium Level", "Advance Level"],
     },
     game_id: {
       type: Schema.Types.ObjectId,
       ref: "Games",
+    },
+    student: {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
     },
     description: {
       type: String,
     },
     plateform: {
       type: String,
-      enum: ["xbox", "pc", "mobile", "ps1"],
+      enum: [
+        "PC",
+        "Mobile Games",
+        "PS1/2/3/4/5",
+        "Xbox/360/One/X",
+        "Retro Consoles",
+        "Portable Consoles",
+      ],
+    },
+    thumbnail: {
+      type: String,
     },
     mode: {
       type: String,
-      enum: ["single", "multiplayer"],
+      enum: ["Single", "Multiplayer"],
     },
   },
   {

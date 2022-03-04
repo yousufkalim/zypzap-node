@@ -69,12 +69,12 @@ const userSchema = new Schema(
       end_date: Date,
     },
     prefrence_games: {
-      favourite_games: [{ type: Schema.Types.ObjectId, ref: "Games" }],
+      favourite_games: [String],
       play_period: {
         type: String,
       },
       play_time_per_perioad: {
-        type: Number,
+        type: String,
       },
       current_level: {
         type: String,
@@ -82,6 +82,11 @@ const userSchema = new Schema(
       target_level: {
         type: String,
       },
+    },
+    plateForm: [String],
+    gameType: [String],
+    gameMood: {
+      type: String,
     },
     tokens: [
       {
