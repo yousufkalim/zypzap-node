@@ -1,8 +1,10 @@
 // Init
 const router = require("express").Router();
 const { imageUpload, upload } = require("../middleware/imageUpload");
+var passport = require("passport");
+require("../controllers/auth/loginwithDiscord")(passport);
+require("../controllers/auth/loginWithGoogle")(passport);
 
-const passport = require("../controllers/auth/withGoogle");
 const {
   getAllUsers,
   createUser,
@@ -52,5 +54,27 @@ router.post("/logout", auth, logoutUser);
 
 router.post("/logout/all", auth, logoutAll);
 
+// login  with discord
+router.get("/auth/discord", passport.authenticate("discord"));
+router.get(
+  "/auth/discord/callback",
+  passport.authenticate("discord", {
+    failureRedirect: "https://zypzap.com/",
+    successRedirect: "https://w3school.com",
+  })
+);
+// login with google
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "https://zypzap.com/",
+    successRedirect: "https://w3school.com",
+  })
+);
 // Export
 module.exports = router;

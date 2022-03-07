@@ -8,6 +8,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    userId: {
+      type: String,
+      unique: true,
+    },
     role: {
       type: String,
       required: true,
@@ -21,7 +25,6 @@ const userSchema = new Schema(
     ],
     password: {
       type: String,
-      required: true,
     },
     following: [
       {

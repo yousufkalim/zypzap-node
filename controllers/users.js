@@ -2,7 +2,6 @@ const User = require("../models/users");
 const Course = require("../models/courses");
 const bcrypt = require("bcryptjs");
 const { auth } = require("../middleware/auth");
-const passport = require("./auth/withGoogle");
 
 exports.createUser = async (req, res) => {
   try {
@@ -77,7 +76,9 @@ exports.enrolledCourseAndStarted = async (req, res) => {
 exports.enrolledCourse = async (req, res) => {
   const { courseId, userId } = req.body;
   try {
-    const course = await Course.findByIdAndUpdate( courseId, {
+    const course = await Course.findByIdAndUpdate(
+      courseId,
+      {
         $push: { student: userId },
       },
       { new: true }
