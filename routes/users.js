@@ -2,8 +2,10 @@
 const router = require("express").Router();
 const { imageUpload, upload } = require("../middleware/imageUpload");
 var passport = require("passport");
-require("../controllers/auth/loginwithDiscord")(passport);
+require("../controllers/auth/loginWithDiscord")(passport);
 require("../controllers/auth/loginWithGoogle")(passport);
+require("../controllers/auth/loginWithTwitch")(passport);
+require("../controllers/auth/loginWithFacebook")(passport);
 
 const {
   getAllUsers,
@@ -72,6 +74,28 @@ router.get(
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", {
+    failureRedirect: "https://zypzap.com/",
+    successRedirect: "https://w3school.com",
+  })
+);
+
+// login with facebook facebook
+router.get("/auth/facebook", passport.authenticate("facebook"));
+
+router.get(
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", {
+    failureRedirect: "https://zypzap.com/",
+    successRedirect: "https://w3school.com",
+  })
+);
+
+//login with twitch
+router.get("/auth/twitch", passport.authenticate("twitch"));
+
+router.get(
+  "/auth/twitch/callback",
+  passport.authenticate("twitch", {
     failureRedirect: "https://zypzap.com/",
     successRedirect: "https://w3school.com",
   })

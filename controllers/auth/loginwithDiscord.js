@@ -29,7 +29,6 @@ module.exports = (passport) => {
           const eMail = profile.email;
           newUser.email.push(eMail);
           newUser.role = "User";
-          newUser.social_ids.push(socialIds);
           await newUser.save();
           console.log("new User", newUser);
           return cb(null, newUser);

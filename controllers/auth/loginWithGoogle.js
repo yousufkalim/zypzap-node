@@ -17,7 +17,7 @@ module.exports = (passport) => {
         callbackURL: "http://localhost:5000/api/users/auth/google/callback",
         scope: ["profile", "email"],
       },
-      async function (request, accessToken, refreshToken, profile, done) {
+      async (accessToken, refreshToken, profile, done) =>{
         console.log("dcndj", profile);
         const user = await User.find({ userId: profile.id });
         if (user.length === 0) {
@@ -27,7 +27,6 @@ module.exports = (passport) => {
           newUser.role = "User";
           const eMail = profile.email;
           newUser.email.push(eMail);
-          newUser.social_ids.push(socialIds);
           await newUser.save();
           console.log("new User", newUser);
           return done(null, newUser);
