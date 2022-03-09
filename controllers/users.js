@@ -204,7 +204,6 @@ exports.loginWithGoogle = async (req, res) => {
 exports.loginWithFacebook = async (req, res) => {
   try {
     const profile = req.user;
-    console.log("gschvjhbckh", profile);
     const user = await User.findOne({ email: profile.emails[0].value });
     if (user.length === 0) {
       const newUser = new User();
@@ -218,7 +217,6 @@ exports.loginWithFacebook = async (req, res) => {
         process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`
       );
     } else {
-      console.log("user", user);
       const token = await generateAuthToken(user);
       return res.redirect(
         process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`
@@ -245,7 +243,6 @@ exports.loginWithTwitch = async (req, res) => {
         process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`
       );
     } else {
-      console.log("4567", user);
       const token = await generateAuthToken(user);
       return res.redirect(
         process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`
@@ -258,9 +255,7 @@ exports.loginWithTwitch = async (req, res) => {
 exports.loginWithDiscord = async (req, res) => {
   try {
     const profile = req.user;
-    console.log("profile", profile);
     const user = await User.findOne({ email: profile.email });
-    console.log("user1234567", user);
     if (!user) {
       const newUser = new User();
       newUser.username = profile.username;
@@ -274,9 +269,7 @@ exports.loginWithDiscord = async (req, res) => {
         process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`
       );
     } else {
-      console.log("user2345", user);
       const token = await generateAuthToken(user);
-      console.log("token23", token);
       return res.redirect(
         process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`
       );
