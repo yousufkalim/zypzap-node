@@ -8,10 +8,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    userId: {
-      type: String,
-      unique: true,
-    },
     role: {
       type: String,
       required: true,
@@ -115,4 +111,5 @@ userSchema.methods.toJSON = function () {
   delete userObject.tokens;
   return userObject;
 };
+
 module.exports = model("Users", userSchema);
