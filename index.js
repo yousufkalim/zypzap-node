@@ -2,12 +2,16 @@
 require("dotenv").config();
 const app = require("express")();
 const port = process.env.PORT || 5000;
-const passport = require("passport");
-
+const session = require("express-session");
 const User = require("./models/users");
 require("./database");
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: true,
+    secret: "bla bla bla",
+  })
+);
 const cors = require("cors");
 app.use(cors({ origin: true, credentials: true }));
 // Middleware
@@ -24,4 +28,3 @@ app.use("/api", require("./routes"));
 app.listen(port, () => {
   console.log(`Server is running at port ${port} :)`);
 });
-
