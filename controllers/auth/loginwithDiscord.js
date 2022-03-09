@@ -8,9 +8,9 @@ module.exports = (passport) => {
   passport.use(
     new DiscordStrategy(
       {
-        clientID: "950251147254448168",
-        clientSecret: "DVm_CV5GkVjfjh4PDFb7MSmS64UrNrXu",
-        callbackURL: "http://localhost:5000/api/users/auth/discord/callback",
+        clientID: process.env.DISCORD_CLIENT_ID,
+        clientSecret: process.env.DISCORD_CLIENT_SECRET,
+        callbackURL: process.env.DISCORD_CALLBACK,
         scope: scopes,
       },
       function (accessToken, refreshToken, profile, cb) {

@@ -6,9 +6,9 @@ module.exports = (passport) => {
   passport.use(
     new twitchStrategy(
       {
-        clientID: "twrs78ppd3ka8opc1mysqc6zyde7c2",
-        clientSecret: "kepao2vzmfql0y8arj7z4n215dnp7v",
-        callbackURL: "http://localhost:5000/api/users/auth/twitch/callback",
+        clientID: process.env.TWITCH_CLIENT_ID,
+        clientSecret: process.env.TWITCH_CLIENT_SECRET,
+        callbackURL: process.env.TWITCH_CALLBACK,
         scope: "user_read",
       },
       function (accessToken, refreshToken, profile, cb) {
