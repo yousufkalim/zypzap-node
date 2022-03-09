@@ -221,7 +221,7 @@ exports.loginWithFacebook = async (req, res) => {
       console.log("user", user);
       const token = await generateAuthToken(user);
       return res.redirect(
-        process.env.Redirct_URL + `?SignupByFacebook=true&&user=${user.token}`
+        process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`
       );
     }
   } catch (error) {
