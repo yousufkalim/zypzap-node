@@ -1,7 +1,9 @@
 // Init
 const router = require("express").Router();
+const User = require("../models/users");
 const { imageUpload, upload } = require("../middleware/imageUpload");
 var passport = require("passport");
+const session = require("express-session");
 require("../controllers/auth/loginWithDiscord")(passport);
 require("../controllers/auth/loginWithGoogle")(passport);
 require("../controllers/auth/loginWithTwitch")(passport);
@@ -19,6 +21,10 @@ const {
   enrolledCourseAndStarted,
   addProfileInfo,
   uploadProfileImage,
+  loginWithGoogle,
+  loginWithFacebook,
+  loginWithTwitch,
+  loginWithDiscord,
 } = require("../controllers/users");
 const {
   loginUser,
@@ -60,10 +66,8 @@ router.post("/logout/all", auth, logoutAll);
 router.get("/auth/discord", passport.authenticate("discord"));
 router.get(
   "/auth/discord/callback",
-  passport.authenticate("discord", {
-    failureRedirect: "https://zypzap.com/",
-    successRedirect: "https://w3school.com",
-  })
+  passport.authenticate("discord"),
+  loginWithDiscord
 );
 // login with google
 router.get(
@@ -75,19 +79,19 @@ router.get(
   "/auth/google/callback",
   passport.authenticate("google", {
     failureRedirect: "https://zypzap.com/",
-    successRedirect: "https://w3school.com",
+    successReturnToOrRedirect:
+      "http://localhost:5000/api/users/auth/google/success",
   })
 );
+router.get("/auth/google/success", loginWithGoogle);
 
 // login with facebook facebook
 router.get("/auth/facebook", passport.authenticate("facebook"));
 
 router.get(
   "/auth/facebook/callback",
-  passport.authenticate("facebook", {
-    failureRedirect: "https://zypzap.com/",
-    successRedirect: "https://w3school.com",
-  })
+  passport.authenticate("facebook"),
+  loginWithFacebook
 );
 
 //login with twitch
@@ -95,10 +99,8 @@ router.get("/auth/twitch", passport.authenticate("twitch"));
 
 router.get(
   "/auth/twitch/callback",
-  passport.authenticate("twitch", {
-    failureRedirect: "https://zypzap.com/",
-    successRedirect: "https://w3school.com",
-  })
+  passport.authenticate("twitch"),
+  loginWithTwitch
 );
 // Export
 module.exports = router;
