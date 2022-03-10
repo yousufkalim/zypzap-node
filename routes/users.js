@@ -4,7 +4,7 @@ const User = require("../models/users");
 const { imageUpload, upload } = require("../middleware/imageUpload");
 var passport = require("passport");
 const session = require("express-session");
-require("../controllers/auth/loginWithDiscord")(passport);
+require("../controllers/auth/loginwithDiscord")(passport);
 require("../controllers/auth/loginWithGoogle")(passport);
 require("../controllers/auth/loginWithTwitch")(passport);
 require("../controllers/auth/loginWithFacebook")(passport);
