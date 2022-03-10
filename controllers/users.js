@@ -2,7 +2,8 @@ const User = require("../models/users");
 const Course = require("../models/courses");
 const bcrypt = require("bcryptjs");
 const { auth } = require("../middleware/auth");
-const passport = require("./auth/withGoogle");
+const jwt = require("jsonwebtoken");
+const { generateAuthToken } = require("../middleware/auth");
 
 exports.createUser = async (req, res) => {
   try {
@@ -77,7 +78,9 @@ exports.enrolledCourseAndStarted = async (req, res) => {
 exports.enrolledCourse = async (req, res) => {
   const { courseId, userId } = req.body;
   try {
-    const course = await Course.findByIdAndUpdate( courseId, {
+    const course = await Course.findByIdAndUpdate(
+      courseId,
+      {
         $push: { student: userId },
       },
       { new: true }
@@ -170,6 +173,108 @@ exports.uploadProfileImage = async (req, res) => {
       { new: true }
     );
     res.send(user);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+exports.loginWithGoogle = async (req, res) => {
+  try {
+    const profile = req.user;
+    const user = await User.findOne({ email: profile.email });
+    console.log("user", user);
+    if (!user) {
+      const newUser = new User();
+      newUser.username = profile.displayName;
+      newUser.role = "User";
+      newUser.email.push(profile.email);
+      const token = await generateAuthToken(newUser);
+      await newUser.save();
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`
+      );
+    } else {
+      const token = await generateAuthToken(user);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`
+      );
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+exports.loginWithFacebook = async (req, res) => {
+  try {
+    const profile = req.user;
+    const user = await User.findOne({ email: profile.emails[0].value });
+    if (!user) {
+      const newUser = new User();
+      newUser.username = profile.displayName;
+      newUser.role = "User";
+      const eMail = profile.emails[0].value;
+      newUser.email.push(eMail);
+      const token = await generateAuthToken(newUser);
+      await newUser.save();
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`
+      );
+    } else {
+      const token = await generateAuthToken(user);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`
+      );
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+exports.loginWithTwitch = async (req, res) => {
+  try {
+    const profile = req.user;
+    const user = await User.findOne({ email: profile.email });
+    if (!user) {
+      const newUser = new User();
+      newUser.username = profile.display_name;
+      newUser.userId = profile.id;
+      newUser.role = "User";
+      const eMail = profile.email;
+      newUser.email.push(eMail);
+      const token = await generateAuthToken(newUser);
+      await newUser.save();
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`
+      );
+    } else {
+      const token = await generateAuthToken(user);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`
+      );
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+exports.loginWithDiscord = async (req, res) => {
+  try {
+    const profile = req.user;
+    const user = await User.findOne({ email: profile.email });
+    if (!user) {
+      const newUser = new User();
+      newUser.username = profile.username;
+      newUser.userId = profile.id;
+      const eMail = profile.email;
+      newUser.email.push(eMail);
+      newUser.role = "User";
+      const token = await generateAuthToken(newUser);
+      await newUser.save();
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`
+      );
+    } else {
+      const token = await generateAuthToken(user);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`
+      );
+    }
   } catch (error) {
     res.status(500).send(error);
   }

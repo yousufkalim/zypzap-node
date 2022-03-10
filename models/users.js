@@ -21,7 +21,6 @@ const userSchema = new Schema(
     ],
     password: {
       type: String,
-      required: true,
     },
     following: [
       {
@@ -112,4 +111,5 @@ userSchema.methods.toJSON = function () {
   delete userObject.tokens;
   return userObject;
 };
+
 module.exports = model("Users", userSchema);
