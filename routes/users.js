@@ -90,7 +90,7 @@ router.get(
   "/auth/facebook/callback",
   passport.authenticate("facebook", {
     failureRedirect: process.env.FAILURE_REDIRECT,
-    successReturnToOrRedirect: process.env.FACEBOOK_CALLBACK,
+    successReturnToOrRedirect: process.env.SUCCESS_FACEBOOK_CALLBACK,
   })
 );
 router.get("/auth/facebook/success", loginWithFacebook);
