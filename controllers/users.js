@@ -181,7 +181,8 @@ exports.loginWithGoogle = async (req, res) => {
   try {
     const profile = req.user;
     const user = await User.findOne({ email: profile.email });
-    if (user.length === 0) {
+    console.log("user", user);
+    if (!user) {
       const newUser = new User();
       newUser.username = profile.displayName;
       newUser.role = "User";
@@ -205,7 +206,7 @@ exports.loginWithFacebook = async (req, res) => {
   try {
     const profile = req.user;
     const user = await User.findOne({ email: profile.emails[0].value });
-    if (user.length === 0) {
+    if (!user) {
       const newUser = new User();
       newUser.username = profile.displayName;
       newUser.role = "User";
@@ -230,7 +231,7 @@ exports.loginWithTwitch = async (req, res) => {
   try {
     const profile = req.user;
     const user = await User.findOne({ email: profile.email });
-    if (user.length === 0) {
+    if (!user) {
       const newUser = new User();
       newUser.username = profile.display_name;
       newUser.userId = profile.id;
