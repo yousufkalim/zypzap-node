@@ -78,7 +78,7 @@ router.get(
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "https://zypzap.com/",
+    failureRedirect: process.env.FAILURE_REDIRECT,
     successReturnToOrRedirect: process.env.GOOGLE_CALLBACK,
   })
 );
@@ -86,14 +86,12 @@ router.get("/auth/google/success", loginWithGoogle);
 
 // login with facebook facebook
 router.get("/auth/facebook", passport.authenticate("facebook"));
-var options = {
-  successReturnToOrRedirect:
-    "http://localhost:5000/api/users/auth/facebook/success",
-  failureRedirect: "https://zypzap.com/",
-};
 router.get(
   "/auth/facebook/callback",
-  passport.authenticate("facebook", options)
+  passport.authenticate("facebook", {
+    failureRedirect: process.env.FAILURE_REDIRECT,
+    successReturnToOrRedirect: process.env.FACEBOOK_CALLBACK,
+  })
 );
 router.get("/auth/facebook/success", loginWithFacebook);
 //login with twitch
@@ -101,7 +99,9 @@ router.get("/auth/twitch", passport.authenticate("twitch"));
 
 router.get(
   "/auth/twitch/callback",
-  passport.authenticate("twitch"),
+  passport.authenticate("twitch", {
+    failureRedirect: process.env.FAILURE_REDIRECT,
+  }),
   loginWithTwitch
 );
 // Export
