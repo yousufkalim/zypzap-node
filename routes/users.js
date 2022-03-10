@@ -4,7 +4,7 @@ const User = require("../models/users");
 const { imageUpload, upload } = require("../middleware/imageUpload");
 var passport = require("passport");
 const session = require("express-session");
-require("../controllers/auth/loginWithDiscord")(passport);
+require("../controllers/auth/loginwithDiscord")(passport);
 require("../controllers/auth/loginWithGoogle")(passport);
 require("../controllers/auth/loginWithTwitch")(passport);
 require("../controllers/auth/loginWithFacebook")(passport);
@@ -90,7 +90,7 @@ router.get(
   "/auth/facebook/callback",
   passport.authenticate("facebook", {
     failureRedirect: process.env.FAILURE_REDIRECT,
-    successReturnToOrRedirect: process.env.FACEBOOK_CALLBACK,
+    successReturnToOrRedirect: process.env.SUCCESS_FACEBOOK_CALLBACK,
   })
 );
 router.get("/auth/facebook/success", loginWithFacebook);
