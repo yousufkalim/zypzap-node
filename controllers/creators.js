@@ -13,6 +13,7 @@ exports.postCreator = async (req, res) => {
 
     let newUser = {
       creator: creator._id,
+      role: "Creator",
     };
     await User.findOneAndUpdate(
       { _id: req.params.id },
@@ -33,7 +34,16 @@ exports.postCreator = async (req, res) => {
 exports.addDetails = async (req, res) => {
   const { goodGame, is_Online, level, audience } = req.body;
   try {
-    let creator = await Creator.findOne({ _id: req.params.id });
+    await User.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        role: "Creator",
+      },
+      {
+        new: true,
+      }
+    );
+    await User.findOne({ _id: req.params.id });
     creator.gameyouaregoodat = goodGame;
     creator.onlineTeaching = is_Online;
     creator.level = level;
