@@ -79,7 +79,7 @@ router.get(
   "/auth/google/callback",
   passport.authenticate("google", {
     failureRedirect: process.env.FAILURE_REDIRECT,
-    successReturnToOrRedirect: process.env.GOOGLE_CALLBACK,
+    successReturnToOrRedirect: process.env.SUCCESS_GOOGLE_CALLBACK,
   })
 );
 router.get("/auth/google/success", loginWithGoogle);
