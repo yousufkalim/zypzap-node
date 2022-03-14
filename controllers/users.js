@@ -48,10 +48,45 @@ exports.setSubscription = async (req, res) => {
     res.status(400).send(error);
   }
 };
+const filterData = (
+  profile_photo,
+  prefrence_games,
+  gameType,
+  plateForm,
+  gameMood
+) => {
+  let myFind = {};
+  if (profile_photo) {
+    myFind.profile_photo = profile_photo;
+  }
+  if (gameType) {
+    myFind.gameType = gameType;
+  }
+  if (prefrence_games) {
+    myFind.prefrence_games = prefrence_games;
+  }
+  if (plateForm) {
+    myFind.plateForm = plateForm;
+  }
+  if (gameMood) {
+    myFind.gameMood = gameMood;
+  }
+  return myFind;
+};
 exports.addProfileInfo = async (req, res) => {
   try {
+    const { profile_photo, prefrence_games, gameType, plateForm, gameMood } =
+      req.body;
+    let myFind = filterData(
+      profile_photo,
+      prefrence_games,
+      gameType,
+      plateForm,
+      gameMood
+    );
+
     const _id = req.params.id;
-    const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
+    const user = await User.findByIdAndUpdate(_id, myFind, { new: true });
     res.json(user);
   } catch (error) {
     res.status(400).send(error);
