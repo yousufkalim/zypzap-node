@@ -4,7 +4,8 @@ const User = require("../models/users");
 
 exports.getAllRatings = async (req, res) => {
   try {
-    const ratings = await Rating.find();
+    const course = req.params.id;
+    const ratings = await Rating.find({ course });
     res.send(ratings);
   } catch (error) {
     res.status(500).send(error);

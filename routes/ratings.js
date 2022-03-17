@@ -14,7 +14,7 @@ const {
 } = require("../middleware/validators/ratings");
 
 // Routes
-router.get("/", getAllRatings);
+router.get("/forSingleCourses/:id", getAllRatings);
 router.get("/:id", getOneRating);
 router.post("/", auth, validateRatings, isValidated, createRatings);
 router.put("/:id", auth, validateRatings, isValidated, updateRating);

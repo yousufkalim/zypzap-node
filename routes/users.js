@@ -38,7 +38,6 @@ const {
   isValidated,
 } = require("../middleware/validators/users");
 const singleUpload = upload.single("image");
-
 // Routes
 //Enrolled Courses
 router.post("/enrolledCourse", auth, enrolledCourse);

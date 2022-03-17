@@ -14,7 +14,7 @@ const {
 } = require("../middleware/validators/creators");
 
 // Routes   addFollower
-router.get("/addFollower", auth, addFollower);
+router.post("/addFollower", auth, addFollower);
 router.get("/search", auth, getsearch);
 router.post("/addDetails/:id", auth, addDetails);
 router.post("/:id", validateCreators, isValidated, auth, postCreator);

@@ -31,7 +31,7 @@ exports.createCourse = async (req, res) => {
     const file = req.file;
     const newCreator = await Creater.findById(creator).populate("followers");
 
-    if (!newCreator) return res.status(404).send("User does not found");
+    if (!newCreator) return res.status(404).send("Creator does not found");
     const course = new Course(data);
     course.thumbnail = file.location;
     if (price === "free") {
@@ -139,7 +139,18 @@ exports.getFilteredCourses = async (req, res) => {
 exports.getOneCourse = async (req, res) => {
   const _id = req.params.id;
   try {
-    const course = await Course.findById(_id);
+    const course = await Course.findById(_id)
+      .populate({
+        path: "creator",
+        populate: [
+          {
+            path: "user_id",
+            model: "Users",
+          },
+          { path: "courses", model: "Courses" },
+        ],
+      })
+      .populate("videos");
     if (!course) res.status(404).send("Not Found");
     res.send(course);
   } catch (error) {
@@ -161,11 +172,9 @@ exports.updateCourse = async (req, res) => {
   const _id = req.params.id;
   const { mode } = req.body;
   try {
- 
-    
     const course = await Course.findByIdAndUpdate(
       _id,
-      { mode: mode },
+      { videos: null },
       { new: true }
     );
 

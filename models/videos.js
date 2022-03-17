@@ -16,7 +16,7 @@ const videoSchema = new Schema(
       ref: "Creators",
     },
     description: {
-      type: String,
+      type: Number,
     },
     file_props: {
       fieldname: {
@@ -62,7 +62,7 @@ const videoSchema = new Schema(
       type: String,
       enum: ["Publish", "Process", "Private", "Restricted", "Edited", "Review"],
     },
-    duration: { type: Number },
+    duration: { type: String },
     thumbnail: {
       type: String,
     },

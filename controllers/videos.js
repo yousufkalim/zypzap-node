@@ -1,7 +1,6 @@
-const fs = require("fs");
 const path = require("path");
 const { getVideoDurationInSeconds } = require("get-video-duration");
-
+// const AWS = require("aws-sdk");
 // Note: All these need to be done
 const Video = require("../models/videos");
 const Course = require("../models/courses");
@@ -52,26 +51,43 @@ exports.watchVideo = async (req, res) => {
     res.status(500).send(error);
   }
 };
+//   convert mints to time formate houre:mint:second  it use in frontEnd , here we save total second of video duration
+// function format(time) {
+//   // Hours, minutes and seconds
+//   var hrs = ~~(time / 3600);
+//   var mins = ~~((time % 3600) / 60);
+//   var secs = ~~time % 60;
+
+//   // Output like "1:01" or "4:03:59" or "123:03:59"
+//   var ret = "";
+//   if (hrs > 0) {
+//     ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+//   }
+//   ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+//   ret += "" + secs;
+//   return ret;
+// }
 exports.postVideo = async (req, res) => {
   try {
     const { courseId } = req.body;
-    const path = req.file.path;
+    console.log("course Id ", courseId);
+    const path = req.file.location;
+    console.log("path", path);
     let duration;
-    await getVideoDurationInSeconds(path).then((d) => {
-      duration = d;
-    });
-
+    const videoDuration = await getVideoDurationInSeconds(path);
+    console.log("videoDuration", videoDuration);
     const video = new Video({
       ...req.body,
-      src_url: req.file.path,
+      src_url: req.file.location,
       views: 0,
-      duration: duration,
+      duration: videoDuration,
       course: courseId,
       file_props: {
         ...req.file,
       },
     });
     await video.save();
+    console.log("video", video);
     const course = await Course.findByIdAndUpdate(
       courseId,
       {
@@ -81,7 +97,8 @@ exports.postVideo = async (req, res) => {
         new: true,
       }
     );
-    res.send(course);
+    console.log("course", course);
+    res.send(video);
   } catch (error) {
     res.status(500).send(error);
   }
