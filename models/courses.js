@@ -31,6 +31,7 @@ const courseSchema = new Schema(
       type: String,
       enum: ["inital Level", "medium Level", "Advance Level"],
     },
+    requirement: [String],
     game_id: {
       type: Schema.Types.ObjectId,
       ref: "Games",
@@ -51,6 +52,7 @@ const courseSchema = new Schema(
         "Xbox/360/One/X",
         "Retro Consoles",
         "Portable Consoles",
+        "Tablet",
       ],
     },
     thumbnail: {

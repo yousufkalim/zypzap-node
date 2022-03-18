@@ -26,6 +26,9 @@ const creatorSchema = new Schema(
     audience: {
       type: String,
     },
+    bio: {
+      type: String,
+    },
     address: {
       street_name: {
         type: String,

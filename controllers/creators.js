@@ -37,13 +37,14 @@ exports.addDetails = async (req, res) => {
     await User.findOneAndUpdate(
       { _id: req.params.id },
       {
-        role: "Creator",
+        role: "creator",
       },
       {
         new: true,
       }
     );
     await User.findOne({ _id: req.params.id });
+    let creator = new Creator();
     creator.gameyouaregoodat = goodGame;
     creator.onlineTeaching = is_Online;
     creator.level = level;
@@ -80,27 +81,28 @@ exports.getsearch = async (req, res) => {
 exports.addFollower = async (req, res) => {
   const { user_id, creator_id } = req.body;
   try {
+    console.log("req", req.body);
     const user = await User.findById(user_id);
     const creator = await Creator.findById(creator_id);
     if (!user || !creator) {
       return res.status(400).send({ message: "user or creator not found" });
     }
 
-    const updateUser = await User.updateOne(
+    const updateUser = await User.findOneAndUpdate(
       { _id: user_id },
       {
         $push: { following: creator.user_id },
       },
       { new: true }
     );
-
-    const creator1 = await Creator.updateOne(
+    console.log("user", updateUser);
+    const creator1 = await Creator.findOneAndUpdate(
       { _id: creator_id },
-      { $push: { follower: user_id } },
+      { $push: { followers: user_id } },
       { new: true }
     );
-
-    res.send({ success: "Following Successfully" });
+    console.log("creator", creator1);
+    res.send({ user: updateUser, creator: creator1 });
   } catch (error) {
     res.status(500).send(error.message);
   }
