@@ -5,7 +5,6 @@ async function Search(collectionName, query) {
     mongoose.connection.db.collection(
       collectionName,
       async (err, collection) => {
-        if (err) console.log(err);
         const result = await collection.find({ $text: { $search: query } });
         return result;
       }

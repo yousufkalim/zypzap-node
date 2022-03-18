@@ -13,7 +13,6 @@ module.exports = (passport) => {
         profileFields: ["id", "displayName", "photos", "email"],
       },
       function (accessToken, refreshToken, profile, cb) {
-        console.log("profile2245", profile);
         return cb(null, profile);
       }
     )

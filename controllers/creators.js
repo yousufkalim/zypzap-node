@@ -81,7 +81,6 @@ exports.getsearch = async (req, res) => {
 exports.addFollower = async (req, res) => {
   const { user_id, creator_id } = req.body;
   try {
-    console.log("req", req.body);
     const user = await User.findById(user_id);
     const creator = await Creator.findById(creator_id);
     if (!user || !creator) {
@@ -95,13 +94,11 @@ exports.addFollower = async (req, res) => {
       },
       { new: true }
     );
-    console.log("user", updateUser);
     const creator1 = await Creator.findOneAndUpdate(
       { _id: creator_id },
       { $push: { followers: user_id } },
       { new: true }
     );
-    console.log("creator", creator1);
     res.send({ user: updateUser, creator: creator1 });
   } catch (error) {
     res.status(500).send(error.message);

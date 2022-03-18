@@ -47,7 +47,6 @@ const imageUpload = multer({
   fileFilter(req, file, cb) {
     // upload only mp4 and mkv format
     if (!file.originalname.match(/\.(jpeg|png|svg|jpg|gif)$/)) {
-      console.log("cjbhcje");
       return cb(new Error("Please upload Image"));
     }
     cb(undefined, true);
