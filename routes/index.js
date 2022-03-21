@@ -14,6 +14,7 @@ router.use("/ratings", require("./ratings"));
 router.use("/search", require("./search"));
 router.use("/contentRequests", require("./contentRequests"));
 router.use("/images", require("./images"));
+router.use("/newsletters", require("./newsletters"));
 
 // Export
 module.exports = router;
