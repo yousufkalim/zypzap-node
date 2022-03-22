@@ -216,7 +216,6 @@ exports.loginWithGoogle = async (req, res) => {
   try {
     const profile = req.user;
     const user = await User.findOne({ email: profile.email });
-    console.log("user", user);
     if (!user) {
       const newUser = new User();
       newUser.username = profile.displayName;
@@ -240,7 +239,6 @@ exports.loginWithGoogle = async (req, res) => {
 exports.loginWithFacebook = async (req, res) => {
   try {
     const profile = req.user;
-    console.log("profile", profile);
     const user = await User.findOne({ email: profile.emails[0].value });
     if (!user) {
       const newUser = new User();
