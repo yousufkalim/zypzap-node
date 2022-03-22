@@ -24,3 +24,30 @@ exports.create = async (req, res) => {
       .json({ success: false, message: "Internal server error", error: err });
   }
 };
+exports.getAllCreator = async (req, res) => {
+  try {
+    const totalNewsCreator = await Newsletters.find({ type: "creator" });
+
+    const totalCreator = totalNewsCreator.length;
+    res.json({ success: true, totalCreator });
+  } catch (err) {
+    console.log("Error ---> ", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Internal server error", error: err });
+  }
+};
+//  get all creator in members
+exports.getAllMembers = async (req, res) => {
+  try {
+    const allNewsLetter = await Newsletters.find({});
+
+    const allMembers = allNewsLetter.length;
+    res.json({ success: true, allMembers });
+  } catch (err) {
+    console.log("Error ---> ", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Internal server error", error: err });
+  }
+};

@@ -19,7 +19,19 @@ exports.getOneGame = async (req, res) => {
     res.status(500).send(error);
   }
 };
-
+exports.searchGame = async (req, res) => {
+  console.log("qwertyu");
+  const name = req.query.name;
+  console.log("name", name);
+  try {
+    const games = await Game.find({
+      game_name: { $regex: name, $options: "$i" },
+    });
+    res.send(games);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
 exports.createGame = async (req, res) => {
   try {
     const newGame = new Game(req.body);
