@@ -6,6 +6,7 @@ const {
   getOneGame,
   createGame,
   updateGame,
+  searchGame,
 } = require("../controllers/games");
 const {
   validateGames,
@@ -16,6 +17,7 @@ const {
 
 router.get("/", getAllGames);
 router.get("/:id", getOneGame);
+router.get("/search", searchGame);
 router.post("/", auth, validateGames, isValidated, createGame);
 router.put("/:id", auth, validateGames, isValidated, updateGame);
 
