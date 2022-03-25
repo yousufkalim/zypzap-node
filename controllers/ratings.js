@@ -73,7 +73,7 @@ exports.updateRating = async (req, res) => {
     if (!updatedRating) return res.status(404).send("Rating can't update");
     res.send(updatedRating);
   } catch (error) {
-    res.status(500).res.send(error);
+    res.status(500).send(error);
   }
 };
 exports.deleteRating = async (req, res) => {

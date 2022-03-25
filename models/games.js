@@ -13,7 +13,7 @@ const gameSchema = new Schema(
         "Action",
         "Adventure",
         "Metaverse",
-        "MMOG",
+        "Massively Multiplayer Games",
         "Car Racing",
         "FPS",
         "RTS",
@@ -23,6 +23,8 @@ const gameSchema = new Schema(
         "Sport",
         "Trading card",
         "Puzzle",
+        "Versus Fighting",
+        "Trading card and Board games",
       ],
     },
     vote: {

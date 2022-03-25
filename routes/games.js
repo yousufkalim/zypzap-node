@@ -12,12 +12,10 @@ const {
   validateGames,
   isValidated,
 } = require("../middleware/validators/games");
-
 // Routes
-
+router.get("/search", searchGame);
 router.get("/", getAllGames);
 router.get("/:id", getOneGame);
-router.get("/search", searchGame);
 router.post("/", auth, validateGames, isValidated, createGame);
 router.put("/:id", auth, validateGames, isValidated, updateGame);
 
