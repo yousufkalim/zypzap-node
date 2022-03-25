@@ -14,6 +14,7 @@ exports.getAll = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
+    console.log("req", res.body);
     const newsletter = await Newsletters.create(req.body);
     console.log(newsletter);
     res.json({ success: true, newsletter });
