@@ -17,6 +17,7 @@ const {
   deleteOneUser,
   addToWishLists,
   setSubscription,
+  basicInfo,
   enrolledCourse,
   enrolledCourseAndStarted,
   addProfileInfo,
@@ -31,6 +32,7 @@ const {
   logoutUser,
   logoutAll,
   getData,
+  updatePassword,
 } = require("../controllers/login");
 const { auth } = require("../middleware/auth");
 const {
@@ -47,6 +49,7 @@ router.get("/getuserbytoken", auth, getData);
 router.get("/", getAllUsers);
 router.post("/addToWishLists", auth, addToWishLists);
 router.put("/addProfileInfo/:id", addProfileInfo);
+router.post("/basicInfo/:id", auth, basicInfo);
 //  upload image
 router.put("/uploadprofileimage/:id", singleUpload, uploadProfileImage);
 //router.put("/uploadimage/:id", auth, imageUpload, uploadProfileImage);
@@ -56,6 +59,7 @@ router.get("/:id", getOneUser);
 router.put("/:id", auth, updateOneUser);
 router.delete("/:id", auth, deleteOneUser);
 router.post("/login", loginUser);
+router.post("/updatePassword/:id", auth, updatePassword);
 
 router.post("/logout", auth, logoutUser);
 

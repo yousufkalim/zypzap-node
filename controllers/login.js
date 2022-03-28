@@ -24,7 +24,31 @@ exports.loginUser = async (req, res) => {
     res.status(400).send(error);
   }
 };
-
+exports.updatePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const _id = req.params.id;
+  try {
+    
+    let user = await User.findById(_id);
+    if (!user) {
+      return res
+        .status(400)
+        .send({ success: false, message: "User Not Exists" });
+    }
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Invalid Password" });
+    }
+    if (isMatch) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+    }
+    await user.save();
+    res.json({ success: true, user });
+  } catch (error) {}
+};
 exports.getData = async (req, res) => {
   res.status(200).send(req.user);
 };
@@ -50,4 +74,3 @@ exports.logoutAll = async (req, res) => {
     res.status(500).send(error);
   }
 };
-

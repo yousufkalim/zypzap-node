@@ -92,6 +92,28 @@ exports.addProfileInfo = async (req, res) => {
     res.status(400).send(error);
   }
 };
+exports.basicInfo = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const { first_name, last_name, phone_number, email } = req.body;
+    const user = await User.findByIdAndUpdate(
+      _id,
+      {
+        first_name,
+        last_name,
+        phone_number,
+        $push: { email: email },
+      },
+      { new: true }
+    );
+    res.json({ success: true, user });
+  } catch (err) {
+    console.log("Error ---> ", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Internal server error", error: err });
+  }
+};
 exports.enrolledCourseAndStarted = async (req, res) => {
   try {
     const { courseId, userId } = req.body;
