@@ -20,9 +20,7 @@ exports.getOneGame = async (req, res) => {
   }
 };
 exports.searchGame = async (req, res) => {
-  console.log("qwertyu");
   const name = req.query.name;
-  console.log("name", name);
   try {
     const games = await Game.find({
       game_name: { $regex: name, $options: "$i" },

@@ -4,6 +4,12 @@ const jwt = require("jsonwebtoken");
 
 const userSchema = new Schema(
   {
+    first_name: {
+      type: String,
+    },
+    last_name: {
+      type: String,
+    },
     username: {
       type: String,
       required: true,
@@ -82,6 +88,7 @@ const userSchema = new Schema(
         type: String,
       },
     },
+    expertiseGame: [String],
     plateForm: [String],
     gameType: [String],
     gameMood: {

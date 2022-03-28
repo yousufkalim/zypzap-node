@@ -3,19 +3,26 @@ const User = require("../models/users");
 
 exports.postCreator = async (req, res) => {
   try {
+    const { expertiseGame, profile_photo, gameType, gameMood, plateForm } =
+      req.body;
     const _id = req.params.id;
     const user = await User.findById(_id);
     let creator = await Creator.findById(_id);
     if (creator)
       return res.status(400).send({ message: "User is already a creator" });
     if (!user) return res.status(400).send("User Not Found");
-    creator = new Creator({ ...req.body, user_id: req.params.id });
+    creator = new Creator({ user_id: req.params.id });
 
     let newUser = {
+      expertiseGame,
+      profile_photo,
+      gameType,
+      gameMood,
+      plateForm,
       creator: creator._id,
       role: "Creator",
     };
-    await User.findOneAndUpdate(
+    const newUsers = await User.findOneAndUpdate(
       { _id: req.params.id },
       {
         $set: newUser,
@@ -25,8 +32,7 @@ exports.postCreator = async (req, res) => {
       }
     );
     await creator.save();
-
-    res.status(201).send(creator);
+    res.status(201).send({ newUsers, creator });
   } catch (error) {
     res.status(500).send(error);
   }
