@@ -7,12 +7,6 @@ const creatorSchema = new Schema(
       required: true,
       ref: "Users",
     },
-    gameyouaregoodat: {
-      type: String,
-    },
-    onlineTeaching: {
-      type: Boolean,
-    },
     gameLevel: {
       type: String,
       enum: ["initial", "medium", "pro"],
@@ -23,9 +17,6 @@ const creatorSchema = new Schema(
         ref: "Users",
       },
     ],
-    audience: {
-      type: String,
-    },
     bio: {
       type: String,
     },
