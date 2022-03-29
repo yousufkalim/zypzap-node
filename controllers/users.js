@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const { auth } = require("../middleware/auth");
 const jwt = require("jsonwebtoken");
 const { generateAuthToken } = require("../middleware/auth");
-
+const { sendEmail } = require("../middleware/sendMail");
 exports.createUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
@@ -25,6 +25,9 @@ exports.createUser = async (req, res) => {
     user.password = await bcrypt.hash(password, salt);
 
     await user.save();
+    if (user) {
+      sendEmail(email);
+    }
     res.json({ message: "User Registered Successfully" });
   } catch (error) {
     console.log("Error ----> ", error);
