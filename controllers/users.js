@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const { auth } = require("../middleware/auth");
 const jwt = require("jsonwebtoken");
 const { generateAuthToken } = require("../middleware/auth");
-
+const { sendEmail } = require("../middleware/sendMail");
 exports.createUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
@@ -25,6 +25,9 @@ exports.createUser = async (req, res) => {
     user.password = await bcrypt.hash(password, salt);
 
     await user.save();
+    if (user) {
+      sendEmail(email);
+    }
     res.json({ message: "User Registered Successfully" });
   } catch (error) {
     console.log("Error ----> ", error);
@@ -222,14 +225,14 @@ exports.deleteOneUser = async (req, res) => {
 // upload image
 exports.uploadProfileImage = async (req, res) => {
   try {
-    const _id = req.params.id;
-    const path = req.file.location;
-    const user = await User.findByIdAndUpdate(
-      _id,
-      { profile_photo: path },
-      { new: true }
-    );
-    res.send(user);
+    // const _id = req.params.id;
+    // const path = req.file.location;
+    // const user = await User.findByIdAndUpdate(
+    //   _id,
+    //   { profile_photo: path },
+    //   { new: true }
+    // );
+    res.send(req.file);
   } catch (error) {
     res.status(500).send(error);
   }

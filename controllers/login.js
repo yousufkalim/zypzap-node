@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/users");
 const { generateAuthToken } = require("../middleware/auth");
-
+// const { sendMail } = require("../middleware/sendMail");
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -28,7 +28,6 @@ exports.updatePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   const _id = req.params.id;
   try {
-    
     let user = await User.findById(_id);
     if (!user) {
       return res

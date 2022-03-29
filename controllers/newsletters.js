@@ -1,5 +1,5 @@
 const Newsletters = require("../models/newsletter");
-
+const { sendEmail } = require("../middleware/sendMail");
 exports.getAll = async (req, res) => {
   try {
     const newsletters = await Newsletters.find().sort({ createdAt: -1 });
@@ -15,6 +15,11 @@ exports.getAll = async (req, res) => {
 exports.create = async (req, res) => {
   try {
     const newsletter = await Newsletters.create(req.body);
+    console.log("hjkj", newsletter);
+    if (newsletter) {
+      sendEmail(req.body.email);
+    }
+
     res.json({ success: true, newsletter });
   } catch (err) {
     console.log("Error ---> ", err);
