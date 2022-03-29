@@ -1,11 +1,8 @@
 var nodemailer = require("nodemailer");
 //   SMTP method
-const Host = process.env.MAILER_HOST;
-const Port = process.env.MAILER_PORT;
-const User = process.env.MAILER_USER;
-const Pass = process.env.MAILER_PASS;
-const password = process.env.MAILER_DOMAIN;
 const sender_mail = process.env.MAILER_EMAIL;
+const password = process.env.MAILER_PASS;
+
 exports.sendEmail = (email) => {
   return new Promise((resolve, reject) => {
     // Sender mail server config
