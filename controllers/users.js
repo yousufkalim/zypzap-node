@@ -222,14 +222,14 @@ exports.deleteOneUser = async (req, res) => {
 // upload image
 exports.uploadProfileImage = async (req, res) => {
   try {
-    const _id = req.params.id;
-    const path = req.file.location;
-    const user = await User.findByIdAndUpdate(
-      _id,
-      { profile_photo: path },
-      { new: true }
-    );
-    res.send(user);
+    // const _id = req.params.id;
+    // const path = req.file.location;
+    // const user = await User.findByIdAndUpdate(
+    //   _id,
+    //   { profile_photo: path },
+    //   { new: true }
+    // );
+    res.send(req.file);
   } catch (error) {
     res.status(500).send(error);
   }
