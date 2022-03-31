@@ -21,7 +21,12 @@ const upload = multer({
     destination: "uploads",
     acl: "public-read",
     metadata: function (req, file, cb) {
-      cb(null, { fieldName: file.fieldname, destination: "uploads" });
+      console.log("file", file);
+      cb(null, {
+        fieldName:
+          file.fieldname + "_" + Date.now() + path.extname(file.originalname),
+        destination: "uploads",
+      });
     },
     key: function (req, file, cb) {
       cb(null, file.originalname);

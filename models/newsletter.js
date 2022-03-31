@@ -9,6 +9,10 @@ const newsletterSchema = new mongoose.Schema(
       type: String,
       enum: ["all", "user", "creator"],
     },
+    tester: {
+      type: String,
+      enum: ["true", "false"],
+    },
   },
   {
     timestamps: true,
