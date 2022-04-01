@@ -7,7 +7,9 @@ exports.sendEmail = (email) => {
   return new Promise((resolve, reject) => {
     // Sender mail server config
     var transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "mail.privateemail.com",
+      port: 587,
+      secure: false,
       auth: {
         user: sender_mail,
         pass: password,
@@ -16,9 +18,9 @@ exports.sendEmail = (email) => {
 
     // Send email options
     var mailOptions = {
-      from: sender_mail,
+      from: `ZypZap <${sender_mail}>`,
       to: email,
-      subject: "ZypZap -Bienvenue",
+      subject: "ZypZap - Bienvenue",
       html: WelcomMsg(email),
     };
 
