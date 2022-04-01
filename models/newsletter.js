@@ -10,8 +10,8 @@ const newsletterSchema = new mongoose.Schema(
       enum: ["all", "user", "creator"],
     },
     tester: {
-      type: String,
-      enum: ["true", "false"],
+      type: Boolean,
+      default: false,
     },
   },
   {
