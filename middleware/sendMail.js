@@ -33,6 +33,28 @@ exports.sendEmail = (email) => {
     });
   });
 };
+const date = new Date();
+console.log("date", date.getDay());
+function getDayName(dateStr, locale) {
+  var date = new Date(dateStr);
+  return date.toLocaleDateString(locale, { weekday: "long" });
+}
+var day = getDayName(date, "fr");
+console.log("day", day);
+const monthNames = [
+  "janvier",
+  "février",
+  "mars",
+  "avril",
+  "Mai",
+  "juin",
+  "juillet",
+  "août",
+  "septembre",
+  "octobre",
+  "novembre",
+  "décembre",
+];
 
 ///   templete send to customer
 const WelcomMsg = (email) => {
@@ -137,7 +159,9 @@ const WelcomMsg = (email) => {
                   "
                   class="mail-p"
                 >
-                  vendredi 25 mars 2022 11:50
+                ${day}, ${
+    monthNames[date.getMonth()]
+  } ${date.getDay()} , ${date.getFullYear()} ${date.getHours()}:${date.getUTCMinutes()}
                 </p>
               </div>
               <div
@@ -180,7 +204,7 @@ const WelcomMsg = (email) => {
                   "
                   class="mail-p"
                 >
-                  TEST - ZypZap - Bienvenue !
+                  ZypZap - Bienvenue !
                 </p>
               </div>
             </div>

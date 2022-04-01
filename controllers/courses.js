@@ -4,63 +4,91 @@ const Creater = require("../models/creators");
 const Notifications = require("../models/notifications");
 const Game = require("../models/games");
 const mongoose = require("mongoose");
-
+const path = require("path");
+const { getVideoDurationInSeconds } = require("get-video-duration");
+// const AWS = require("aws-sdk");
+// Note: All these need to be done
+const Video = require("../models/videos");
 exports.createCourse = async (req, res) => {
   try {
     let files = req.files;
-    console.log("Req files", files);
-    console.log("data", req.body);
-    // const {
-    //   game_id,
-    //   course_name,
-    //   creator,
-    //   price,
-    //   mode,
-    //   type,
-    //   plateform,
-    //   description,
-    //   level,
-    // } = req.body;
+    const {
+      id,
+      course_name,
+      game_name,
+      level,
+      category,
+      mode,
+      plateform,
+      description,
+    } = req.body;
+    const newCourse = {
+      course_name,
+      level,
+      mode,
+      plateform,
+      description,
+      creator: id,
+      price: 0,
+    };
+    const length = req.files.length;
+    const newCreator = await Creater.findById(id).populate("followers");
+    if (!newCreator) return res.status(404).send("Creator does not found");
+    const course = new Course(newCourse);
+    const courseId = course._id;
+    course.thumbnail = req.files[length - 1].location;
+    await course.save();
 
-    // const data = {
-    //   game_id,
-    //   course_name,
-    //   creator,
-    //   mode,
-    //   type,
-    //   plateform,
-    //   description,
-    //   level,
-    // };
-    // const newCreator = await Creater.findById(creator).populate("followers");
+    const newFile = files.filter((file, index) => {
+      return index !== files.length - 1;
+    });
+    newFile.map(async (file) => {
+      const path = file.location;
+      const videoDuration = await getVideoDurationInSeconds(path);
+      console.log("videoDuration", videoDuration);
+      const video = new Video({
+        title: file.originalname,
+        src_url: file.location,
+        duration: videoDuration,
+        views: 0,
+        course: courseId,
+        creator: id,
+        file_props: {
+          ...file,
+        },
+      });
+      await video.save();
+      console.log("video", video);
+      const newC = await Course.findByIdAndUpdate(
+        courseId,
+        {
+          $push: { videos: video._id },
+        },
+        {
+          new: true,
+        }
+      );
+    });
 
-    // if (!newCreator) return res.status(404).send("Creator does not found");
-    // const course = new Course(data);
-    // course.thumbnail = file.location;
-    // if (price === "free") {
-    //   course.price = 0;
-    // } else {
-    //   course.price = price;
-    // }
-
-    // await course.save();
-    // const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
-    // const sevenDays = new Date(daysCount); //Set date after 7days
-    // const notification = await Notifications.create({
-    //   title: "New Course added",
-    //   expiry_date: sevenDays,
-    //   from: data.creator,
-    // });
-    // newCreator.followers.map(async (follower) => {
-    //   let Updateuser = await User.findByIdAndUpdate(
-    //     follower.id,
-    //     {
-    //       $push: { notifications: notification.id },
-    //     },
-    //     { new: true }
-    //   );
-    // });
-    res.send(files);
+    const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
+    const sevenDays = new Date(daysCount); //Set date after 7days
+    const notification = await Notifications.create({
+      title: "New Course added",
+      expiry_date: sevenDays,
+      from: id,
+    });
+    console.log("newCreator", newCreator.followers);
+    newCreator.followers.map(async (follower) => {
+      let Updateuser = await User.findByIdAndUpdate(
+        follower.id,
+        {
+          $push: { notifications: notification.id },
+        },
+        { new: true }
+      );
+    });
+    console.log("course final", course);
+    res.send(course);
   } catch (error) {
     res.status(500).send(error.message);
   }
