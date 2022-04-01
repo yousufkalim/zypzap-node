@@ -2,7 +2,7 @@
 const router = require("express").Router();
 const { auth } = require("../middleware/auth");
 const { upload } = require("../middleware/imageUpload");
-const singleUpload = upload.single("image");
+const singleUpload = upload.array("files");
 const {
   getAllCourses,
   getOneCourse,
@@ -21,7 +21,7 @@ const {
 // Routes
 router.get("/", getAllCourses);
 router.get("/search", searchCourse);
-router.post("/", auth, singleUpload, createCourse);
+router.post("/", singleUpload, createCourse);
 router.get("/filteredCourses", getFilteredCourses);
 router.get("/topGames", getTopGames);
 router.get("/:id", auth, getOneCourse);

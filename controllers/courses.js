@@ -7,57 +7,60 @@ const mongoose = require("mongoose");
 
 exports.createCourse = async (req, res) => {
   try {
-    const {
-      game_id,
-      course_name,
-      creator,
-      price,
-      mode,
-      type,
-      plateform,
-      description,
-      level,
-    } = req.body;
-    const data = {
-      game_id,
-      course_name,
-      creator,
-      mode,
-      type,
-      plateform,
-      description,
-      level,
-    };
-    const file = req.file;
-    const newCreator = await Creater.findById(creator).populate("followers");
+    let files = req.files;
+    console.log("Req files", files);
+    console.log("data", req.body);
+    // const {
+    //   game_id,
+    //   course_name,
+    //   creator,
+    //   price,
+    //   mode,
+    //   type,
+    //   plateform,
+    //   description,
+    //   level,
+    // } = req.body;
 
-    if (!newCreator) return res.status(404).send("Creator does not found");
-    const course = new Course(data);
-    course.thumbnail = file.location;
-    if (price === "free") {
-      course.price = 0;
-    } else {
-      course.price = price;
-    }
+    // const data = {
+    //   game_id,
+    //   course_name,
+    //   creator,
+    //   mode,
+    //   type,
+    //   plateform,
+    //   description,
+    //   level,
+    // };
+    // const newCreator = await Creater.findById(creator).populate("followers");
 
-    await course.save();
-    const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
-    const sevenDays = new Date(daysCount); //Set date after 7days
-    const notification = await Notifications.create({
-      title: "New Course added",
-      expiry_date: sevenDays,
-      from: data.creator,
-    });
-    newCreator.followers.map(async (follower) => {
-      let Updateuser = await User.findByIdAndUpdate(
-        follower.id,
-        {
-          $push: { notifications: notification.id },
-        },
-        { new: true }
-      );
-    });
-    res.send(course);
+    // if (!newCreator) return res.status(404).send("Creator does not found");
+    // const course = new Course(data);
+    // course.thumbnail = file.location;
+    // if (price === "free") {
+    //   course.price = 0;
+    // } else {
+    //   course.price = price;
+    // }
+
+    // await course.save();
+    // const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
+    // const sevenDays = new Date(daysCount); //Set date after 7days
+    // const notification = await Notifications.create({
+    //   title: "New Course added",
+    //   expiry_date: sevenDays,
+    //   from: data.creator,
+    // });
+    // newCreator.followers.map(async (follower) => {
+    //   let Updateuser = await User.findByIdAndUpdate(
+    //     follower.id,
+    //     {
+    //       $push: { notifications: notification.id },
+    //     },
+    //     { new: true }
+    //   );
+    // });
+    res.send(files);
   } catch (error) {
     res.status(500).send(error.message);
   }
