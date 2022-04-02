@@ -20,7 +20,7 @@ exports.sendEmail = (email) => {
     var mailOptions = {
       from: `ZypZap <${sender_mail}>`,
       to: email,
-      subject: "ZypZap - Bienvenue",
+      subject: "Merci pour votre pré-inscription ! - Bienvenue chez ZypZap !",
       html: WelcomMsg(email),
     };
 
@@ -90,103 +90,6 @@ const WelcomMsg = (email) => {
           class="mail-confirm-container"
         >
           <div class="mail-centerDiv">
-            <!-- -------------------------- Mail heading div start--------------------------- -->
-            <div
-              style="
-                margin-top: 100px;
-                border-top: 1px solid gray;
-                line-height: 0;
-              "
-              class="mail-heading"
-            >
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  padding-top: 7px;
-                  margin: 0;
-                "
-                class="mail-content"
-              >
-                <h1 style="font-size: 22px" class="mail-H1"><b>De :</b></h1>
-                <p
-                  style="
-                    font-size: 20px;
-                    font-weight: 500;
-                    padding-left: 5px;
-                    padding-top: 3px;
-                    margin: 0;
-                    margin-top:12px;
-                  "
-                  class="mail-p"
-                >
-                  Olivier Morlat
-                </p>
-              </div>
-              <div
-                style="display: flex; align-items: center; padding-top: 7px"
-                class="mail-content"
-              >
-                <h1 style="font-size: 22px" class="mail-H1">Envoyé le :</h1>
-                <p
-                  style="
-                    font-size: 20px;
-                    font-weight: 500;
-                    padding-left: 5px;
-                    padding-top: 3px;
-                    margin: 0;
-                    margin-top:12px;
-                  "
-                  class="mail-p"
-                >
-                  vendredi 25 mars 2022 11:50
-                </p>
-              </div>
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  padding-top: 7px;
-                  margin: 0;
-                "
-                class="mail-content"
-              >
-                <h1 style="font-size: 22px" class="mail-H1">À :</h1>
-                <p
-                  style="
-                    font-size: 20px;
-                    font-weight: 500;
-                    padding-left: 5px;
-                    padding-top: 3px;
-                    margin: 0;
-                    margin-top:12px;
-                  "
-                  class="mail-p"
-                >
-                  ${email}
-                </p>
-              </div>
-              <div
-                style="display: flex; align-items: center; padding-top: 7px"
-                class="mail-content"
-              >
-                <h1 style="font-size: 22px" class="mail-H1">Objet :</h1>
-                <p
-                  style="
-                    font-size: 20px;
-                    font-weight: 500;
-                    padding-left: 5px;
-                    padding-top: 3px;
-                    margin: 0;
-                    margin-top:12px;
-                  "
-                  class="mail-p"
-                >
-                  TEST - ZypZap - Bienvenue !
-                </p>
-              </div>
-            </div>
-            <!-- -------------------------- Mail heading div end --------------------------- -->
             <!-- ---------------------------- mail-logo-div start ---------------------------- -->
             <div
               style="text-align: center; padding: 50px 0"
