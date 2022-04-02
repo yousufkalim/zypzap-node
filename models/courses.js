@@ -60,7 +60,7 @@ const courseSchema = new Schema(
     },
     mode: {
       type: String,
-      enum: ["Single", "Multiplayer"],
+      enum: ["Single", "Multiplayer", "Both"],
     },
   },
   {
