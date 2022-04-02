@@ -30,6 +30,7 @@ exports.createCourse = async (req, res) => {
       description,
       creator: id,
       price: 0,
+      game_id: game_name,
     };
     const length = req.files.length;
     const newCreator = await Creater.findById(id).populate("followers");
@@ -45,7 +46,6 @@ exports.createCourse = async (req, res) => {
     newFile.map(async (file) => {
       const path = file.location;
       const videoDuration = await getVideoDurationInSeconds(path);
-      console.log("videoDuration", videoDuration);
       const video = new Video({
         title: file.originalname,
         src_url: file.location,
@@ -58,7 +58,6 @@ exports.createCourse = async (req, res) => {
         },
       });
       await video.save();
-      console.log("video", video);
       const newC = await Course.findByIdAndUpdate(
         courseId,
         {
@@ -77,7 +76,6 @@ exports.createCourse = async (req, res) => {
       expiry_date: sevenDays,
       from: id,
     });
-    console.log("newCreator", newCreator.followers);
     newCreator.followers.map(async (follower) => {
       let Updateuser = await User.findByIdAndUpdate(
         follower.id,
@@ -87,7 +85,6 @@ exports.createCourse = async (req, res) => {
         { new: true }
       );
     });
-    console.log("course final", course);
     res.send(course);
   } catch (error) {
     res.status(500).send(error.message);

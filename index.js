@@ -5,7 +5,6 @@ const port = process.env.PORT || 5000;
 const session = require("express-session");
 const User = require("./models/users");
 
-// Friday, March 25, 2022 11:50 a.m.
 
 
 require("./database");
