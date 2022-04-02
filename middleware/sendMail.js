@@ -35,31 +35,31 @@ exports.sendEmail = (email) => {
     });
   });
 };
-const date = new Date();
-console.log("date", date.getDay());
-function getDayName(dateStr, locale) {
-  var date = new Date(dateStr);
-  return date.toLocaleDateString(locale, { weekday: "long" });
-}
-var day = getDayName(date, "fr");
-console.log("day", day);
-const monthNames = [
-  "janvier",
-  "février",
-  "mars",
-  "avril",
-  "Mai",
-  "juin",
-  "juillet",
-  "août",
-  "septembre",
-  "octobre",
-  "novembre",
-  "décembre",
-];
 
 ///   templete send to customer
 const WelcomMsg = (email) => {
+  const date = new Date();
+  console.log("date", date.getDay());
+  function getDayName(dateStr, locale) {
+    var date = new Date(dateStr);
+    return date.toLocaleDateString(locale, { weekday: "long" });
+  }
+  var day = getDayName(date, "fr");
+  console.log("day", day);
+  const monthNames = [
+    "janvier",
+    "février",
+    "mars",
+    "avril",
+    "Mai",
+    "juin",
+    "juillet",
+    "août",
+    "septembre",
+    "octobre",
+    "novembre",
+    "décembre",
+  ];
   return `<!DOCTYPE html>
   <html lang="en">
     <head>
