@@ -184,13 +184,13 @@ const WelcomMsg = (email) => {
               </p>
               <div class="mail-footerLogo">
                 <a href="https://discord.gg/qkv5jufE">
-                  <button style=" background-color: blue;
+                  <button class="mailFT-Logo" style="background-color: blue;
+                  cursor: pointer;
                   border: none;
                   color: #fff;
                   border-radius: 20px;
                   padding: 10px 50px;
-                  font-size: 20px;
-                  cursor: pointer;" class="mailFT-Logo">Rajoignaz le Discord !</button>
+                  font-size: 20px;" >Rejoignez le Discord !</button>
                 </a>
               </div>
             </div>
