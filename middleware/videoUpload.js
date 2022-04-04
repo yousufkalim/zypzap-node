@@ -32,7 +32,6 @@ const videoUpload = multer({
     destination: "uploads",
     acl: "public-read",
     metadata: function (req, file, cb) {
-      console.log("file", file);
       cb(null, {
         fieldName:
           file.fieldname + "_" + Date.now() + path.extname(file.originalname),

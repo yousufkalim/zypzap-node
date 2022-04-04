@@ -42,6 +42,7 @@ exports.createCourse = async (req, res) => {
     const newFile = files.filter((file, index) => {
       return index !== files.length - 1;
     });
+    console.log("courses", course);
     newFile.map(async (file) => {
       const path = file.location;
       const videoDuration = await getVideoDurationInSeconds(path);

@@ -15,10 +15,10 @@ const {
 
 // Routes   addFollower
 router.post("/addFollower", auth, addFollower);
+router.get("/:id", getCreator);
 router.get("/search", auth, getsearch);
 router.post("/addDetails/:id", auth, addDetails);
 router.post("/:id", validateCreators, isValidated, auth, postCreator);
-router.get("/:id", getCreator);
 
 // Export
 module.exports = router;

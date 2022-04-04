@@ -15,7 +15,6 @@ exports.getAll = async (req, res) => {
 exports.create = async (req, res) => {
   try {
     const newsletter = await Newsletters.create(req.body);
-    console.log("hjkj", newsletter);
     if (newsletter) {
       sendEmail(req.body.email);
     }
