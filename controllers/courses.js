@@ -12,8 +12,6 @@ const Video = require("../models/videos");
 exports.createCourse = async (req, res) => {
   try {
     let files = req.files;
-    console.log("files", files);
-    console.log("body", req.body);
     const {
       id,
       course_name,
@@ -44,7 +42,6 @@ exports.createCourse = async (req, res) => {
     const newFile = files.filter((file, index) => {
       return index !== files.length - 1;
     });
-    console.log("newFiles", newFile);
     newFile.map(async (file) => {
       const path = file.location;
       const videoDuration = await getVideoDurationInSeconds(path);
