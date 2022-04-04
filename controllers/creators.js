@@ -64,7 +64,18 @@ exports.addDetails = async (req, res) => {
 };
 exports.getCreator = async (req, res) => {
   try {
-    let creator = await Creator.findOne({ _id: req.params.id });
+    let creator = await Creator.findOne({ _id: req.params.id })
+      .populate({
+        path: "courses",
+        populate: [
+          {
+            path: "videos",
+            model: "Videos",
+          },
+        ],
+      })
+      .populate("user_id");
+
     if (!creator) return res.status(400).send({ message: "creator not found" });
     res.json({ creator });
   } catch (error) {

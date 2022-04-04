@@ -12,6 +12,8 @@ const Video = require("../models/videos");
 exports.createCourse = async (req, res) => {
   try {
     let files = req.files;
+    console.log("files", files);
+    console.log("body", req.body);
     const {
       id,
       course_name,
@@ -39,10 +41,10 @@ exports.createCourse = async (req, res) => {
     const courseId = course._id;
     course.thumbnail = req.files[length - 1].location;
     await course.save();
-
     const newFile = files.filter((file, index) => {
       return index !== files.length - 1;
     });
+    console.log("newFiles", newFile);
     newFile.map(async (file) => {
       const path = file.location;
       const videoDuration = await getVideoDurationInSeconds(path);
@@ -58,7 +60,7 @@ exports.createCourse = async (req, res) => {
         },
       });
       await video.save();
-      const newC = await Course.findByIdAndUpdate(
+      await Course.findByIdAndUpdate(
         courseId,
         {
           $push: { videos: video._id },
@@ -77,7 +79,7 @@ exports.createCourse = async (req, res) => {
       from: id,
     });
     newCreator.followers.map(async (follower) => {
-      let Updateuser = await User.findByIdAndUpdate(
+      await User.findByIdAndUpdate(
         follower.id,
         {
           $push: { notifications: notification.id },
@@ -85,6 +87,14 @@ exports.createCourse = async (req, res) => {
         { new: true }
       );
     });
+    const newcreator = await Creater.findByIdAndUpdate(
+      newCreator._id,
+      {
+        $push: { courses: courseId },
+      },
+      { new: true }
+    );
+    console.log("newcreator", newcreator);
     res.send(course);
   } catch (error) {
     res.status(500).send(error.message);
