@@ -64,6 +64,7 @@ exports.addDetails = async (req, res) => {
 };
 exports.getCreator = async (req, res) => {
   try {
+    console.log("req.params.id", req.params.id);
     let creator = await Creator.findOne({ _id: req.params.id })
       .populate({
         path: "courses",
