@@ -129,8 +129,8 @@ const WelcomMsg = (email) => {
                 </p>
               </a>
               <img
-                style="width: 90%"
-                src="https://pass-to-trip.s3.eu-west-3.amazonaws.com/ZypzapLogo.jpg"
+                style="width: 60%"
+                src="https://pass-to-trip.s3.eu-west-3.amazonaws.com/bodyLogo.png"
                 alt=""
                 class="mail-zypzap-logo"
               />
@@ -172,24 +172,25 @@ const WelcomMsg = (email) => {
             </div>
             <!-- ------------------------ mail-heading-content end------------------------- -->
             <div style="text-align: center" class="mail-Bg-container">
-              <img style="width: 90%" src="https://pass-to-trip.s3.eu-west-3.amazonaws.com/signature%20zypzap%20globale.jpeg" alt="" class="mailBg" />
+              <img style="width: 60%;" src="https://pass-to-trip.s3.eu-west-3.amazonaws.com/signature%20zypzap%20globale.jpeg" alt="" class="mailBg" />
               <p
-                style="padding-top: 30px; padding-bottom: 50px; font-size: 20px; color: gray;"
+                style="padding-top: 30px; padding-bottom: 50px; font-size: 16px; color: gray;"
                 class="mail-Bg-P"
               >
                 Si vous souhaitez vous désinscrire de notre newsletter, cliquez
                 <span"><a  style="color: blue"  href="" > ici</a></span>
               </p>
+              <a href="https://discord.gg/GtsvfSV79U">
+              <button class="mailFT-Logo" style="background-color: blue;
+              cursor: pointer;
+              border: none;
+              color: #fff;
+              border-radius: 20px;
+              padding: 10px 50px;
+              font-size: 20px;" >Rejoignez le Discord !</button>
+            </a>
               <div class="mail-footerLogo">
-                <a href="https://discord.gg/GtsvfSV79U">
-                  <button class="mailFT-Logo" style="background-color: blue;
-                  cursor: pointer;
-                  border: none;
-                  color: #fff;
-                  border-radius: 20px;
-                  padding: 10px 50px;
-                  font-size: 20px;" >Rejoignez le Discord !</button>
-                </a>
+               
               </div>
             </div>
           </div>
