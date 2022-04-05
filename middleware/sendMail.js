@@ -181,7 +181,7 @@ const WelcomMsg = (email) => {
                 <span"><a  style="color: blue"  href="" > ici</a></span>
               </p>
               <div class="mail-footerLogo">
-                <a href="https://discord.gg/qkv5jufE">
+                <a href="https://discord.gg/GtsvfSV79U">
                   <button class="mailFT-Logo" style="background-color: blue;
                   cursor: pointer;
                   border: none;
