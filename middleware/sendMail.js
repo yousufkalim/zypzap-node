@@ -172,7 +172,7 @@ const WelcomMsg = (email) => {
             </div>
             <!-- ------------------------ mail-heading-content end------------------------- -->
             <div style="text-align: center" class="mail-Bg-container">
-              <img style="width: 60%;" src="https://pass-to-trip.s3.eu-west-3.amazonaws.com/signature%20zypzap%20globale.jpeg" alt="" class="mailBg" />
+              <img style="width: 60%;" src="https://pass-to-trip.s3.eu-west-3.amazonaws.com/z2-4.svg" alt="" class="mailBg" />
               <p
                 style="padding-top: 30px; padding-bottom: 50px; font-size: 16px; color: gray;"
                 class="mail-Bg-P"

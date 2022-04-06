@@ -91,7 +91,6 @@ exports.createCourse = async (req, res) => {
       },
       { new: true }
     );
-    console.log("newcreator", newcreator);
     res.send(course);
   } catch (error) {
     res.status(500).send(error.message);
