@@ -20,7 +20,7 @@ exports.sendEmail = (email) => {
     var mailOptions = {
       from: `ZypZap <${sender_mail}>`,
       to: email,
-      subject: "Merci pour votre pré-inscription ! - Bienvenue chez ZypZap !",
+      subject: "ZypZap - Bienvenue",
       html: WelcomMsg(email),
     };
 
@@ -73,6 +73,7 @@ const WelcomMsg = (email) => {
       <link rel="stylesheet" href="/style.css" />
       <title>Mail Confirmation</title>
       <style>
+    
         @media screen and (max-width: 800px) {
           .mail-confirm-container {
             width: 80% !important;
@@ -101,6 +102,7 @@ const WelcomMsg = (email) => {
             padding: 10px 0 !important;
           }
         }
+        
       </style>
     </head>
     <body style="font-family: Lato, sans-serif; margin: 0">
@@ -110,6 +112,105 @@ const WelcomMsg = (email) => {
           class="mail-confirm-container"
         >
           <div class="mail-centerDiv">
+            <!-- -------------------------- Mail heading div start--------------------------- -->
+            <div
+              style="
+                margin-top: 100px;
+                border-top: 1px solid gray;
+                line-height: 0;
+              "
+              class="mail-heading"
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  padding-top: 7px;
+                  margin: 0;
+                "
+                class="mail-content"
+              >
+                <h1 style="font-size: 22px" class="mail-H1"><b>De :</b></h1>
+                <p
+                  style="
+                    font-size: 20px;
+                    font-weight: 500;
+                    padding-left: 5px;
+                    padding-top: 3px;
+                    margin: 0;
+                    margin-top:12px;
+                  "
+                  class="mail-p"
+                >
+                  Olivier Morlat
+                </p>
+              </div>
+              <div
+                style="display: flex; align-items: center; padding-top: 7px"
+                class="mail-content"
+              >
+                <h1 style="font-size: 22px" class="mail-H1">Envoyé le :</h1>
+                <p
+                  style="
+                    font-size: 20px;
+                    font-weight: 500;
+                    padding-left: 5px;
+                    padding-top: 3px;
+                    margin: 0;
+                    margin-top:12px;
+                  "
+                  class="mail-p"
+                >
+                ${day}, ${
+    monthNames[date.getMonth()]
+  } ${date.getDay()} , ${date.getFullYear()} ${date.getHours()}:${date.getUTCMinutes()}
+                </p>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  padding-top: 7px;
+                  margin: 0;
+                "
+                class="mail-content"
+              >
+                <h1 style="font-size: 22px" class="mail-H1">À :</h1>
+                <p
+                  style="
+                    font-size: 20px;
+                    font-weight: 500;
+                    padding-left: 5px;
+                    padding-top: 3px;
+                    margin: 0;
+                    margin-top:12px;
+                  "
+                  class="mail-p"
+                >
+                  ${email}
+                </p>
+              </div>
+              <div
+                style="display: flex; align-items: center; padding-top: 7px"
+                class="mail-content"
+              >
+                <h1 style="font-size: 22px" class="mail-H1">Objet :</h1>
+                <p
+                  style="
+                    font-size: 20px;
+                    font-weight: 500;
+                    padding-left: 5px;
+                    padding-top: 3px;
+                    margin: 0;
+                    margin-top:12px;
+                  "
+                  class="mail-p"
+                >
+                  ZypZap - Bienvenue !
+                </p>
+              </div>
+            </div>
+            <!-- -------------------------- Mail heading div end --------------------------- -->
             <!-- ---------------------------- mail-logo-div start ---------------------------- -->
             <div
               style="text-align: center; padding: 50px 0"
@@ -130,7 +231,7 @@ const WelcomMsg = (email) => {
               </a>
               <img
                 style="width: 60%"
-                src="https://pass-to-trip.s3.eu-west-3.amazonaws.com/bodyLogo.png"
+                src="https://pass-to-trip.s3.eu-west-3.amazonaws.com/z2.png"
                 alt=""
                 class="mail-zypzap-logo"
               />
@@ -172,7 +273,7 @@ const WelcomMsg = (email) => {
             </div>
             <!-- ------------------------ mail-heading-content end------------------------- -->
             <div style="text-align: center" class="mail-Bg-container">
-              <img style="width: 60%;" src="https://pass-to-trip.s3.eu-west-3.amazonaws.com/z2-4.svg" alt="" class="mailBg" />
+              <img style="width: 70%;" src="https://pass-to-trip.s3.eu-west-3.amazonaws.com/signature%20zypzap%20globale.jpeg" alt="" class="mailBg" />
               <p
                 style="padding-top: 30px; padding-bottom: 50px; font-size: 16px; color: gray;"
                 class="mail-Bg-P"
@@ -180,15 +281,14 @@ const WelcomMsg = (email) => {
                 Si vous souhaitez vous désinscrire de notre newsletter, cliquez
                 <span"><a  style="color: blue"  href="" > ici</a></span>
               </p>
-              <a href="https://discord.gg/GtsvfSV79U">
-              <button class="mailFT-Logo" style="background-color: blue;
-              cursor: pointer;
+              <a  href="https://discord.gg/GtsvfSV79U" class="mailFT-Logo"  class:"btng" style="background-color: blue;
+              cursor:pointer;
               border: none;
               color: #fff;
               border-radius: 20px;
+              text-decoration: none ;
               padding: 10px 50px;
-              font-size: 20px;" >Rejoignez le Discord !</button>
-            </a>
+              font-size: 20px;" >Rejoignez le Discord !</a>
               <div class="mail-footerLogo">
                
               </div>
