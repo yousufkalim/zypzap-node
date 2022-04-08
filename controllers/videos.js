@@ -69,7 +69,6 @@ exports.watchVideo = async (req, res) => {
 // }
 exports.postVideo = async (req, res) => {
   try {
-    const { courseId } = req.body;
     const path = req.file.location;
     const videoDuration = await getVideoDurationInSeconds(path);
     const video = new Video({
@@ -77,21 +76,11 @@ exports.postVideo = async (req, res) => {
       src_url: req.file.location,
       views: 0,
       duration: videoDuration,
-      course: courseId,
       file_props: {
         ...req.file,
       },
     });
     await video.save();
-    const course = await Course.findByIdAndUpdate(
-      courseId,
-      {
-        $push: { videos: video._id },
-      },
-      {
-        new: true,
-      }
-    );
     res.send(video);
   } catch (error) {
     res.status(500).send(error);

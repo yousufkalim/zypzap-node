@@ -8,6 +8,7 @@ const singleUpload = upload.array("files");
 router.post("/", singleUpload, async (req, res) => {
   try {
     let files = req.files;
+    console.log(files, "------>files");
     res.json({ file: files, courses: req.body });
   } catch (error) {
     console.log("error message----->", error.message);
