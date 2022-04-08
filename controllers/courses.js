@@ -147,15 +147,27 @@ exports.getFilteredCourses = async (req, res) => {
 
       let foundGames = await Course.find({ game_id: { $in: gameIds } })
         .populate("videos")
-        .populate("game_id");
-
+        .populate("game_id")
+        .populate({
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
+          },
+        });
+      console.log("1234567");
       return res.send(foundGames);
     } else {
       const courses = await Course.find({
         $and: myFind,
-      })
-        .populate("videos")
-        .populate("game_id");
+      }).populate({
+        path: "creator",
+        populate: {
+          path: "user_id",
+          model: "Users",
+        },
+      });
+      console.log("345678");
       if (!courses) return res.status(404).send("Courses does not found");
       if (gameType) {
         const newCourses = courses.filter(
@@ -176,13 +188,10 @@ exports.getOneCourse = async (req, res) => {
     const course = await Course.findById(_id)
       .populate({
         path: "creator",
-        populate: [
-          {
-            path: "user_id",
-            model: "Users",
-          },
-          { path: "courses", model: "Courses" },
-        ],
+        populate: {
+          path: "user_id",
+          model: "Users",
+        },
       })
       .populate("videos");
     if (!course) res.status(404).send("Not Found");
@@ -260,6 +269,13 @@ exports.getTopGames = async (req, res) => {
 
     if (number == 1) {
       const courses = await Course.find({})
+        .populate({
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
+          },
+        })
         .populate("videos")
         .sort({ rating: -1 })
         .limit(10);
@@ -267,6 +283,13 @@ exports.getTopGames = async (req, res) => {
     }
     if (number == 2) {
       const courses = await Course.find({})
+        .populate({
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
+          },
+        })
         .populate("videos")
         .sort({ createdAt: 1 })
         .limit(10);
