@@ -29,7 +29,7 @@ const courseSchema = new Schema(
     },
     level: {
       type: String,
-      enum: ["Casual", "Confirmed","Hardcore" , "Esporter"] 
+      enum: ["Casual", "Confirmed", "Hardcore", "Esporter"],
     },
     requirement: [String],
     game_id: {
