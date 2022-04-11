@@ -55,7 +55,7 @@ const userSchema = new Schema(
     enrolled_courses: [
       {
         course_id: {
-          type: Schema.Types.ObjectId,
+          type: Schema.ObjectId,
           ref: "Courses",
         },
         started: {
@@ -76,10 +76,7 @@ const userSchema = new Schema(
     },
     prefrence_games: {
       favourite_games: [String],
-      play_period: {
-        type: String,
-      },
-      play_time_per_perioad: {
+      learningRethem: {
         type: String,
       },
       current_level: {

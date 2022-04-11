@@ -155,7 +155,6 @@ exports.getFilteredCourses = async (req, res) => {
             model: "Users",
           },
         });
-      console.log("1234567");
       return res.send(foundGames);
     } else {
       const courses = await Course.find({
@@ -167,7 +166,6 @@ exports.getFilteredCourses = async (req, res) => {
           model: "Users",
         },
       });
-      console.log("345678");
       if (!courses) return res.status(404).send("Courses does not found");
       if (gameType) {
         const newCourses = courses.filter(
