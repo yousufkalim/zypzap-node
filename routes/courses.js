@@ -24,7 +24,7 @@ router.get("/search", searchCourse);
 router.post("/", singleUpload, createCourse);
 router.get("/filteredCourses", getFilteredCourses);
 router.get("/topGames", getTopGames);
-router.get("/:id", auth, getOneCourse);
+router.get("/:id", getOneCourse);
 router.put("/:id", auth, updateCourse);
 router.delete("/:id", auth, deleteCourse);
 
