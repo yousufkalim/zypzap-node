@@ -142,6 +142,7 @@ exports.getFilteredCourses = async (req, res) => {
     const mode = req.query.mode;
     const price = req.query.price;
     let myFind = coursesFilter(plateForm, level, mode, price);
+    console.log("myFind", myFind);
     if (myFind.length === 0 && gameType === "") {
       return res.send(myFind);
     }
@@ -173,6 +174,7 @@ exports.getFilteredCourses = async (req, res) => {
           },
         })
         .populate("videos");
+      console.log("courses123", courses);
       if (!courses) return res.status(404).send("Courses does not found");
       if (gameType) {
         const newCourses = courses.filter(
@@ -279,6 +281,7 @@ exports.getTopGames = async (req, res) => {
   try {
     const number = req.query.type;
 
+    /// Top ten and trendy games
     if (number == 1) {
       const courses = await Course.find({})
         .populate({
@@ -293,6 +296,7 @@ exports.getTopGames = async (req, res) => {
         .limit(10);
       res.send(courses);
     }
+    /// Latest Courses
     if (number == 2) {
       const courses = await Course.find({})
         .populate({
@@ -303,9 +307,102 @@ exports.getTopGames = async (req, res) => {
           },
         })
         .populate("videos")
-        .sort({ createdAt: 1 })
+        .sort({ createdAt: -1 })
         .limit(10);
       res.send(courses);
+    }
+    //   top ten NFT games
+    if (number == 3) {
+      const games = await Game.find({ category: "NFT" })
+        .sort({ createdAt: -1 })
+        .limit(10);
+      const gameIds = games.map((a) => a._id);
+
+      let foundGames = await Course.find({ game_id: { $in: gameIds } })
+        .populate("game_id")
+        .populate({
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
+          },
+        })
+        .populate("videos");
+      res.send(foundGames);
+    }
+    //   top ten Metaverse games
+    if (number == 4) {
+      const games = await Game.find({ category: "Metaverse" })
+        .sort({ createdAt: -1 })
+        .limit(10);
+      const gameIds = games.map((a) => a._id);
+
+      let foundGames = await Course.find({ game_id: { $in: gameIds } })
+        .populate("game_id")
+        .populate({
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
+          },
+        })
+        .populate("videos")
+        .limit(10);
+      res.send(foundGames);
+    }
+    //  top reated content creators
+    if (number == 5) {
+      const users = await User.find({
+        creator: { $ne: null },
+      })
+        .populate({
+          path: "creator",
+          populate: {
+            path: "courses",
+            model: "Courses",
+          },
+        })
+        .sort({ createdAt: -1 })
+        .limit(10);
+
+      // const Creator = users.filter((user) => users.creator !== null);
+      res.send(users);
+    }
+    ///  Top New Games
+    if (number == 6) {
+      const games = await Game.find({}).sort({ createdAt: -1 }).limit(10);
+      const gameIds = games.map((a) => a._id);
+
+      let foundGames = await Course.find({ game_id: { $in: gameIds } })
+        .populate("game_id")
+        .populate({
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
+          },
+        })
+        .populate("videos");
+      res.send(foundGames);
+    }
+    /// top ten reality games
+    if (number == 7) {
+      const games = await Game.find({ category: "Reality" })
+        .sort({ createdAt: -1 })
+        .limit(10);
+      const gameIds = games.map((a) => a._id);
+
+      let foundGames = await Course.find({ game_id: { $in: gameIds } })
+        .populate("game_id")
+        .populate({
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
+          },
+        })
+        .populate("videos");
+      res.send(foundGames);
     }
   } catch (error) {
     res.status(500).send(error);

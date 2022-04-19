@@ -102,6 +102,28 @@ exports.getsearch = async (req, res) => {
     res.status(500).send(error);
   }
 };
+exports.topRatedCreator = async (req, res) => {
+  try {
+    const users = await User.find({
+      creator: { $ne: null },
+    })
+      .populate({
+        path: "creator",
+        populate: {
+          path: "courses",
+          model: "Courses",
+        },
+      })
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    // const Creator = users.filter((user) => users.creator !== null);
+    res.send(users);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
 exports.addFollower = async (req, res) => {
   const { user_id, creator_id } = req.body;
   try {
