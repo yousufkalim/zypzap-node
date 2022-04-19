@@ -113,10 +113,13 @@ exports.getAllCourses = async (req, res) => {
     res.status(500).send(error);
   }
 };
-const coursesFilter = (plateForm, mode, price) => {
+const coursesFilter = (plateForm, level, mode, price) => {
   let myFind = [];
   if (plateForm) {
     myFind = [...myFind, { plateform: plateForm }];
+  }
+  if (level) {
+    myFind = [...myFind, { level: level }];
   }
   if (mode) {
     myFind = [...myFind, { mode: mode }];
@@ -135,9 +138,10 @@ exports.getFilteredCourses = async (req, res) => {
   try {
     const gameType = req.query.gameType;
     const plateForm = req.query.plateForm;
+    const level = req.query.level;
     const mode = req.query.mode;
     const price = req.query.price;
-    let myFind = coursesFilter(plateForm, mode, price);
+    let myFind = coursesFilter(plateForm, level, mode, price);
     if (myFind.length === 0 && gameType === "") {
       return res.send(myFind);
     }
@@ -146,7 +150,6 @@ exports.getFilteredCourses = async (req, res) => {
       const gameIds = games.map((a) => a._id);
 
       let foundGames = await Course.find({ game_id: { $in: gameIds } })
-        .populate("videos")
         .populate("game_id")
         .populate({
           path: "creator",
@@ -154,18 +157,22 @@ exports.getFilteredCourses = async (req, res) => {
             path: "user_id",
             model: "Users",
           },
-        });
+        })
+        .populate("videos");
       return res.send(foundGames);
     } else {
       const courses = await Course.find({
         $and: myFind,
-      }).populate({
-        path: "creator",
-        populate: {
-          path: "user_id",
-          model: "Users",
-        },
-      });
+      })
+        .populate("game_id")
+        .populate({
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
+          },
+        })
+        .populate("videos");
       if (!courses) return res.status(404).send("Courses does not found");
       if (gameType) {
         const newCourses = courses.filter(
@@ -189,6 +196,13 @@ exports.getOneCourse = async (req, res) => {
         populate: {
           path: "user_id",
           model: "Users",
+        },
+      })
+      .populate({
+        path: "creator",
+        populate: {
+          path: "courses",
+          model: "Courses",
         },
       })
       .populate("videos");

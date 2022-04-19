@@ -28,7 +28,7 @@ exports.createUser = async (req, res) => {
     if (user) {
       sendEmail(email);
     }
-    res.json({ message: "User Registered Successfully" });
+    res.json({ message: "User Registered Successfully", user: user });
   } catch (error) {
     console.log("Error ----> ", error);
     res.status(500).send(error);
@@ -98,14 +98,13 @@ exports.addProfileInfo = async (req, res) => {
 exports.basicInfo = async (req, res) => {
   try {
     const _id = req.params.id;
-    const { first_name, last_name, phone_number, email } = req.body;
+    const { username, phone_number, email } = req.body;
     const user = await User.findByIdAndUpdate(
       _id,
       {
-        first_name,
-        last_name,
+        username,
         phone_number,
-        $push: { email: email },
+        email,
       },
       { new: true }
     );
@@ -135,7 +134,6 @@ exports.enrolledCourseAndStarted = async (req, res) => {
       },
       { new: true }
     );
-    console.log("user", user);
     if (user === null) return res.send({ message: "User not found" });
     res.send(user);
   } catch (error) {
@@ -162,7 +160,6 @@ exports.enrolledCourse = async (req, res) => {
       { new: true }
     );
     if (user === null) return res.send({ message: "User not found" });
-    console.log("user", user);
     res.send(course);
   } catch (error) {
     res.status(400).send(error);
@@ -204,35 +201,33 @@ exports.getOneUser = async (req, res) => {
     const user = await User.findOne({ _id })
       .populate({
         path: "wishlist_courses",
-        populate: [
-          {
-            path: "creator",
-            populate: {
-              path: "user_id",
-              model: "Users",
-            },
+        populate: {
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
           },
-          {
-            path: "videos",
-            model: "Videos",
-          },
-        ],
+        },
       })
       .populate({
         path: "enrolled_courses.course_id",
-        populate: [
-          {
-            path: "creator",
-            populate: {
-              path: "user_id",
-              model: "Users",
-            },
+        populate: {
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
           },
-          {
+        },
+      })
+      .populate({
+        path: "creator",
+        populate: {
+          path: "courses",
+          populate: {
             path: "videos",
             model: "Videos",
           },
-        ],
+        },
       });
     if (!user) return res.status(404).send("User Not Found");
     res.send(user);

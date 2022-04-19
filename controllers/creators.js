@@ -64,7 +64,6 @@ exports.addDetails = async (req, res) => {
 };
 exports.getCreator = async (req, res) => {
   try {
-    console.log("req.params.id", req.params.id);
     let creator = await Creator.findOne({ _id: req.params.id })
       .populate({
         path: "courses",
@@ -86,7 +85,6 @@ exports.getCreator = async (req, res) => {
 exports.getsearch = async (req, res) => {
   const name = req.query.name;
   try {
-    console.log("name", name);
     const users = await User.find({
       username: { $regex: name, $options: "$i" },
       creator: { $ne: null },
@@ -99,7 +97,6 @@ exports.getsearch = async (req, res) => {
     });
 
     const Creator = users.filter((user) => users.creator !== null);
-    console.log("Creatorertyui", Creator);
     res.send(Creator);
   } catch (error) {
     res.status(500).send(error);
