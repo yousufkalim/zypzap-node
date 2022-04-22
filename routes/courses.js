@@ -21,7 +21,7 @@ const {
 // Routes
 router.get("/", getAllCourses);
 router.get("/search", searchCourse);
-router.post("/", singleUpload, createCourse);
+router.post("/", createCourse);
 router.get("/filteredCourses", getFilteredCourses);
 router.get("/topGames", getTopGames);
 router.get("/:id", getOneCourse);

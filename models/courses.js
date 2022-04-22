@@ -36,6 +36,9 @@ const courseSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Games",
     },
+    game: {
+      type: String,
+    },
     student: {
       type: Schema.Types.ObjectId,
       ref: "Users",

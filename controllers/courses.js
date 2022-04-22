@@ -11,86 +11,63 @@ const { getVideoDurationInSeconds } = require("get-video-duration");
 const Video = require("../models/videos");
 exports.createCourse = async (req, res) => {
   try {
-    let files = req.files;
-    const {
-      id,
-      course_name,
-      game_name,
-      level,
-      category,
-      mode,
-      plateform,
-      description,
-    } = req.body;
-    const newCourse = {
-      course_name,
-      level,
-      mode,
-      plateform,
-      description,
-      creator: id,
-      price: 0,
-      game_id: game_name,
-    };
-    const length = req.files.length;
+    console.log("req.body", req.body);
+    const { formDataOne, formDataFive, formDataSix, id } = req.body;
     const newCreator = await Creater.findById(id).populate("followers");
     if (!newCreator) return res.status(404).send("Creator does not found");
-    const course = new Course(newCourse);
-    const courseId = course._id;
-    course.thumbnail = req.files[length - 1].location;
-    await course.save();
-    const newFile = files.filter((file, index) => {
-      return index !== files.length - 1;
-    });
-    newFile.map(async (file) => {
-      const path = file.location;
-      const videoDuration = await getVideoDurationInSeconds(path);
-      const video = new Video({
-        title: file.originalname,
-        src_url: file.location,
-        duration: videoDuration,
-        views: 0,
-        course: courseId,
-        creator: id,
-        file_props: {
-          ...file,
-        },
-      });
-      await video.save();
-      await Course.findByIdAndUpdate(
-        courseId,
-        {
-          $push: { videos: video._id },
-        },
-        {
-          new: true,
-        }
-      );
-    });
+    const {
+      course_name,
+      gameName,
+      gameLevel,
+      gameType,
+      gameMood,
+      gamePlateForm,
+      description,
+    } = formDataOne;
 
-    const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
-    const sevenDays = new Date(daysCount); //Set date after 7days
-    const notification = await Notifications.create({
-      title: "New Course added",
-      expiry_date: sevenDays,
-      from: id,
-    });
-    newCreator.followers.map(async (follower) => {
-      await User.findByIdAndUpdate(
-        follower.id,
-        {
-          $push: { notifications: notification.id },
-        },
-        { new: true }
-      );
-    });
+    const newCourse = {
+      course_name: course_name,
+      level: gameLevel,
+      mode: gameMood,
+      plateform: gamePlateForm,
+      description: description,
+      creator: id,
+      price: 0,
+      game_id: gameName,
+      videos: formDataFive,
+      thumbnail: formDataSix,
+    };
+    console.log("newCourse", newCourse);
+    let course = new Course(newCourse);
+    console.log("course", course);
+    await course.save();
+    console.log("course1", course);
+    // const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
+    // const sevenDays = new Date(daysCount); //Set date after 7days
+    // const notification = await Notifications.create({
+    //   title: "New Course added",
+    //   expiry_date: sevenDays,
+    //   from: id,
+    // });
+    // console.log("notification", notification);
+    // newCreator.followers.map(async (follower) => {
+    //   await User.findByIdAndUpdate(
+    //     follower.id,
+    //     {
+    //       $push: { notifications: notification.id },
+    //     },
+    //     { new: true }
+    //   );
+    // });
+    console.log("newCreator60", newCreator);
     const newcreator = await Creater.findByIdAndUpdate(
       newCreator._id,
       {
-        $push: { courses: courseId },
+        $push: { courses: course._id },
       },
       { new: true }
     );
+    console.log("newcreator", newcreator);
     res.send(course);
   } catch (error) {
     res.status(500).send(error.message);
@@ -270,7 +247,7 @@ exports.deleteCourse = async (req, res) => {
     const creator = await Creator.save();
     await User.updateMany(
       { "enrolled_courses.course_id": courseId },
-      { $pull: { enrolled_courses: { course_id: course_id } } }
+      { $pull: { enrolled_courses: { course_id: courseId } } }
     );
     res.send(deletedCourse);
   } catch (error) {
