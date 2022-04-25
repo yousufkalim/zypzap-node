@@ -11,9 +11,19 @@ const { getVideoDurationInSeconds } = require("get-video-duration");
 const Video = require("../models/videos");
 exports.createCourse = async (req, res) => {
   try {
-    console.log("req.body", req.body);
     const { formDataOne, formDataFive, formDataSix, id } = req.body;
-    const newCreator = await Creater.findById(id).populate("followers");
+    const newCreator = await Creater.findById(id)
+      .populate("followers")
+      .populate({
+        path: "courses",
+        populate: [
+          {
+            path: "videos",
+            model: "Videos",
+          },
+        ],
+      })
+      .populate("user_id");
     if (!newCreator) return res.status(404).send("Creator does not found");
     const {
       course_name,
@@ -37,29 +47,24 @@ exports.createCourse = async (req, res) => {
       videos: formDataFive,
       thumbnail: formDataSix,
     };
-    console.log("newCourse", newCourse);
     let course = new Course(newCourse);
-    console.log("course", course);
     await course.save();
-    console.log("course1", course);
-    // const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
-    // const sevenDays = new Date(daysCount); //Set date after 7days
-    // const notification = await Notifications.create({
-    //   title: "New Course added",
-    //   expiry_date: sevenDays,
-    //   from: id,
-    // });
-    // console.log("notification", notification);
-    // newCreator.followers.map(async (follower) => {
-    //   await User.findByIdAndUpdate(
-    //     follower.id,
-    //     {
-    //       $push: { notifications: notification.id },
-    //     },
-    //     { new: true }
-    //   );
-    // });
-    console.log("newCreator60", newCreator);
+    const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
+    const sevenDays = new Date(daysCount); //Set date after 7days
+    const notification = await Notifications.create({
+      title: "New Course added",
+      expiry_date: sevenDays,
+      from: id,
+    });
+    newCreator.followers.map(async (follower) => {
+      await User.findByIdAndUpdate(
+        follower.id,
+        {
+          $push: { notifications: notification.id },
+        },
+        { new: true }
+      );
+    });
     const newcreator = await Creater.findByIdAndUpdate(
       newCreator._id,
       {
@@ -67,8 +72,7 @@ exports.createCourse = async (req, res) => {
       },
       { new: true }
     );
-    console.log("newcreator", newcreator);
-    res.send(course);
+    res.send({ course, creator: newCreator });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -119,7 +123,6 @@ exports.getFilteredCourses = async (req, res) => {
     const mode = req.query.mode;
     const price = req.query.price;
     let myFind = coursesFilter(plateForm, level, mode, price);
-    console.log("myFind", myFind);
     if (myFind.length === 0 && gameType === "") {
       return res.send(myFind);
     }
@@ -151,7 +154,6 @@ exports.getFilteredCourses = async (req, res) => {
           },
         })
         .populate("videos");
-      console.log("courses123", courses);
       if (!courses) return res.status(404).send("Courses does not found");
       if (gameType) {
         const newCourses = courses.filter(
