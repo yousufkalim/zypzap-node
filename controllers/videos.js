@@ -69,19 +69,19 @@ exports.watchVideo = async (req, res) => {
 // }
 exports.postVideo = async (req, res) => {
   try {
-    const files = req.files;
-    // const videoDuration = await getVideoDurationInSeconds(path);
-    // const video = new Video({
-    //   ...req.body,
-    //   src_url: req.file.location,
-    //   views: 0,
-    //   duration: videoDuration,
-    //   file_props: {
-    //     ...req.file,
-    //   },
-    // });
-    // await video.save();
-    res.send(files);
+    const files = req.body;
+    const videoDuration = await getVideoDurationInSeconds(files.path);
+    console.log("videoDuration", videoDuration);
+    const video = new Video({
+      title: files.name,
+      src_url: files.path,
+      views: 0,
+      duration: videoDuration,
+      creator: files.creator,
+    });
+    await video.save();
+    console.log("video", video);
+    res.send(video);
   } catch (error) {
     res.status(500).send(error);
   }
