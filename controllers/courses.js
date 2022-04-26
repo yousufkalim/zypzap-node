@@ -170,6 +170,7 @@ exports.getFilteredCourses = async (req, res) => {
 };
 exports.getOneCourse = async (req, res) => {
   const _id = req.params.id;
+  console.log("id----------->", _id);
   try {
     const course = await Course.findById(_id)
       .populate({
@@ -186,7 +187,9 @@ exports.getOneCourse = async (req, res) => {
           model: "Courses",
         },
       })
-      .populate("videos");
+      .populate("videos")
+      .populate("game_id");
+    console.log("1234567", course);
     if (!course) res.status(404).send("Not Found");
     res.send(course);
   } catch (error) {

@@ -71,7 +71,6 @@ exports.postVideo = async (req, res) => {
   try {
     const files = req.body;
     const videoDuration = await getVideoDurationInSeconds(files.path);
-    console.log("videoDuration", videoDuration);
     const video = new Video({
       title: files.name,
       src_url: files.path,
@@ -80,7 +79,6 @@ exports.postVideo = async (req, res) => {
       creator: files.creator,
     });
     await video.save();
-    console.log("video", video);
     res.send(video);
   } catch (error) {
     res.status(500).send(error);
