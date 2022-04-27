@@ -170,7 +170,6 @@ exports.getFilteredCourses = async (req, res) => {
 };
 exports.getOneCourse = async (req, res) => {
   const _id = req.params.id;
-  console.log("id----------->", _id);
   try {
     const course = await Course.findById(_id)
       .populate({
@@ -189,7 +188,6 @@ exports.getOneCourse = async (req, res) => {
       })
       .populate("videos")
       .populate("game_id");
-    console.log("1234567", course);
     if (!course) res.status(404).send("Not Found");
     res.send(course);
   } catch (error) {
@@ -208,15 +206,29 @@ exports.searchCourse = async (req, res) => {
   }
 };
 exports.updateCourse = async (req, res) => {
-  const _id = req.params.id;
-  const { mode } = req.body;
+  const { formDataOne, formDataFive, id } = req.body;
   try {
+    const {
+      course_name,
+      gameName,
+      gameLevel,
+      gameType,
+      gameMood,
+      gamePlateForm,
+      description,
+    } = formDataOne;
     const course = await Course.findByIdAndUpdate(
-      _id,
-      { videos: null },
+      id,
+      {
+        course_name: course_name,
+        level: gameLevel,
+        mode: gameMood,
+        plateform: gamePlateForm,
+        description: description,
+        $push: { videos: formDataFive },
+      },
       { new: true }
     );
-
     if (!course) return res.status(404).send("Course Not Found");
     const creator = await Creater.findById(course.creator).populate(
       "followers"
