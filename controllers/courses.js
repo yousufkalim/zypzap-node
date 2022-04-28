@@ -405,20 +405,16 @@ exports.getTopGames = async (req, res) => {
 };
 exports.deleteCourseEpisode = async (req, res) => {
   const courseId = req.params.id;
-  console.log("id", courseId);
-  const { video, id } = req.body;
-  console.log("video", video, "id", id);
+  const { video } = req.body;
   try {
-    const course = await Course.findById(courseId).populate("videos");
-    console.log("id", course);
+    const course = await Course.findByIdAndUpdate(
+      courseId,
+      {
+        $pull: { videos: video._id },
+      },
+      { new: true }
+    );
     if (!course) return res.status(404).send("Course not found");
-    const Creator = await Creater.findById(course.creator);
-    if (!Creator) return res.status(404).send("Creator not found");
-    const videos = course.videos;
-    const newChapter = videos?.filter((a) => a !== video);
-    course.videos = newChapter;
-    await course.save();
-    console.log("cvfsvef", course);
     res.send(course);
   } catch (error) {
     res.status(500).send(error);
