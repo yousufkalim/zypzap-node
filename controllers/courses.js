@@ -223,6 +223,7 @@ exports.updateCourse = async (req, res) => {
         course_name: course_name,
         level: gameLevel,
         mode: gameMood,
+        game_id: gameName,
         plateform: gamePlateForm,
         description: description,
         $push: { videos: formDataFive },
@@ -398,6 +399,27 @@ exports.getTopGames = async (req, res) => {
         .populate("videos");
       res.send(foundGames);
     }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+exports.deleteCourseEpisode = async (req, res) => {
+  const courseId = req.params.id;
+  console.log("id", courseId);
+  const { video, id } = req.body;
+  console.log("video", video, "id", id);
+  try {
+    const course = await Course.findById(courseId).populate("videos");
+    console.log("id", course);
+    if (!course) return res.status(404).send("Course not found");
+    const Creator = await Creater.findById(course.creator);
+    if (!Creator) return res.status(404).send("Creator not found");
+    const videos = course.videos;
+    const newChapter = videos?.filter((a) => a !== video);
+    course.videos = newChapter;
+    await course.save();
+    console.log("cvfsvef", course);
+    res.send(course);
   } catch (error) {
     res.status(500).send(error);
   }
