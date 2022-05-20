@@ -109,21 +109,42 @@ exports.enrolledCourseAndStarted = async (req, res) => {
     const course = await Course.findByIdAndUpdate(
       courseId,
       {
-        $push: { student: userId },
+        $addToSet: {
+          student: userId,
+        },
       },
       { new: true }
     );
     if (!course) return res.send({ message: "Course not found" });
-    const user = await User.findByIdAndUpdate(
-      userId,
+    const user = await User.findOneAndUpdate(
+      { _id: userId, "enrolled_courses.course_id": courseId },
       {
-        $push: { enrolled_courses: { course_id: courseId, started: true } },
+        $set: {
+          "enrolled_courses.$.started": true,
+        },
       },
       { new: true }
     );
-    if (user === null) return res.send({ message: "User not found" });
+
+    // await User.findOneAndUpdate(
+    //   {
+    //     "enrolled_courses.courseId": courseId
+    //   },
+    //   {
+    //       $set: {
+    //     'enrolled_courses.$.started': true,
+    // },
+    //   {
+    //     $push: { enrolled_courses: { course_id: courseId, started: true } },
+    //   },
+    //   { new: true }
+    // );
+    console.log("User --> ", user);
+    if (user === null) return res.status(404).send({ message: "User not found" });
+
     res.send(user);
   } catch (error) {
+    console.log(error);
     res.status(400).send(error);
   }
 };
