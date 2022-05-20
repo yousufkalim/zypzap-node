@@ -26,19 +26,13 @@ const {
   loginWithFacebook,
   loginWithTwitch,
   loginWithDiscord,
+  forgetPassword,
+  verifyPasswordToken,
+  resetPassword,
 } = require("../controllers/users");
-const {
-  loginUser,
-  logoutUser,
-  logoutAll,
-  getData,
-  updatePassword,
-} = require("../controllers/login");
+const { loginUser, logoutUser, logoutAll, getData, updatePassword } = require("../controllers/login");
 const { auth } = require("../middleware/auth");
-const {
-  validateUsers,
-  isValidated,
-} = require("../middleware/validators/users");
+const { validateUsers, isValidated } = require("../middleware/validators/users");
 const singleUpload = upload.single("image");
 // Routes
 //Enrolled Courses
@@ -60,6 +54,9 @@ router.put("/:id", auth, updateOneUser);
 router.delete("/:id", auth, deleteOneUser);
 router.post("/login", loginUser);
 router.post("/updatePassword/:id", auth, updatePassword);
+router.post("/forget-password", forgetPassword);
+router.get("/verify-token/:token", verifyPasswordToken);
+router.put("/reset-password/:token", resetPassword);
 
 router.post("/logout", auth, logoutUser);
 
@@ -67,16 +64,9 @@ router.post("/logout/all", auth, logoutAll);
 
 // login  with discord
 router.get("/auth/discord", passport.authenticate("discord"));
-router.get(
-  "/auth/discord/callback",
-  passport.authenticate("discord"),
-  loginWithDiscord
-);
+router.get("/auth/discord/callback", passport.authenticate("discord"), loginWithDiscord);
 // login with google
-router.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
+router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(
   "/auth/google/callback",
