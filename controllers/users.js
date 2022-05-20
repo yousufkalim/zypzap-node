@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const { auth } = require("../middleware/auth");
 const jwt = require("jsonwebtoken");
 const { generateAuthToken } = require("../middleware/auth");
-const { sendEmail } = require("../middleware/sendMail");
+const { sendEmail, sendForgetPasswordEmail } = require("../middleware/sendMail");
 
 exports.createUser = async (req, res) => {
   try {
@@ -36,6 +36,69 @@ exports.createUser = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+exports.forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    // Check User Already Exists
+    let user = await User.findOne({ email });
+    if (!user) return res.status(404).send({ message: "User not found with that email" });
+
+    const token = await generateAuthToken(user);
+    const link = `${process.env.CLIENT_URL}/reset-password/${token}`;
+    await sendForgetPasswordEmail(email, user.username, link);
+
+    res.json({ message: "Email sent successfully" });
+  } catch (error) {
+    console.log("Error ----> ", error);
+    res.status(500).json({ success: false, message: "internal server error", error });
+  }
+};
+
+exports.verifyPasswordToken = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+    const user = await User.findOne({
+      _id: decoded._id,
+      "tokens.token": token,
+    });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Token verified successfully", userId: user._id });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "internal server error", error });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+    const user = await User.findOne({
+      _id: decoded._id,
+      "tokens.token": token,
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "internal server error", error });
+  }
+};
+
 // return a message if subscribed successfully
 exports.setSubscription = async (req, res) => {
   try {
