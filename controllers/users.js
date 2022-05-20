@@ -5,6 +5,7 @@ const { auth } = require("../middleware/auth");
 const jwt = require("jsonwebtoken");
 const { generateAuthToken } = require("../middleware/auth");
 const { sendEmail } = require("../middleware/sendMail");
+
 exports.createUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
@@ -27,7 +28,9 @@ exports.createUser = async (req, res) => {
     if (user) {
       sendEmail(email);
     }
-    res.json({ message: "User Registered Successfully", user: user });
+    const token = await generateAuthToken(user);
+
+    res.json({ message: "User Registered Successfully", user: user, token });
   } catch (error) {
     console.log("Error ----> ", error);
     res.status(500).send(error);
