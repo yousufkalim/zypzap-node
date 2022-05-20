@@ -21,6 +21,7 @@ exports.sendEmail = (email) => {
 
         apiInstance1.sendTestEmail(campaignId, emailTo).then(
           function () {
+            console.log("Email sent");
             resolve({ success: true, message: "Email sent successfully" });
           },
           function (error) {

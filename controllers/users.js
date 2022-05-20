@@ -26,7 +26,7 @@ exports.createUser = async (req, res) => {
 
     await user.save();
     if (user) {
-      sendEmail(email);
+      await sendEmail(email);
     }
     const token = await generateAuthToken(user);
 
