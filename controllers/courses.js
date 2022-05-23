@@ -19,20 +19,20 @@ exports.createCourse = async (req, res) => {
         populate: [
           {
             path: "videos",
-            model: "Videos",
-          },
-        ],
+            model: "Videos"
+          }
+        ]
       })
       .populate("user_id");
     if (!newCreator) return res.status(404).send("Creator does not found");
     const {
       course_name,
-      gameName,
+      // gameName,
       gameLevel,
       gameType,
       gameMood,
       gamePlateForm,
-      description,
+      description
     } = formDataOne;
 
     const newCourse = {
@@ -43,9 +43,9 @@ exports.createCourse = async (req, res) => {
       description: description,
       creator: id,
       price: 0,
-      game_id: gameName,
+      // game_id: gameName,
       videos: formDataFive,
-      thumbnail: formDataSix,
+      thumbnail: formDataSix
     };
     let course = new Course(newCourse);
     await course.save();
@@ -54,13 +54,13 @@ exports.createCourse = async (req, res) => {
     const notification = await Notifications.create({
       title: "New Course added",
       expiry_date: sevenDays,
-      from: id,
+      from: id
     });
     newCreator.followers.map(async (follower) => {
       await User.findByIdAndUpdate(
         follower.id,
         {
-          $push: { notifications: notification.id },
+          $push: { notifications: notification.id }
         },
         { new: true }
       );
@@ -68,7 +68,7 @@ exports.createCourse = async (req, res) => {
     const newcreator = await Creater.findByIdAndUpdate(
       newCreator._id,
       {
-        $push: { courses: course._id },
+        $push: { courses: course._id }
       },
       { new: true }
     );
@@ -84,10 +84,11 @@ exports.getAllCourses = async (req, res) => {
         path: "creator",
         populate: {
           path: "user_id",
-          model: "Users",
-        },
+          model: "Users"
+        }
       })
-      .populate("videos");
+      .populate("videos")
+      .sort("-created_at");
     if (!courses) res.status(404).send("Courses Not Found");
     res.send(courses);
   } catch (error) {
@@ -136,22 +137,22 @@ exports.getFilteredCourses = async (req, res) => {
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users",
-          },
+            model: "Users"
+          }
         })
         .populate("videos");
       return res.send(foundGames);
     } else {
       const courses = await Course.find({
-        $and: myFind,
+        $and: myFind
       })
         .populate("game_id")
         .populate({
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users",
-          },
+            model: "Users"
+          }
         })
         .populate("videos");
       if (!courses) return res.status(404).send("Courses does not found");
@@ -176,15 +177,15 @@ exports.getOneCourse = async (req, res) => {
         path: "creator",
         populate: {
           path: "user_id",
-          model: "Users",
-        },
+          model: "Users"
+        }
       })
       .populate({
         path: "creator",
         populate: {
           path: "courses",
-          model: "Courses",
-        },
+          model: "Courses"
+        }
       })
       .populate("videos")
       .populate("game_id");
@@ -198,7 +199,7 @@ exports.searchCourse = async (req, res) => {
   const name = req.query.name;
   try {
     const course = await Course.find({
-      course_name: { $regex: name, $options: "$i" },
+      course_name: { $regex: name, $options: "$i" }
     }).populate("videos");
     res.send(course);
   } catch (error) {
@@ -210,12 +211,12 @@ exports.updateCourse = async (req, res) => {
   try {
     const {
       course_name,
-      gameName,
+      // gameName,
       gameLevel,
       gameType,
       gameMood,
       gamePlateForm,
-      description,
+      description
     } = formDataOne;
     const course = await Course.findByIdAndUpdate(
       id,
@@ -223,10 +224,10 @@ exports.updateCourse = async (req, res) => {
         course_name: course_name,
         level: gameLevel,
         mode: gameMood,
-        game_id: gameName,
+        // game_id: gameName,
         plateform: gamePlateForm,
         description: description,
-        $push: { videos: formDataFive },
+        $push: { videos: formDataFive }
       },
       { new: true }
     );
@@ -236,13 +237,13 @@ exports.updateCourse = async (req, res) => {
     );
     const notification = await Notifications.create({
       title: "Course Updated By Creator",
-      from: creator,
+      from: creator
     });
     creator.followers.map(async (follower) => {
       let Updateuser = await User.findByIdAndUpdate(
         follower.id,
         {
-          $push: { notifications: notification.id },
+          $push: { notifications: notification.id }
         },
         { new: true }
       );
@@ -283,8 +284,8 @@ exports.getTopGames = async (req, res) => {
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users",
-          },
+            model: "Users"
+          }
         })
         .populate("videos")
         .sort({ rating: -1 })
@@ -298,8 +299,8 @@ exports.getTopGames = async (req, res) => {
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users",
-          },
+            model: "Users"
+          }
         })
         .populate("videos")
         .sort({ createdAt: -1 })
@@ -319,8 +320,8 @@ exports.getTopGames = async (req, res) => {
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users",
-          },
+            model: "Users"
+          }
         })
         .populate("videos");
       res.send(foundGames);
@@ -338,8 +339,8 @@ exports.getTopGames = async (req, res) => {
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users",
-          },
+            model: "Users"
+          }
         })
         .populate("videos")
         .limit(10);
@@ -348,14 +349,14 @@ exports.getTopGames = async (req, res) => {
     //  top reated content creators
     if (number == 5) {
       const users = await User.find({
-        creator: { $ne: null },
+        creator: { $ne: null }
       })
         .populate({
           path: "creator",
           populate: {
             path: "courses",
-            model: "Courses",
-          },
+            model: "Courses"
+          }
         })
         .sort({ createdAt: -1 })
         .limit(10);
@@ -374,8 +375,8 @@ exports.getTopGames = async (req, res) => {
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users",
-          },
+            model: "Users"
+          }
         })
         .populate("videos");
       res.send(foundGames);
@@ -393,8 +394,8 @@ exports.getTopGames = async (req, res) => {
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users",
-          },
+            model: "Users"
+          }
         })
         .populate("videos");
       res.send(foundGames);
@@ -410,7 +411,7 @@ exports.deleteCourseEpisode = async (req, res) => {
     const course = await Course.findByIdAndUpdate(
       courseId,
       {
-        $pull: { videos: video._id },
+        $pull: { videos: video._id }
       },
       { new: true }
     );
