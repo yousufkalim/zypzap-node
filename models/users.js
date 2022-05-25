@@ -29,6 +29,10 @@ const userSchema = new Schema(
     password: {
       type: String,
     },
+    country: String,
+    account_number: String,
+    bank_identifier: String,
+    iban: String,
     following: [
       {
         type: Schema.Types.ObjectId,
