@@ -99,15 +99,6 @@ exports.addProfileInfo = async (req, res) => {
 exports.basicInfo = async (req, res) => {
   try {
     const _id = req.params.id;
-    const {
-      username,
-      phone_number,
-      email,
-      iban,
-      country,
-      account_number,
-      bank_identifier,
-    } = req.body;
 
     if (req.body.password) {
       req.body.password = bcrypt.hashSync(
@@ -115,20 +106,7 @@ exports.basicInfo = async (req, res) => {
         parseInt(bcryptSalt)
       );
     }
-    const user = await User.findByIdAndUpdate(
-      _id,
-      {
-        username,
-        phone_number,
-        email,
-        password,
-        iban,
-        country,
-        account_number,
-        bank_identifier,
-      },
-      { new: true }
-    );
+    const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
     res.json({ success: true, user });
   } catch (err) {
     console.log("Error ---> ", err);

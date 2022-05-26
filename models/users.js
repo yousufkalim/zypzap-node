@@ -33,6 +33,13 @@ const userSchema = new Schema(
     account_number: String,
     bank_identifier: String,
     iban: String,
+    card_holder_name: String,
+    card_number: String,
+    expiry_date: {
+      month: String,
+      year: String,
+    },
+    cvv: String,
     following: [
       {
         type: Schema.Types.ObjectId,
