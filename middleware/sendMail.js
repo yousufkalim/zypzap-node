@@ -21,6 +21,7 @@ exports.sendEmail = (email) => {
 
         apiInstance1.sendTestEmail(campaignId, emailTo).then(
           function () {
+            console.log("Email sent");
             resolve({ success: true, message: "Email sent successfully" });
           },
           function (error) {
@@ -58,6 +59,42 @@ exports.sendEmail = (email) => {
             reject(error);
           }
         );
+      }
+    );
+  });
+};
+
+exports.sendForgetPasswordEmail = async (email, name, link) => {
+  return new Promise((resolve, reject) => {
+    var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+    var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // SendSmtpEmail | Values to send a transactional email
+
+    sendSmtpEmail = {
+      to: [
+        {
+          email,
+          name,
+        },
+      ],
+      templateId: 21,
+      params: {
+        name,
+        link,
+      },
+      headers: {
+        "X-Mailin-custom": "custom_header_1:custom_value_1|custom_header_2:custom_value_2",
+      },
+    };
+
+    apiInstance.sendTransacEmail(sendSmtpEmail).then(
+      function (data) {
+        console.log("API called successfully. Returned data: " + data);
+        resolve(data);
+      },
+      function (error) {
+        console.error(error);
+        reject(error);
       }
     );
   });

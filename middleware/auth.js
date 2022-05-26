@@ -18,15 +18,13 @@ exports.auth = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
+    console.log(error);
     res.status(401).send({ error: "Please authenticated" });
   }
 };
 
 exports.generateAuthToken = async (user) => {
-  const token = jwt.sign(
-    { _id: user._id.toString() },
-    process.env.TOKEN_SECRET
-  );
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.TOKEN_SECRET);
 
   user.tokens = user.tokens.concat({
     token,

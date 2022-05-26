@@ -32,10 +32,10 @@ const courseSchema = new Schema(
       enum: ["Casual", "Confirmed", "Hardcore", "Esporter"],
     },
     requirement: [String],
-    game_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Games",
-    },
+    // game_id: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "Games",
+    // },
     game: {
       type: String,
     },
