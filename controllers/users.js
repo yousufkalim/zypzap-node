@@ -11,7 +11,8 @@ exports.createUser = async (req, res) => {
     const { username, email, password, role } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
-    if (user) return res.status(400).send({ message: "Email is already exist" });
+    if (user)
+      return res.status(400).send({ message: "Email is already exist" });
 
     // Create User Object
     user = new User({
@@ -116,7 +117,13 @@ exports.setSubscription = async (req, res) => {
     res.status(400).send(error);
   }
 };
-const filterData = (profile_photo, prefrence_games, gameType, plateForm, gameMood) => {
+const filterData = (
+  profile_photo,
+  prefrence_games,
+  gameType,
+  plateForm,
+  gameMood
+) => {
   let myFind = {};
   if (profile_photo) {
     myFind.profile_photo = profile_photo;
@@ -137,8 +144,15 @@ const filterData = (profile_photo, prefrence_games, gameType, plateForm, gameMoo
 };
 exports.addProfileInfo = async (req, res) => {
   try {
-    const { profile_photo, prefrence_games, gameType, plateForm, gameMood } = req.body;
-    let myFind = filterData(profile_photo, prefrence_games, gameType, plateForm, gameMood);
+    const { profile_photo, prefrence_games, gameType, plateForm, gameMood } =
+      req.body;
+    let myFind = filterData(
+      profile_photo,
+      prefrence_games,
+      gameType,
+      plateForm,
+      gameMood
+    );
 
     const _id = req.params.id;
     const user = await User.findByIdAndUpdate(_id, myFind, { new: true });
@@ -147,23 +161,24 @@ exports.addProfileInfo = async (req, res) => {
     res.status(400).send(error);
   }
 };
+
 exports.basicInfo = async (req, res) => {
   try {
     const _id = req.params.id;
-    const { username, phone_number, email } = req.body;
-    const user = await User.findByIdAndUpdate(
-      _id,
-      {
-        username,
-        phone_number,
-        email,
-      },
-      { new: true }
-    );
+
+    if (req.body.password) {
+      req.body.password = bcrypt.hashSync(
+        req.body.password,
+        parseInt(bcryptSalt)
+      );
+    }
+    const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
     res.json({ success: true, user });
   } catch (err) {
     console.log("Error ---> ", err);
-    res.status(500).json({ success: false, message: "Internal server error", error: err });
+    res
+      .status(500)
+      .json({ success: false, message: "Internal server error", error: err });
   }
 };
 exports.enrolledCourseAndStarted = async (req, res) => {
@@ -354,10 +369,14 @@ exports.loginWithGoogle = async (req, res) => {
       newUser.email.push(profile.email);
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`
+      );
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`
+      );
     }
   } catch (error) {
     res.status(500).send(error);
@@ -375,10 +394,14 @@ exports.loginWithFacebook = async (req, res) => {
       newUser.email.push(eMail);
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`
+      );
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`
+      );
     }
   } catch (error) {
     res.status(500).send(error);
@@ -397,10 +420,14 @@ exports.loginWithTwitch = async (req, res) => {
       newUser.email.push(eMail);
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`
+      );
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`
+      );
     }
   } catch (error) {
     res.status(500).send(error);
@@ -419,10 +446,14 @@ exports.loginWithDiscord = async (req, res) => {
       newUser.role = "User";
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`
+      );
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`);
+      return res.redirect(
+        process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`
+      );
     }
   } catch (error) {
     res.status(500).send(error);
