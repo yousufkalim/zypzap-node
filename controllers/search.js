@@ -56,3 +56,7 @@ exports.getAllSearchResults = async (req, res) => {
 exports.getAllSearchByFilter = (req, res) => {
   res.send("Filter");
 };
+
+exports.filteredData = (req, res) => {
+  const filters = req.query;
+};

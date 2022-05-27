@@ -18,6 +18,7 @@ const {
   addToWishLists,
   setSubscription,
   basicInfo,
+  editInfo,
   enrolledCourse,
   enrolledCourseAndStarted,
   addProfileInfo,
@@ -43,6 +44,7 @@ router.get("/getuserbytoken", auth, getData);
 router.get("/", getAllUsers);
 router.post("/addToWishLists", auth, addToWishLists);
 router.put("/addProfileInfo/:id", addProfileInfo);
+
 router.post("/basicInfo/:id", auth, basicInfo);
 //  upload image
 router.put("/uploadprofileimage", singleUpload, uploadProfileImage);

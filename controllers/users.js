@@ -183,19 +183,18 @@ exports.addProfileInfo = async (req, res) => {
     res.status(400).send(error);
   }
 };
+
 exports.basicInfo = async (req, res) => {
   try {
     const _id = req.params.id;
-    const { username, phone_number, email } = req.body;
-    const user = await User.findByIdAndUpdate(
-      _id,
-      {
-        username,
-        phone_number,
-        email
-      },
-      { new: true }
-    );
+
+    if (req.body.password) {
+      req.body.password = bcrypt.hashSync(
+        req.body.password,
+        parseInt(bcryptSalt)
+      );
+    }
+    const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
     res.json({ success: true, user });
   } catch (err) {
     console.log("Error ---> ", err);
