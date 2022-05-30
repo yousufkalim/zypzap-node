@@ -5,29 +5,29 @@ const jwt = require("jsonwebtoken");
 const userSchema = new Schema(
   {
     first_name: {
-      type: String,
+      type: String
     },
     last_name: {
-      type: String,
+      type: String
     },
     username: {
       type: String,
-      required: true,
+      required: true
     },
     role: {
       type: String,
-      required: true,
+      required: true
     },
     email: [
       {
         type: String,
         required: true,
-        unique: true,
-      },
+        unique: true
+      }
     ],
     phone_number: { type: String },
     password: {
-      type: String,
+      type: String
     },
     country: String,
     account_number: String,
@@ -37,84 +37,87 @@ const userSchema = new Schema(
     card_number: String,
     expiry_date: {
       month: String,
-      year: String,
+      year: String
     },
     cvv: String,
     following: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Users",
-      },
+        ref: "Users"
+      }
     ],
     creator: {
       type: Schema.Types.ObjectId,
-      ref: "Creators",
+      ref: "Creators"
     },
     profile_photo: {
-      type: String,
+      type: String
+    },
+    cover_photo: {
+      type: String
     },
     social_ids: [
       {
         platform: {
-          type: String,
+          type: String
         },
         url: {
-          type: String,
-        },
-      },
+          type: String
+        }
+      }
     ],
     enrolled_courses: [
       {
         course_id: {
           type: Schema.ObjectId,
-          ref: "Courses",
+          ref: "Courses"
         },
         started: {
-          type: Boolean,
-        },
-      },
+          type: Boolean
+        }
+      }
     ],
     wishlist_courses: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Courses",
-      },
+        ref: "Courses"
+      }
     ],
     subscription: {
       subscribed: { type: Boolean, default: false },
       start_date: Date,
-      end_date: Date,
+      end_date: Date
     },
     prefrence_games: {
       favourite_games: [String],
       learningRethem: {
-        type: String,
+        type: String
       },
       current_level: {
-        type: String,
+        type: String
       },
       target_level: {
-        type: String,
-      },
+        type: String
+      }
     },
     expertiseGame: [String],
     plateForm: [String],
     gameType: [String],
     gameMood: {
-      type: String,
+      type: String
     },
     tokens: [
       {
         token: {
           type: String,
-          required: true,
-        },
-      },
+          required: true
+        }
+      }
     ],
-    notifications: [{ type: Schema.Types.ObjectId, ref: "notifications" }],
+    notifications: [{ type: Schema.Types.ObjectId, ref: "notifications" }]
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 

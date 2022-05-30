@@ -202,7 +202,16 @@ exports.searchCourse = async (req, res) => {
   try {
     const course = await Course.find({
       course_name: { $regex: name, $options: "$i" }
-    }).populate("videos");
+    })
+      .populate("videos")
+      .populate({
+        path: "creator",
+        populate: {
+          path: "user_id",
+          model: "Users"
+        }
+      });
+
     res.send(course);
   } catch (error) {
     res.status(500).send(error);

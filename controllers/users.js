@@ -166,18 +166,32 @@ const filterData = (
 };
 exports.addProfileInfo = async (req, res) => {
   try {
-    const { profile_photo, prefrence_games, gameType, plateForm, gameMood } =
-      req.body;
+    const {
+      profile_photo,
+      cover_photo,
+      prefrence_games,
+      gameType,
+      plateForm,
+      gameMood
+    } = req.body;
     let myFind = filterData(
       profile_photo,
+      cover_photo,
       prefrence_games,
       gameType,
       plateForm,
       gameMood
     );
+    let UpdatedData = { ...req.body };
+    console.log("req.body", req.body);
+    console.log("myFind", myFind);
 
     const _id = req.params.id;
-    const user = await User.findByIdAndUpdate(_id, myFind, { new: true });
+    const user = await User.findByIdAndUpdate(
+      _id,
+      { ...req.body },
+      { new: true }
+    );
     res.json(user);
   } catch (error) {
     res.status(400).send(error);
