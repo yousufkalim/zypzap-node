@@ -4,7 +4,10 @@ const bcrypt = require("bcryptjs");
 const { auth } = require("../middleware/auth");
 const jwt = require("jsonwebtoken");
 const { generateAuthToken } = require("../middleware/auth");
-const { sendEmail, sendForgetPasswordEmail } = require("../middleware/sendMail");
+const {
+  sendEmail,
+  sendForgetPasswordEmail
+} = require("../middleware/sendMail");
 
 exports.createUser = async (req, res) => {
   try {
@@ -20,7 +23,7 @@ exports.createUser = async (req, res) => {
       email,
       password,
       role,
-      creator: null,
+      creator: null
     });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
@@ -43,7 +46,10 @@ exports.forgetPassword = async (req, res) => {
     const { email } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
-    if (!user) return res.status(404).send({ message: "User not found with that email" });
+    if (!user)
+      return res
+        .status(404)
+        .send({ message: "User not found with that email" });
 
     const token = await generateAuthToken(user);
     const link = `${process.env.CLIENT_URL}/reset-password/${token}`;
@@ -52,7 +58,9 @@ exports.forgetPassword = async (req, res) => {
     res.json({ message: "Email sent successfully" });
   } catch (error) {
     console.log("Error ----> ", error);
-    res.status(500).json({ success: false, message: "internal server error", error });
+    res
+      .status(500)
+      .json({ success: false, message: "internal server error", error });
   }
 };
 
@@ -62,16 +70,24 @@ exports.verifyPasswordToken = async (req, res) => {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const user = await User.findOne({
       _id: decoded._id,
-      "tokens.token": token,
+      "tokens.token": token
     });
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
-    res.status(200).json({ success: true, message: "Token verified successfully", userId: user._id });
+    res.status(200).json({
+      success: true,
+      message: "Token verified successfully",
+      userId: user._id
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "internal server error", error });
+    res
+      .status(500)
+      .json({ success: false, message: "internal server error", error });
   }
 };
 
@@ -82,21 +98,27 @@ exports.resetPassword = async (req, res) => {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const user = await User.findOne({
       _id: decoded._id,
-      "tokens.token": token,
+      "tokens.token": token
     });
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     const hashedPassword = bcrypt.hashSync(req.body.password, 10);
     user.password = hashedPassword;
     await user.save();
 
-    res.status(200).json({ success: true, message: "Password updated successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Password updated successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "internal server error", error });
+    res
+      .status(500)
+      .json({ success: false, message: "internal server error", error });
   }
 };
 
@@ -144,18 +166,32 @@ const filterData = (
 };
 exports.addProfileInfo = async (req, res) => {
   try {
-    const { profile_photo, prefrence_games, gameType, plateForm, gameMood } =
-      req.body;
+    const {
+      profile_photo,
+      cover_photo,
+      prefrence_games,
+      gameType,
+      plateForm,
+      gameMood
+    } = req.body;
     let myFind = filterData(
       profile_photo,
+      cover_photo,
       prefrence_games,
       gameType,
       plateForm,
       gameMood
     );
+    let UpdatedData = { ...req.body };
+    console.log("req.body", req.body);
+    console.log("myFind", myFind);
 
     const _id = req.params.id;
-    const user = await User.findByIdAndUpdate(_id, myFind, { new: true });
+    const user = await User.findByIdAndUpdate(
+      _id,
+      { ...req.body },
+      { new: true }
+    );
     res.json(user);
   } catch (error) {
     res.status(400).send(error);
@@ -188,8 +224,8 @@ exports.enrolledCourseAndStarted = async (req, res) => {
       courseId,
       {
         $addToSet: {
-          student: userId,
-        },
+          student: userId
+        }
       },
       { new: true }
     );
@@ -198,8 +234,8 @@ exports.enrolledCourseAndStarted = async (req, res) => {
       { _id: userId, "enrolled_courses.course_id": courseId },
       {
         $set: {
-          "enrolled_courses.$.started": true,
-        },
+          "enrolled_courses.$.started": true
+        }
       },
       { new: true }
     );
@@ -218,7 +254,8 @@ exports.enrolledCourseAndStarted = async (req, res) => {
     //   { new: true }
     // );
     console.log("User --> ", user);
-    if (user === null) return res.status(404).send({ message: "User not found" });
+    if (user === null)
+      return res.status(404).send({ message: "User not found" });
 
     res.send(user);
   } catch (error) {
@@ -232,7 +269,7 @@ exports.enrolledCourse = async (req, res) => {
     const course = await Course.findByIdAndUpdate(
       courseId,
       {
-        $push: { student: userId },
+        $push: { student: userId }
       },
       { new: true }
     );
@@ -241,7 +278,7 @@ exports.enrolledCourse = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       userId,
       {
-        $push: { enrolled_courses: { course_id: courseId, started: false } },
+        $push: { enrolled_courses: { course_id: courseId, started: false } }
       },
       { new: true }
     );
@@ -271,7 +308,7 @@ exports.addToWishLists = async (req, res) => {
       const user = await User.updateOne(
         { _id: userId },
         {
-          $push: { wishlist_courses: courseId },
+          $push: { wishlist_courses: courseId }
         },
         { new: true }
       );
@@ -291,9 +328,9 @@ exports.getOneUser = async (req, res) => {
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users",
-          },
-        },
+            model: "Users"
+          }
+        }
       })
       .populate({
         path: "enrolled_courses.course_id",
@@ -301,9 +338,9 @@ exports.getOneUser = async (req, res) => {
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users",
-          },
-        },
+            model: "Users"
+          }
+        }
       })
       .populate({
         path: "creator",
@@ -311,9 +348,9 @@ exports.getOneUser = async (req, res) => {
           path: "courses",
           populate: {
             path: "videos",
-            model: "Videos",
-          },
-        },
+            model: "Videos"
+          }
+        }
       });
     if (!user) return res.status(404).send("User Not Found");
     res.send(user);

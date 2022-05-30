@@ -28,6 +28,7 @@ exports.createCourse = async (req, res) => {
     const {
       course_name,
       // gameName,
+      selectedGamename,
       gameLevel,
       gameType,
       gameMood,
@@ -44,6 +45,7 @@ exports.createCourse = async (req, res) => {
       creator: id,
       price: 0,
       // game_id: gameName,
+      selectedGamename,
       videos: formDataFive,
       thumbnail: formDataSix
     };
@@ -200,7 +202,16 @@ exports.searchCourse = async (req, res) => {
   try {
     const course = await Course.find({
       course_name: { $regex: name, $options: "$i" }
-    }).populate("videos");
+    })
+      .populate("videos")
+      .populate({
+        path: "creator",
+        populate: {
+          path: "user_id",
+          model: "Users"
+        }
+      });
+
     res.send(course);
   } catch (error) {
     res.status(500).send(error);
@@ -212,6 +223,7 @@ exports.updateCourse = async (req, res) => {
     const {
       course_name,
       // gameName,
+      selectedGamename,
       gameLevel,
       gameType,
       gameMood,
@@ -225,6 +237,7 @@ exports.updateCourse = async (req, res) => {
         level: gameLevel,
         mode: gameMood,
         // game_id: gameName,
+        selectedGamename,
         plateform: gamePlateForm,
         description: description,
         $push: { videos: formDataFive }
@@ -256,7 +269,9 @@ exports.updateCourse = async (req, res) => {
 exports.deleteCourse = async (req, res) => {
   const courseId = req.params.id;
   try {
+    console.log("111111", courseId);
     const deletedCourse = await Course.findByIdAndDelete(courseId);
+    console.log("222222", deletedCourse);
     if (!deletedCourse) return res.status(404).send("Course not found");
     const Creator = await Creater.findById(deletedCourse.creator);
     if (!Creator) return res.status(404).send("Creator not found");
@@ -268,7 +283,7 @@ exports.deleteCourse = async (req, res) => {
       { "enrolled_courses.course_id": courseId },
       { $pull: { enrolled_courses: { course_id: courseId } } }
     );
-    res.send(deletedCourse);
+    res.status(200).send({ creator: creator });
   } catch (error) {
     res.status(500).send(error);
   }

@@ -4,47 +4,50 @@ const courseSchema = new Schema(
   {
     course_name: {
       type: String,
-      required: true,
+      required: true
     },
     creator: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "Creators",
+      ref: "Creators"
     },
     videos: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Videos",
-      },
+        ref: "Videos"
+      }
     ],
     duration: {
-      type: String,
+      type: String
     },
     rating: {
       type: Number,
-      default: 0,
+      default: 0
     },
     price: {
-      type: Number,
+      type: Number
     },
     level: {
       type: String,
-      enum: ["Casual", "Confirmed", "Hardcore", "Esporter"],
+      enum: ["Casual", "Confirmed", "Hardcore", "Esporter"]
     },
     requirement: [String],
     // game_id: {
     //   type: Schema.Types.ObjectId,
     //   ref: "Games",
     // },
+    selectedGamename: {
+      type: String
+    },
     game: {
-      type: String,
+      type: String
     },
     student: {
       type: Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "Users"
     },
     description: {
-      type: String,
+      type: String
     },
     plateform: {
       type: String,
@@ -55,19 +58,19 @@ const courseSchema = new Schema(
         "Xbox/360/One/X",
         "Retro Consoles",
         "Portable Consoles",
-        "Tablet",
-      ],
+        "Tablet"
+      ]
     },
     thumbnail: {
-      type: String,
+      type: String
     },
     mode: {
       type: String,
-      enum: ["Single", "Multiplayer", "Both"],
-    },
+      enum: ["Single", "Multiplayer", "Both"]
+    }
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 
