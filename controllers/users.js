@@ -202,11 +202,26 @@ exports.basicInfo = async (req, res) => {
   try {
     const _id = req.params.id;
 
-    if (req.body.password) {
-      req.body.password = bcrypt.hashSync(
-        req.body.password,
-        parseInt(bcryptSalt)
+    if (req.body.currentPassword) {
+      let user = await User.findById(_id);
+      if (!user) {
+        return res
+          .status(400)
+          .send({ success: false, message: "User Not Exists" });
+      }
+      const isMatch = await bcrypt.compare(
+        req.body.currentPassword,
+        user.password
       );
+      if (!isMatch) {
+        return res
+          .status(400)
+          .send({ success: false, message: "Invalid Password" });
+      }
+      if (isMatch) {
+        const salt = await bcrypt.genSalt(10);
+        req.body.password = await bcrypt.hash(req.body.password, salt);
+      }
     }
     const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
     res.json({ success: true, user });
