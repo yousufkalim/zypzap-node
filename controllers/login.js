@@ -7,7 +7,7 @@ exports.loginUser = async (req, res) => {
   try {
     // Check User Exists
     let user = await User.findOne({ email: email }).populate({
-      path: "creator",
+      path: "creator"
     });
     if (!user) {
       return res.status(400).send({ message: "User Not Exists" });
