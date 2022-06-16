@@ -16,7 +16,7 @@ exports.create = async (req, res) => {
   try {
     const newsletter = await Newsletters.create(req.body);
     if (newsletter) {
-      sendEmail(req.body.email);
+      sendEmail(req.body.email, req.body.type === "creator" ? 35 : 34);
     }
 
     res.json({ success: true, newsletter });

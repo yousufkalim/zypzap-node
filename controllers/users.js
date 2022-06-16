@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const { generateAuthToken } = require("../middleware/auth");
 const {
   sendEmail,
-  sendForgetPasswordEmail
+  sendForgetPasswordEmail,
 } = require("../middleware/sendMail");
 
 exports.createUser = async (req, res) => {
@@ -23,14 +23,14 @@ exports.createUser = async (req, res) => {
       email,
       password,
       role,
-      creator: null
+      creator: null,
     });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
 
     await user.save();
     if (user) {
-      await sendEmail(email);
+      await sendEmail(email, 34);
     }
     const token = await generateAuthToken(user);
 
@@ -70,7 +70,7 @@ exports.verifyPasswordToken = async (req, res) => {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const user = await User.findOne({
       _id: decoded._id,
-      "tokens.token": token
+      "tokens.token": token,
     });
     if (!user) {
       return res
@@ -81,7 +81,7 @@ exports.verifyPasswordToken = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Token verified successfully",
-      userId: user._id
+      userId: user._id,
     });
   } catch (error) {
     console.log(error);
@@ -98,7 +98,7 @@ exports.resetPassword = async (req, res) => {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const user = await User.findOne({
       _id: decoded._id,
-      "tokens.token": token
+      "tokens.token": token,
     });
 
     if (!user) {
@@ -172,7 +172,7 @@ exports.addProfileInfo = async (req, res) => {
       prefrence_games,
       gameType,
       plateForm,
-      gameMood
+      gameMood,
     } = req.body;
     let myFind = filterData(
       profile_photo,
@@ -239,8 +239,8 @@ exports.enrolledCourseAndStarted = async (req, res) => {
       courseId,
       {
         $addToSet: {
-          student: userId
-        }
+          student: userId,
+        },
       },
       { new: true }
     );
@@ -250,8 +250,8 @@ exports.enrolledCourseAndStarted = async (req, res) => {
       { _id: userId, "enrolled_courses.course_id": courseId },
       {
         $set: {
-          "enrolled_courses.$.started": true
-        }
+          "enrolled_courses.$.started": true,
+        },
       },
       { new: true }
     );
@@ -259,7 +259,7 @@ exports.enrolledCourseAndStarted = async (req, res) => {
       user = await User.findByIdAndUpdate(
         userId,
         {
-          $push: { enrolled_courses: { course_id: courseId, started: true } }
+          $push: { enrolled_courses: { course_id: courseId, started: true } },
         },
         { new: true }
       );
@@ -281,7 +281,7 @@ exports.enrolledCourse = async (req, res) => {
     const course = await Course.findByIdAndUpdate(
       courseId,
       {
-        $push: { student: userId }
+        $push: { student: userId },
       },
       { new: true }
     );
@@ -290,7 +290,7 @@ exports.enrolledCourse = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       userId,
       {
-        $push: { enrolled_courses: { course_id: courseId, started: false } }
+        $push: { enrolled_courses: { course_id: courseId, started: false } },
       },
       { new: true }
     );
@@ -320,7 +320,7 @@ exports.addToWishLists = async (req, res) => {
       const user = await User.updateOne(
         { _id: userId },
         {
-          $push: { wishlist_courses: courseId }
+          $push: { wishlist_courses: courseId },
         },
         { new: true }
       );
@@ -340,9 +340,9 @@ exports.getOneUser = async (req, res) => {
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users"
-          }
-        }
+            model: "Users",
+          },
+        },
       })
       .populate({
         path: "enrolled_courses.course_id",
@@ -350,9 +350,9 @@ exports.getOneUser = async (req, res) => {
           path: "creator",
           populate: {
             path: "user_id",
-            model: "Users"
-          }
-        }
+            model: "Users",
+          },
+        },
       })
       .populate({
         path: "creator",
@@ -360,9 +360,9 @@ exports.getOneUser = async (req, res) => {
           path: "courses",
           populate: {
             path: "videos",
-            model: "Videos"
-          }
-        }
+            model: "Videos",
+          },
+        },
       });
     if (!user) return res.status(404).send("User Not Found");
     res.send(user);
