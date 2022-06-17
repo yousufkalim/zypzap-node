@@ -1,6 +1,9 @@
 const Creator = require("../models/creators");
 const User = require("../models/users");
-
+const {
+  sendEmail,
+  sendForgetPasswordEmail,
+} = require("../middleware/sendMail");
 exports.postCreator = async (req, res) => {
   try {
     const {
@@ -9,7 +12,7 @@ exports.postCreator = async (req, res) => {
       cover_photo,
       gameType,
       gameMood,
-      plateForm
+      plateForm,
     } = req.body;
     const _id = req.params.id;
     const user = await User.findById(_id);
@@ -24,19 +27,20 @@ exports.postCreator = async (req, res) => {
     let newUser = {
       ...req.body,
       creator: creator._id,
-      role: "Creator"
+      role: "Creator",
     };
     console.log("newUser", newUser);
     const newUsers = await User.findOneAndUpdate(
       { _id: req.params.id },
       {
-        $set: newUser
+        $set: newUser,
       },
       {
-        new: true
+        new: true,
       }
     );
     await creator.save();
+    sendEmail(user.email[0], 35);
     res.status(201).send({ newUsers, creator });
   } catch (error) {
     res.status(500).send(error);
@@ -48,10 +52,10 @@ exports.addDetails = async (req, res) => {
     await User.findOneAndUpdate(
       { _id: req.params.id },
       {
-        role: "creator"
+        role: "creator",
       },
       {
-        new: true
+        new: true,
       }
     );
     await User.findOne({ _id: req.params.id });
@@ -75,9 +79,9 @@ exports.getCreator = async (req, res) => {
         populate: [
           {
             path: "videos",
-            model: "Videos"
-          }
-        ]
+            model: "Videos",
+          },
+        ],
       })
       .populate("user_id");
 
@@ -92,13 +96,13 @@ exports.getsearch = async (req, res) => {
   try {
     const users = await User.find({
       username: { $regex: name, $options: "$i" },
-      creator: { $ne: null }
+      creator: { $ne: null },
     }).populate({
       path: "creator",
       populate: {
         path: "courses",
-        model: "Courses"
-      }
+        model: "Courses",
+      },
     });
 
     const Creator = users.filter((user) => users.creator !== null);
@@ -110,14 +114,14 @@ exports.getsearch = async (req, res) => {
 exports.topRatedCreator = async (req, res) => {
   try {
     const users = await User.find({
-      creator: { $ne: null }
+      creator: { $ne: null },
     })
       .populate({
         path: "creator",
         populate: {
           path: "courses",
-          model: "Courses"
-        }
+          model: "Courses",
+        },
       })
       .sort({ createdAt: -1 })
       .limit(10);
@@ -141,7 +145,7 @@ exports.addFollower = async (req, res) => {
     const updateUser = await User.findOneAndUpdate(
       { _id: user_id },
       {
-        $push: { following: creator.user_id }
+        $push: { following: creator.user_id },
       },
       { new: true }
     );
