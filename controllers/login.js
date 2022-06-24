@@ -84,10 +84,9 @@ exports.getData = async (req, res) => {
       });
     if (!user) {
       return res.status(404).send("User Not Found");
-    } else {
-      res.status(200).send(req.user);
-    }
-    res.send(user);
+    } 
+    
+    res.status(200).send(user);
   } catch (error) {
     res.status(500).send(error);
   }
