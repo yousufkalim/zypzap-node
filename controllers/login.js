@@ -7,7 +7,7 @@ exports.loginUser = async (req, res) => {
   try {
     // Check User Exists
     let user = await User.findOne({ email: email }).populate({
-      path: "creator"
+      path: "creator",
     });
     if (!user) {
       return res.status(400).send({ message: "User Not Exists" });
@@ -49,7 +49,48 @@ exports.updatePassword = async (req, res) => {
   } catch (error) {}
 };
 exports.getData = async (req, res) => {
-  res.status(200).send(req.user);
+  try {
+    const _id = req.user?._id;
+    const user = await User.findOne({ _id })
+      .populate({
+        path: "wishlist_courses",
+        populate: {
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
+          },
+        },
+      })
+      .populate({
+        path: "enrolled_courses.course_id",
+        populate: {
+          path: "creator",
+          populate: {
+            path: "user_id",
+            model: "Users",
+          },
+        },
+      })
+      .populate({
+        path: "creator",
+        populate: {
+          path: "courses",
+          populate: {
+            path: "videos",
+            model: "Videos",
+          },
+        },
+      });
+    if (!user) {
+      return res.status(404).send("User Not Found");
+    } else {
+      res.status(200).send(req.user);
+    }
+    res.send(user);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
 
 exports.logoutUser = async (req, res) => {
