@@ -71,23 +71,14 @@ exports.getData = async (req, res) => {
             model: "Users",
           },
         },
-      })
-      .populate({
-        path: "creator",
-        populate: {
-          path: "courses",
-          populate: {
-            path: "videos",
-            model: "Videos",
-          },
-        },
       });
+
     if (!user) {
       return res.status(404).send("User Not Found");
-    } 
-    
+    }
     res.status(200).send(user);
   } catch (error) {
+    console.log("Api error ---> ", error);
     res.status(500).send(error);
   }
 };
