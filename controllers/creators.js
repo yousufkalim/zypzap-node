@@ -21,7 +21,7 @@ exports.postCreator = async (req, res) => {
     if (creator)
       return res.status(400).send({ message: "User is already a creator" });
     if (!user) return res.status(400).send("User Not Found");
-    creator = new Creator({ user_id: req.params.id });
+    creator = await Creator.create({ user_id: req.params.id });
     console.log("req.body", req.body);
 
     let newUser = {
@@ -39,7 +39,7 @@ exports.postCreator = async (req, res) => {
         new: true,
       }
     );
-    await creator.save();
+
     sendEmail(user.email[0], 35);
     res.status(201).send({ newUsers, creator });
   } catch (error) {
