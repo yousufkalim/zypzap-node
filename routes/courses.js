@@ -22,10 +22,10 @@ const {
 
 // Routes
 router.get("/", getAllCourses);
-// router.get("/search", searchCourse);
+router.get("/search", searchCourse);
 router.post("/", createCourse);
 
-router.post("/filter", filterCourses); //newsearch
+router.post("/filter", filterCourses);
 
 router.get("/filteredCourses", getFilteredCourses);
 router.get("/topGames", getTopGames);
