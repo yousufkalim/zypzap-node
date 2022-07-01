@@ -16,20 +16,20 @@ exports.getAllSearchResults = async (req, res) => {
           { username: { $regex: searchQuery, $options: "$i" } },
           { email: { $regex: searchQuery, $options: "$i" } },
         ],
-      }).limit(10);
+      });
       let games = await Games.find({
         $or: [
           { game_name: { $regex: searchQuery, $options: "$i" } },
           { category: { $regex: searchQuery, $options: "$i" } },
         ],
-      }).limit(10);
+      });
       let videos = await Videos.find({
         $or: [
           { title: { $regex: searchQuery, $options: "$i" } },
           { description: { $regex: searchQuery, $options: "$i" } },
           { tags: { $regex: searchQuery, $options: "$i" } },
         ],
-      }).limit(10);
+      });
 
       let courses = await Courses.find({
         $or: [
@@ -37,7 +37,7 @@ exports.getAllSearchResults = async (req, res) => {
           { description: { $regex: searchQuery, $options: "$i" } },
           { level: { $regex: searchQuery, $options: "$i" } },
         ],
-      }).limit(10);
+      });
 
       res.json([
         ...new Set(users),

@@ -76,6 +76,7 @@ exports.getData = async (req, res) => {
     if (!user) {
       return res.status(404).send("User Not Found");
     }
+
     res.status(200).send(user);
   } catch (error) {
     console.log("Api error ---> ", error);
