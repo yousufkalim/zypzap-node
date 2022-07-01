@@ -36,7 +36,7 @@ exports.createRatings = async (req, res) => {
         { rating: rating },
         {
           new: true,
-          runValidators: true,
+          runValidators: true
         }
       );
     } else {
@@ -51,7 +51,7 @@ exports.createRatings = async (req, res) => {
         { rating: avr },
         {
           new: true,
-          runValidators: true,
+          runValidators: true
         }
       );
     }
@@ -65,12 +65,39 @@ exports.createRatings = async (req, res) => {
 };
 exports.updateRating = async (req, res) => {
   const _id = req.params.id;
+  const { rating, course, rating_by } = req.body;
   try {
     const updatedRating = await Rating.findByIdAndUpdate(_id, req.body, {
       new: true,
-      runValidators: true,
+      runValidators: true
     });
     if (!updatedRating) return res.status(404).send("Rating can't update");
+    const preRating = await Rating.find({ course: course });
+    if (preRating.length === 0) {
+      const newCourse = await Course.findByIdAndUpdate(
+        course,
+        { rating: rating },
+        {
+          new: true,
+          runValidators: true
+        }
+      );
+    } else {
+      let point = 0;
+      preRating.map((rate) => {
+        point += rate.rating;
+      });
+
+      const avr = (point / preRating.length).toFixed(1);
+      const newCourse = await Course.findByIdAndUpdate(
+        course,
+        { rating: avr },
+        {
+          new: true,
+          runValidators: true
+        }
+      );
+    }
     res.send(updatedRating);
   } catch (error) {
     res.status(500).send(error);

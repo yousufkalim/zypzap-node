@@ -6,18 +6,18 @@ const {
   getOneRating,
   createRatings,
   updateRating,
-  deleteRating,
+  deleteRating
 } = require("../controllers/ratings");
 const {
   validateRatings,
-  isValidated,
+  isValidated
 } = require("../middleware/validators/ratings");
 
 // Routes
 router.get("/forSingleCourses/:id", getAllRatings);
 router.get("/:id", getOneRating);
-router.post("/", auth, validateRatings, isValidated, createRatings);
-router.put("/:id", auth, validateRatings, isValidated, updateRating);
+router.post("/", createRatings);
+router.put("/:id", updateRating);
 router.delete("/:id", auth, validateRatings, isValidated, deleteRating);
 
 // Export
