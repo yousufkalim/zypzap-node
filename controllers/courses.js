@@ -327,8 +327,8 @@ exports.getTopGames = async (req, res) => {
           },
         })
         .populate("videos")
-        .sort({ rating: -1 });
-
+        .sort({ rating: -1 })
+        .limit(10);
       res.send(courses);
     }
     /// Latest Courses
