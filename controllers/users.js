@@ -1,21 +1,17 @@
-const User = require("../models/users");
-const Course = require("../models/courses");
-const bcrypt = require("bcryptjs");
-const { auth } = require("../middleware/auth");
-const jwt = require("jsonwebtoken");
-const { generateAuthToken } = require("../middleware/auth");
-const {
-  sendEmail,
-  sendForgetPasswordEmail,
-} = require("../middleware/sendMail");
+const User = require('../models/users');
+const Course = require('../models/courses');
+const bcrypt = require('bcryptjs');
+const { auth } = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
+const { generateAuthToken } = require('../middleware/auth');
+const { sendEmail, sendForgetPasswordEmail } = require('../middleware/sendMail');
 
 exports.createUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
-    if (user)
-      return res.status(400).send({ message: "Email is already exist" });
+    if (user) return res.status(400).send({ message: 'Email is already exist' });
 
     // Create User Object
     user = new User({
@@ -34,9 +30,9 @@ exports.createUser = async (req, res) => {
     }
     const token = await generateAuthToken(user);
 
-    res.json({ message: "User Registered Successfully", user: user, token });
+    res.json({ message: 'User Registered Successfully', user: user, token });
   } catch (error) {
-    console.log("Error ----> ", error);
+    console.log('Error ----> ', error);
     res.status(500).send(error);
   }
 };
@@ -46,21 +42,16 @@ exports.forgetPassword = async (req, res) => {
     const { email } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
-    if (!user)
-      return res
-        .status(404)
-        .send({ message: "User not found with that email" });
+    if (!user) return res.status(404).send({ message: 'User not found with that email' });
 
     const token = await generateAuthToken(user);
     const link = `${process.env.CLIENT_URL}/reset-password/${token}`;
     await sendForgetPasswordEmail(email, user.username, link);
 
-    res.json({ message: "Email sent successfully" });
+    res.json({ message: 'Email sent successfully' });
   } catch (error) {
-    console.log("Error ----> ", error);
-    res
-      .status(500)
-      .json({ success: false, message: "internal server error", error });
+    console.log('Error ----> ', error);
+    res.status(500).json({ success: false, message: 'internal server error', error });
   }
 };
 
@@ -70,24 +61,20 @@ exports.verifyPasswordToken = async (req, res) => {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const user = await User.findOne({
       _id: decoded._id,
-      "tokens.token": token,
+      'tokens.token': token,
     });
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, message: 'User not found' });
     }
 
     res.status(200).json({
       success: true,
-      message: "Token verified successfully",
+      message: 'Token verified successfully',
       userId: user._id,
     });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({ success: false, message: "internal server error", error });
+    res.status(500).json({ success: false, message: 'internal server error', error });
   }
 };
 
@@ -98,27 +85,21 @@ exports.resetPassword = async (req, res) => {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const user = await User.findOne({
       _id: decoded._id,
-      "tokens.token": token,
+      'tokens.token': token,
     });
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, message: 'User not found' });
     }
 
     const hashedPassword = bcrypt.hashSync(req.body.password, 10);
     user.password = hashedPassword;
     await user.save();
 
-    res
-      .status(200)
-      .json({ success: true, message: "Password updated successfully" });
+    res.status(200).json({ success: true, message: 'Password updated successfully' });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({ success: false, message: "internal server error", error });
+    res.status(500).json({ success: false, message: 'internal server error', error });
   }
 };
 
@@ -127,7 +108,7 @@ exports.setSubscription = async (req, res) => {
   try {
     const { userId } = req.body;
     let user = await User.findById(userId);
-    if (!user) return res.status(404).send("User Not Found");
+    if (!user) return res.status(404).send('User Not Found');
 
     const daysCount = new Date().getTime() + 2592000000; //To set Expiry date for subscription (!month)
     const thirthyDays = new Date(daysCount);
@@ -139,13 +120,7 @@ exports.setSubscription = async (req, res) => {
     res.status(400).send(error);
   }
 };
-const filterData = (
-  profile_photo,
-  prefrence_games,
-  gameType,
-  plateForm,
-  gameMood
-) => {
+const filterData = (profile_photo, prefrence_games, gameType, plateForm, gameMood) => {
   let myFind = {};
   if (profile_photo) {
     myFind.profile_photo = profile_photo;
@@ -166,14 +141,7 @@ const filterData = (
 };
 exports.addProfileInfo = async (req, res) => {
   try {
-    const {
-      profile_photo,
-      cover_photo,
-      prefrence_games,
-      gameType,
-      plateForm,
-      gameMood,
-    } = req.body;
+    const { profile_photo, cover_photo, prefrence_games, gameType, plateForm, gameMood } = req.body;
     let myFind = filterData(
       profile_photo,
       cover_photo,
@@ -183,15 +151,9 @@ exports.addProfileInfo = async (req, res) => {
       gameMood
     );
     let UpdatedData = { ...req.body };
-    console.log("req.body", req.body);
-    console.log("myFind", myFind);
 
     const _id = req.params.id;
-    const user = await User.findByIdAndUpdate(
-      _id,
-      { ...req.body },
-      { new: true }
-    );
+    const user = await User.findByIdAndUpdate(_id, { ...req.body }, { new: true });
     res.json(user);
   } catch (error) {
     res.status(400).send(error);
@@ -205,18 +167,11 @@ exports.basicInfo = async (req, res) => {
     if (req.body.currentPassword) {
       let user = await User.findById(_id);
       if (!user) {
-        return res
-          .status(400)
-          .send({ success: false, message: "User Not Exists" });
+        return res.status(400).send({ success: false, message: 'User Not Exists' });
       }
-      const isMatch = await bcrypt.compare(
-        req.body.currentPassword,
-        user.password
-      );
+      const isMatch = await bcrypt.compare(req.body.currentPassword, user.password);
       if (!isMatch) {
-        return res
-          .status(400)
-          .send({ success: false, message: "Invalid Password" });
+        return res.status(400).send({ success: false, message: 'Invalid Password' });
       }
       if (isMatch) {
         const salt = await bcrypt.genSalt(10);
@@ -226,10 +181,8 @@ exports.basicInfo = async (req, res) => {
     const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
     res.json({ success: true, user });
   } catch (err) {
-    console.log("Error ---> ", err);
-    res
-      .status(500)
-      .json({ success: false, message: "Internal server error", error: err });
+    console.log('Error ---> ', err);
+    res.status(500).json({ success: false, message: 'Internal server error', error: err });
   }
 };
 exports.enrolledCourseAndStarted = async (req, res) => {
@@ -244,13 +197,13 @@ exports.enrolledCourseAndStarted = async (req, res) => {
       },
       { new: true }
     );
-    if (!course) return res.send({ message: "Course not found" });
+    if (!course) return res.send({ message: 'Course not found' });
 
     let user = await User.findOneAndUpdate(
-      { _id: userId, "enrolled_courses.course_id": courseId },
+      { _id: userId, 'enrolled_courses.course_id': courseId },
       {
         $set: {
-          "enrolled_courses.$.started": true,
+          'enrolled_courses.$.started': true,
         },
       },
       { new: true }
@@ -265,9 +218,7 @@ exports.enrolledCourseAndStarted = async (req, res) => {
       );
     }
 
-    console.log("User2323 --> ", user);
-    if (user === null)
-      return res.status(404).send({ message: "User not found" });
+    if (user === null) return res.status(404).send({ message: 'User not found' });
 
     res.send(user);
   } catch (error) {
@@ -286,7 +237,7 @@ exports.enrolledCourse = async (req, res) => {
       { new: true }
     );
 
-    if (!course) return res.send({ message: "Course not found" });
+    if (!course) return res.send({ message: 'Course not found' });
     const user = await User.findByIdAndUpdate(
       userId,
       {
@@ -294,7 +245,7 @@ exports.enrolledCourse = async (req, res) => {
       },
       { new: true }
     );
-    if (user === null) return res.send({ message: "User not found" });
+    if (user === null) return res.send({ message: 'User not found' });
     res.json({ user, course });
   } catch (error) {
     res.status(400).send(error);
@@ -303,9 +254,51 @@ exports.enrolledCourse = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
-    if (!users) return res.status(404).send("Users Not Found");
+    if (!users) return res.status(404).send('Users Not Found');
     res.send(users);
   } catch (error) {
+    res.status(500).send(error);
+  }
+};
+exports.videoPlayed = async (req, res) => {
+  try {
+    const { userId, courseId, videoId } = req.params;
+
+    let user = await User.findById(userId);
+    let course = await Course.findById(courseId);
+
+    if (!course || !user) {
+      return res.status(404).json({ success: false, message: 'Course or User not found' });
+    }
+
+    user = await User.findOneAndUpdate(
+      { _id: userId, 'enrolled_courses.course_id': courseId },
+      {
+        $addToSet: {
+          'enrolled_courses.$.played_videos': videoId,
+        },
+      },
+      { new: true }
+    );
+
+    let playedVideos =
+      user.enrolled_courses.filter((a) => a.course_id?.toString() === courseId)[0]?.played_videos
+        ?.length || 0;
+    let courseVideos = course.videos.length;
+
+    user = await User.findOneAndUpdate(
+      { _id: userId, 'enrolled_courses.course_id': courseId },
+      {
+        $set: {
+          'enrolled_courses.$.progress': (playedVideos / courseVideos) * 100,
+        },
+      },
+      { new: true }
+    );
+
+    res.send(user);
+  } catch (error) {
+    console.log('Error --> ', error);
     res.status(500).send(error);
   }
 };
@@ -315,7 +308,7 @@ exports.addToWishLists = async (req, res) => {
     const users = await User.findById(userId);
     const course = await Course.findById(courseId);
     if (!users || !course) {
-      return res.status(404).send("User Not Found");
+      return res.status(404).send('User Not Found');
     } else {
       const user = await User.updateOne(
         { _id: userId },
@@ -335,36 +328,36 @@ exports.getOneUser = async (req, res) => {
     const _id = req.params.id;
     const user = await User.findOne({ _id })
       .populate({
-        path: "wishlist_courses",
+        path: 'wishlist_courses',
         populate: {
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         },
       })
       .populate({
-        path: "enrolled_courses.course_id",
+        path: 'enrolled_courses.course_id',
         populate: {
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         },
       })
       .populate({
-        path: "creator",
+        path: 'creator',
         populate: {
-          path: "courses",
+          path: 'courses',
           populate: {
-            path: "videos",
-            model: "Videos",
+            path: 'videos',
+            model: 'Videos',
           },
         },
       });
-    if (!user) return res.status(404).send("User Not Found");
+    if (!user) return res.status(404).send('User Not Found');
     res.send(user);
   } catch (error) {
     res.status(500).send(error);
@@ -386,7 +379,7 @@ exports.deleteOneUser = async (req, res) => {
   try {
     const _id = req.params.id;
     const deletedUser = await User.findByIdAndDelete(_id);
-    if (!deletedUser) return res.status(404).send("User Not Found");
+    if (!deletedUser) return res.status(404).send('User Not Found');
     res.send(deletedUser);
   } catch (error) {
     res.status(500).send(error);
@@ -414,18 +407,14 @@ exports.loginWithGoogle = async (req, res) => {
     if (!user) {
       const newUser = new User();
       newUser.username = profile.displayName;
-      newUser.role = "User";
+      newUser.role = 'User';
       newUser.email.push(profile.email);
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(
-        process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`
-      );
+      return res.redirect(process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`);
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(
-        process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`
-      );
+      return res.redirect(process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`);
     }
   } catch (error) {
     res.status(500).send(error);
@@ -438,19 +427,15 @@ exports.loginWithFacebook = async (req, res) => {
     if (!user) {
       const newUser = new User();
       newUser.username = profile.displayName;
-      newUser.role = "User";
+      newUser.role = 'User';
       const eMail = profile.emails[0].value;
       newUser.email.push(eMail);
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(
-        process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`
-      );
+      return res.redirect(process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`);
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(
-        process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`
-      );
+      return res.redirect(process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`);
     }
   } catch (error) {
     res.status(500).send(error);
@@ -464,19 +449,15 @@ exports.loginWithTwitch = async (req, res) => {
       const newUser = new User();
       newUser.username = profile.display_name;
       newUser.userId = profile.id;
-      newUser.role = "User";
+      newUser.role = 'User';
       const eMail = profile.email;
       newUser.email.push(eMail);
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(
-        process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`
-      );
+      return res.redirect(process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`);
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(
-        process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`
-      );
+      return res.redirect(process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`);
     }
   } catch (error) {
     res.status(500).send(error);
@@ -492,17 +473,13 @@ exports.loginWithDiscord = async (req, res) => {
       newUser.userId = profile.id;
       const eMail = profile.email;
       newUser.email.push(eMail);
-      newUser.role = "User";
+      newUser.role = 'User';
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(
-        process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`
-      );
+      return res.redirect(process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`);
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(
-        process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`
-      );
+      return res.redirect(process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`);
     }
   } catch (error) {
     res.status(500).send(error);
