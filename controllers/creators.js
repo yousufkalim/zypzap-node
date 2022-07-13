@@ -1,35 +1,24 @@
-const Creator = require("../models/creators");
-const User = require("../models/users");
-const {
-  sendEmail,
-  sendForgetPasswordEmail,
-} = require("../middleware/sendMail");
+const Creator = require('../models/creators');
+const User = require('../models/users');
+const { sendEmail, sendForgetPasswordEmail } = require('../middleware/sendMail');
 exports.postCreator = async (req, res) => {
   try {
-    const {
-      expertiseGame,
-      profile_photo,
-      cover_photo,
-      gameType,
-      gameMood,
-      plateForm,
-    } = req.body;
+    const { expertiseGame, profile_photo, cover_photo, gameType, gameMood, plateForm } = req.body;
     const _id = req.params.id;
     const user = await User.findById(_id);
     let creator = await Creator.findById(_id);
 
-    if (creator)
-      return res.status(400).send({ message: "User is already a creator" });
-    if (!user) return res.status(400).send("User Not Found");
+    if (creator) return res.status(400).send({ message: 'User is already a creator' });
+    if (!user) return res.status(400).send('User Not Found');
     creator = await Creator.create({ user_id: req.params.id });
-    console.log("req.body", req.body);
+    console.log('req.body', req.body);
 
     let newUser = {
       ...req.body,
       creator: creator._id,
-      role: "Creator",
+      role: 'Creator',
     };
-    console.log("newUser", newUser);
+    console.log('newUser', newUser);
     const newUsers = await User.findOneAndUpdate(
       { _id: req.params.id },
       {
@@ -40,7 +29,7 @@ exports.postCreator = async (req, res) => {
       }
     );
 
-    sendEmail(user.email[0], 35);
+    sendEmail(user.email[0], 36);
     res.status(201).send({ newUsers, creator });
   } catch (error) {
     res.status(500).send(error);
@@ -52,7 +41,7 @@ exports.addDetails = async (req, res) => {
     await User.findOneAndUpdate(
       { _id: req.params.id },
       {
-        role: "creator",
+        role: 'creator',
       },
       {
         new: true,
@@ -75,17 +64,17 @@ exports.getCreator = async (req, res) => {
   try {
     let creator = await Creator.findOne({ _id: req.params.id })
       .populate({
-        path: "courses",
+        path: 'courses',
         populate: [
           {
-            path: "videos",
-            model: "Videos",
+            path: 'videos',
+            model: 'Videos',
           },
         ],
       })
-      .populate("user_id");
+      .populate('user_id');
 
-    if (!creator) return res.status(400).send({ message: "creator not found" });
+    if (!creator) return res.status(400).send({ message: 'creator not found' });
     res.json({ creator });
   } catch (error) {
     res.status(500).send(error);
@@ -95,13 +84,13 @@ exports.getsearch = async (req, res) => {
   const name = req.query.name;
   try {
     const users = await User.find({
-      username: { $regex: name, $options: "$i" },
+      username: { $regex: name, $options: '$i' },
       creator: { $ne: null },
     }).populate({
-      path: "creator",
+      path: 'creator',
       populate: {
-        path: "courses",
-        model: "Courses",
+        path: 'courses',
+        model: 'Courses',
       },
     });
 
@@ -117,10 +106,10 @@ exports.topRatedCreator = async (req, res) => {
       creator: { $ne: null },
     })
       .populate({
-        path: "creator",
+        path: 'creator',
         populate: {
-          path: "courses",
-          model: "Courses",
+          path: 'courses',
+          model: 'Courses',
         },
       })
       .sort({ createdAt: -1 })
@@ -139,7 +128,7 @@ exports.addFollower = async (req, res) => {
     const user = await User.findById(user_id);
     const creator = await Creator.findById(creator_id);
     if (!user || !creator) {
-      return res.status(400).send({ message: "user or creator not found" });
+      return res.status(400).send({ message: 'user or creator not found' });
     }
 
     const updateUser = await User.findOneAndUpdate(
@@ -149,11 +138,7 @@ exports.addFollower = async (req, res) => {
       },
       { new: true }
     );
-    const creator1 = await Creator.findOneAndUpdate(
-      { _id: creator_id },
-      { $push: { followers: user_id } },
-      { new: true }
-    );
+    const creator1 = await Creator.findOneAndUpdate({ _id: creator_id }, { $push: { followers: user_id } }, { new: true });
     res.send({ user: updateUser, creator: creator1 });
   } catch (error) {
     res.status(500).send(error.message);

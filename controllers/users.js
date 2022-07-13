@@ -26,7 +26,7 @@ exports.createUser = async (req, res) => {
 
     await user.save();
     if (user) {
-      await sendEmail(email, 34);
+      await sendEmail(email, 37);
     }
     const token = await generateAuthToken(user);
 
@@ -142,14 +142,7 @@ const filterData = (profile_photo, prefrence_games, gameType, plateForm, gameMoo
 exports.addProfileInfo = async (req, res) => {
   try {
     const { profile_photo, cover_photo, prefrence_games, gameType, plateForm, gameMood } = req.body;
-    let myFind = filterData(
-      profile_photo,
-      cover_photo,
-      prefrence_games,
-      gameType,
-      plateForm,
-      gameMood
-    );
+    let myFind = filterData(profile_photo, cover_photo, prefrence_games, gameType, plateForm, gameMood);
     let UpdatedData = { ...req.body };
 
     const _id = req.params.id;
@@ -281,9 +274,7 @@ exports.videoPlayed = async (req, res) => {
       { new: true }
     );
 
-    let playedVideos =
-      user.enrolled_courses.filter((a) => a.course_id?.toString() === courseId)[0]?.played_videos
-        ?.length || 0;
+    let playedVideos = user.enrolled_courses.filter((a) => a.course_id?.toString() === courseId)[0]?.played_videos?.length || 0;
     let courseVideos = course.videos.length;
 
     user = await User.findOneAndUpdate(
