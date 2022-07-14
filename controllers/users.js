@@ -402,10 +402,10 @@ exports.loginWithGoogle = async (req, res) => {
       newUser.email.push(profile.email);
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`);
+      return res.redirect(process.env.CLIENT_URL + `/home/?SignupByGoogle=true&&user=${token}`);
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(process.env.Redirct_URL + `?SignupByGoogle=true&&user=${token}`);
+      return res.redirect(process.env.CLIENT_URL + `/home/?SignupByGoogle=true&&user=${token}`);
     }
   } catch (error) {
     res.status(500).send(error);
@@ -423,10 +423,10 @@ exports.loginWithFacebook = async (req, res) => {
       newUser.email.push(eMail);
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`);
+      return res.redirect(process.env.CLIENT_URL + `/home/?SignupByFacebook=true&&user=${token}`);
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(process.env.Redirct_URL + `?SignupByFacebook=true&&user=${token}`);
+      return res.redirect(process.env.CLIENT_URL + `/home/?SignupByFacebook=true&&user=${token}`);
     }
   } catch (error) {
     res.status(500).send(error);
@@ -445,10 +445,10 @@ exports.loginWithTwitch = async (req, res) => {
       newUser.email.push(eMail);
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`);
+      return res.redirect(process.env.CLIENT_URL + `/home/?SignupByTwitch=true&&user=${token}`);
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(process.env.Redirct_URL + `?SignupByTwitch=true&&user=${token}`);
+      return res.redirect(process.env.CLIENT_URL + `/home/?SignupByTwitch=true&&user=${token}`);
     }
   } catch (error) {
     res.status(500).send(error);
@@ -467,10 +467,10 @@ exports.loginWithDiscord = async (req, res) => {
       newUser.role = 'User';
       const token = await generateAuthToken(newUser);
       await newUser.save();
-      return res.redirect(process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`);
+      return res.redirect(process.env.CLIENT_URL + `/home/?SignupByDiscord=true&&user=${token}`);
     } else {
       const token = await generateAuthToken(user);
-      return res.redirect(process.env.Redirct_URL + `?SignupByDiscord=true&&user=${token}`);
+      return res.redirect(process.env.CLIENT_URL + `/home/?SignupByDiscord=true&&user=${token}`);
     }
   } catch (error) {
     res.status(500).send(error);
