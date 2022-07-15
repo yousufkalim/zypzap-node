@@ -1,30 +1,30 @@
-const Course = require("../models/courses");
-const User = require("../models/users");
-const Creater = require("../models/creators");
-const Notifications = require("../models/notifications");
-const Game = require("../models/games");
-const mongoose = require("mongoose");
-const path = require("path");
-const { getVideoDurationInSeconds } = require("get-video-duration");
+const Course = require('../models/courses');
+const User = require('../models/users');
+const Creater = require('../models/creators');
+const Notifications = require('../models/notifications');
+const Game = require('../models/games');
+const mongoose = require('mongoose');
+const path = require('path');
+const { getVideoDurationInSeconds } = require('get-video-duration');
 // const AWS = require("aws-sdk");
 // Note: All these need to be done
-const Video = require("../models/videos");
+const Video = require('../models/videos');
 exports.createCourse = async (req, res) => {
   try {
     const { formDataOne, formDataFive, formDataSix, id } = req.body;
     const newCreator = await Creater.findById(id)
-      .populate("followers")
+      .populate('followers')
       .populate({
-        path: "courses",
+        path: 'courses',
         populate: [
           {
-            path: "videos",
-            model: "Videos",
+            path: 'videos',
+            model: 'Videos',
           },
         ],
       })
-      .populate("user_id");
-    if (!newCreator) return res.status(404).send("Creator does not found");
+      .populate('user_id');
+    if (!newCreator) return res.status(404).send('Creator does not found');
     const {
       course_name,
       // gameName,
@@ -54,7 +54,7 @@ exports.createCourse = async (req, res) => {
     const daysCount = new Date().getTime() + 604800000; //To set Expiry date for notification
     const sevenDays = new Date(daysCount); //Set date after 7days
     const notification = await Notifications.create({
-      title: "New Course added",
+      title: 'New Course added',
       expiry_date: sevenDays,
       from: id,
     });
@@ -83,15 +83,15 @@ exports.getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find()
       .populate({
-        path: "creator",
+        path: 'creator',
         populate: {
-          path: "user_id",
-          model: "Users",
+          path: 'user_id',
+          model: 'Users',
         },
       })
-      .populate("videos")
-      .sort("-created_at");
-    if (!courses) res.status(404).send("Courses Not Found");
+      .populate('videos')
+      .sort('-created_at');
+    if (!courses) res.status(404).send('Courses Not Found');
     res.send(courses);
   } catch (error) {
     res.status(500).send(error);
@@ -109,7 +109,7 @@ const coursesFilter = (plateForm, level, mode, price) => {
     myFind = [...myFind, { mode: mode }];
   }
   if (price) {
-    if (price === "all") {
+    if (price === 'all') {
       myFind = [...myFind, { price: { $gt: 0 } }];
     } else {
       myFind = [...myFind, { price: { $lte: price } }];
@@ -126,7 +126,7 @@ exports.getFilteredCourses = async (req, res) => {
     const mode = req.query.mode;
     const price = req.query.price;
     let myFind = coursesFilter(plateForm, level, mode, price);
-    if (myFind.length === 0 && gameType === "") {
+    if (myFind.length === 0 && gameType === '') {
       return res.send(myFind);
     }
     if (myFind.length === 0 && gameType) {
@@ -134,34 +134,32 @@ exports.getFilteredCourses = async (req, res) => {
       const gameIds = games.map((a) => a._id);
 
       let foundGames = await Course.find({ game_id: { $in: gameIds } })
-        .populate("game_id")
+        .populate('game_id')
         .populate({
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         })
-        .populate("videos");
+        .populate('videos');
       return res.send(foundGames);
     } else {
       const courses = await Course.find({
         $and: myFind,
       })
-        .populate("game_id")
+        .populate('game_id')
         .populate({
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         })
-        .populate("videos");
-      if (!courses) return res.status(404).send("Courses does not found");
+        .populate('videos');
+      if (!courses) return res.status(404).send('Courses does not found');
       if (gameType) {
-        const newCourses = courses.filter(
-          (course) => course?.game_id?.category === gameType
-        );
+        const newCourses = courses.filter((course) => course?.game_id?.category === gameType);
         res.send(newCourses);
       } else {
         res.send(courses);
@@ -176,24 +174,24 @@ exports.getOneCourse = async (req, res) => {
   try {
     const course = await Course.findById(_id)
       .populate({
-        path: "creator",
+        path: 'creator',
         populate: {
-          path: "user_id",
-          model: "Users",
+          path: 'user_id',
+          model: 'Users',
         },
       })
       .populate({
-        path: "creator",
+        path: 'creator',
         populate: {
-          path: "courses",
-          model: "Courses",
+          path: 'courses',
+          model: 'Courses',
         },
       })
-      .populate("videos")
-      .populate("game_id");
+      .populate('videos')
+      .populate('game_id');
 
-    console.log("Course ---> ", course);
-    if (!course) res.status(404).send("Not Found");
+    console.log('Course ---> ', course);
+    if (!course) res.status(404).send('Not Found');
     res.send(course);
   } catch (error) {
     res.status(500).send(error);
@@ -203,18 +201,24 @@ exports.getOneCourse = async (req, res) => {
 exports.filterCourses = async (req, res) => {
   try {
     delete req.body.category;
+
+    Object.keys(req.body).map((item) => {
+      if (req.body[item].length === 0) {
+        delete req.body[item];
+      }
+    });
+
     const courses = await Course.find(req.body)
       .populate({
-        path: "creator",
+        path: 'creator',
         populate: {
-          path: "user_id",
-          model: "Users",
+          path: 'user_id',
+          model: 'Users',
         },
       })
-      .populate("videos")
+      .populate('videos')
       .sort({ createdAt: -1 });
 
-    console.log("Filters --> ", courses);
     res.send(courses);
   } catch (error) {
     res.status(500).send(error);
@@ -225,14 +229,14 @@ exports.searchCourse = async (req, res) => {
   const name = req.query.name;
   try {
     const course = await Course.find({
-      course_name: { $regex: name, $options: "$i" },
+      course_name: { $regex: name, $options: '$i' },
     })
-      .populate("videos")
+      .populate('videos')
       .populate({
-        path: "creator",
+        path: 'creator',
         populate: {
-          path: "user_id",
-          model: "Users",
+          path: 'user_id',
+          model: 'Users',
         },
       });
 
@@ -268,12 +272,10 @@ exports.updateCourse = async (req, res) => {
       },
       { new: true }
     );
-    if (!course) return res.status(404).send("Course Not Found");
-    const creator = await Creater.findById(course.creator).populate(
-      "followers"
-    );
+    if (!course) return res.status(404).send('Course Not Found');
+    const creator = await Creater.findById(course.creator).populate('followers');
     const notification = await Notifications.create({
-      title: "Course Updated By Creator",
+      title: 'Course Updated By Creator',
       from: creator,
     });
     creator.followers.map(async (follower) => {
@@ -293,20 +295,17 @@ exports.updateCourse = async (req, res) => {
 exports.deleteCourse = async (req, res) => {
   const courseId = req.params.id;
   try {
-    console.log("111111", courseId);
+    console.log('111111', courseId);
     const deletedCourse = await Course.findByIdAndDelete(courseId);
-    console.log("222222", deletedCourse);
-    if (!deletedCourse) return res.status(404).send("Course not found");
+    console.log('222222', deletedCourse);
+    if (!deletedCourse) return res.status(404).send('Course not found');
     const Creator = await Creater.findById(deletedCourse.creator);
-    if (!Creator) return res.status(404).send("Creator not found");
+    if (!Creator) return res.status(404).send('Creator not found');
     const courses = Creator.courses;
     const newCourses = courses.filter((course) => course !== courseId);
     Creater.courses = newCourses;
     const creator = await Creator.save();
-    await User.updateMany(
-      { "enrolled_courses.course_id": courseId },
-      { $pull: { enrolled_courses: { course_id: courseId } } }
-    );
+    await User.updateMany({ 'enrolled_courses.course_id': courseId }, { $pull: { enrolled_courses: { course_id: courseId } } });
     res.status(200).send({ creator: creator });
   } catch (error) {
     res.status(500).send(error);
@@ -320,13 +319,13 @@ exports.getTopGames = async (req, res) => {
     if (number == 1) {
       const courses = await Course.find({})
         .populate({
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         })
-        .populate("videos")
+        .populate('videos')
         .sort({ rating: -1 })
         .limit(10);
       res.send(courses);
@@ -335,55 +334,55 @@ exports.getTopGames = async (req, res) => {
     if (number == 2) {
       const courses = await Course.find({})
         .populate({
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         })
-        .populate("videos")
+        .populate('videos')
         .sort({ createdAt: -1 });
 
       res.send(courses);
     }
     //   top ten NFT games
     if (number == 3) {
-      const games = await Game.find({ category: "NFT" }).sort({
+      const games = await Game.find({ category: 'NFT' }).sort({
         createdAt: -1,
       });
 
       const gameIds = games.map((a) => a._id);
 
       let foundGames = await Course.find({ game_id: { $in: gameIds } })
-        .populate("game_id")
+        .populate('game_id')
         .populate({
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         })
-        .populate("videos");
+        .populate('videos');
       res.send(foundGames);
     }
     //   top ten Metaverse games
     if (number == 4) {
-      const games = await Game.find({ category: "Metaverse" }).sort({
+      const games = await Game.find({ category: 'Metaverse' }).sort({
         createdAt: -1,
       });
 
       const gameIds = games.map((a) => a._id);
 
       let foundGames = await Course.find({ game_id: { $in: gameIds } })
-        .populate("game_id")
+        .populate('game_id')
         .populate({
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         })
-        .populate("videos");
+        .populate('videos');
 
       res.send(foundGames);
     }
@@ -393,10 +392,10 @@ exports.getTopGames = async (req, res) => {
         creator: { $ne: null },
       })
         .populate({
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "courses",
-            model: "Courses",
+            path: 'courses',
+            model: 'Courses',
           },
         })
         .sort({ createdAt: -1 });
@@ -410,35 +409,35 @@ exports.getTopGames = async (req, res) => {
       const gameIds = games.map((a) => a._id);
 
       let foundGames = await Course.find({ game_id: { $in: gameIds } })
-        .populate("game_id")
+        .populate('game_id')
         .populate({
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         })
-        .populate("videos");
+        .populate('videos');
       res.send(foundGames);
     }
     /// top ten reality games
     if (number == 7) {
-      const games = await Game.find({ category: "Reality" }).sort({
+      const games = await Game.find({ category: 'Reality' }).sort({
         createdAt: -1,
       });
 
       const gameIds = games.map((a) => a._id);
 
       let foundGames = await Course.find({ game_id: { $in: gameIds } })
-        .populate("game_id")
+        .populate('game_id')
         .populate({
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         })
-        .populate("videos");
+        .populate('videos');
       res.send(foundGames);
     }
   } catch (error) {
@@ -456,7 +455,7 @@ exports.deleteCourseEpisode = async (req, res) => {
       },
       { new: true }
     );
-    if (!course) return res.status(404).send("Course not found");
+    if (!course) return res.status(404).send('Course not found');
     res.send(course);
   } catch (error) {
     res.status(500).send(error);

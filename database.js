@@ -1,9 +1,9 @@
 // Init
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const db_url = process.env.MONGODB_URI;
 
 // Setting
-mongoose.set("debug", true);
+mongoose.set('debug', true);
 
 // Connection
 mongoose
@@ -15,7 +15,7 @@ mongoose
     ignoreUndefined: true,
     autoIndex: true,
   })
-  .then(() => console.log("We are connected with database :)"))
+  .then(() => console.log('We are connected with database :)'))
   .catch((err) => {
-    console.log("DB Connection Error :( -------> ", err);
+    console.log('DB Connection Error :( -------> ', err);
   });
