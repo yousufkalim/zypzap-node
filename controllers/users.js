@@ -142,7 +142,14 @@ const filterData = (profile_photo, prefrence_games, gameType, plateForm, gameMoo
 exports.addProfileInfo = async (req, res) => {
   try {
     const { profile_photo, cover_photo, prefrence_games, gameType, plateForm, gameMood } = req.body;
-    let myFind = filterData(profile_photo, cover_photo, prefrence_games, gameType, plateForm, gameMood);
+    let myFind = filterData(
+      profile_photo,
+      cover_photo,
+      prefrence_games,
+      gameType,
+      plateForm,
+      gameMood
+    );
     let UpdatedData = { ...req.body };
 
     const _id = req.params.id;
@@ -162,14 +169,15 @@ exports.basicInfo = async (req, res) => {
       if (!user) {
         return res.status(400).send({ success: false, message: 'User Not Exists' });
       }
-      const isMatch = await bcrypt.compare(req.body.currentPassword, user.password);
+
+      const isMatch = bcrypt.compareSync(req.body.currentPassword, user.password);
+
       if (!isMatch) {
-        return res.status(400).send({ success: false, message: 'Invalid Password' });
+        return res.status(400).send({ success: false, message: 'Current Password is Invalid' });
       }
-      if (isMatch) {
-        const salt = await bcrypt.genSalt(10);
-        req.body.password = await bcrypt.hash(req.body.password, salt);
-      }
+
+      const salt = await bcrypt.genSalt(10);
+      req.body.password = await bcrypt.hash(req.body.password, salt);
     }
     const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
     res.json({ success: true, user });
@@ -178,6 +186,22 @@ exports.basicInfo = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error', error: err });
   }
 };
+
+exports.basicInfoUserOnly = async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const salt = await bcrypt.genSalt(10);
+    req.body.password = await bcrypt.hash(req.body.password, salt);
+
+    const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
+    res.json({ success: true, user });
+  } catch (err) {
+    console.log('Error ---> ', err);
+    res.status(500).json({ success: false, message: 'Internal server error', error: err });
+  }
+};
+
 exports.enrolledCourseAndStarted = async (req, res) => {
   try {
     const { courseId, userId } = req.body;
@@ -274,7 +298,9 @@ exports.videoPlayed = async (req, res) => {
       { new: true }
     );
 
-    let playedVideos = user.enrolled_courses.filter((a) => a.course_id?.toString() === courseId)[0]?.played_videos?.length || 0;
+    let playedVideos =
+      user.enrolled_courses.filter((a) => a.course_id?.toString() === courseId)[0]?.played_videos
+        ?.length || 0;
     let courseVideos = course.videos.length;
 
     user = await User.findOneAndUpdate(
