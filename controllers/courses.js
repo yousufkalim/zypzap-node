@@ -28,6 +28,7 @@ exports.createCourse = async (req, res) => {
     const {
       course_name,
       // gameName,
+      gameName,
       selectedGamename,
       gameLevel,
       gameType,
@@ -39,6 +40,8 @@ exports.createCourse = async (req, res) => {
     const newCourse = {
       course_name: course_name,
       level: gameLevel,
+      gameName: gameName,
+      gameType: gameType,
       mode: gameMood,
       plateform: gamePlateForm,
       description: description,
@@ -74,6 +77,7 @@ exports.createCourse = async (req, res) => {
       },
       { new: true }
     );
+    console.log('course=====================================>', course);
     res.send({ course, creator: newCreator });
   } catch (error) {
     res.status(500).send(error.message);
@@ -250,7 +254,7 @@ exports.updateCourse = async (req, res) => {
   try {
     const {
       course_name,
-      // gameName,
+      gameName,
       selectedGamename,
       gameLevel,
       gameType,
@@ -264,7 +268,8 @@ exports.updateCourse = async (req, res) => {
         course_name: course_name,
         level: gameLevel,
         mode: gameMood,
-        // game_id: gameName,
+        gameType: gameType,
+        gameName: gameName,
         selectedGamename,
         plateform: gamePlateForm,
         description: description,
@@ -305,7 +310,10 @@ exports.deleteCourse = async (req, res) => {
     const newCourses = courses.filter((course) => course !== courseId);
     Creater.courses = newCourses;
     const creator = await Creator.save();
-    await User.updateMany({ 'enrolled_courses.course_id': courseId }, { $pull: { enrolled_courses: { course_id: courseId } } });
+    await User.updateMany(
+      { 'enrolled_courses.course_id': courseId },
+      { $pull: { enrolled_courses: { course_id: courseId } } }
+    );
     res.status(200).send({ creator: creator });
   } catch (error) {
     res.status(500).send(error);
