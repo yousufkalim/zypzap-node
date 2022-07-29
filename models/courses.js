@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 const courseSchema = new Schema(
   {
@@ -6,15 +6,18 @@ const courseSchema = new Schema(
       type: String,
       required: true,
     },
+    gameName: {
+      type: String,
+    },
     creator: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "Creators",
+      ref: 'Creators',
     },
     videos: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Videos",
+        ref: 'Videos',
       },
     ],
     duration: {
@@ -29,7 +32,7 @@ const courseSchema = new Schema(
     },
     level: {
       type: String,
-      enum: ["Casual", "Confirmed", "Hardcore", "Esporter"],
+      enum: ['Casual', 'Confirmed', 'Hardcore', 'Esporter'],
     },
     requirement: [String],
     // game_id: {
@@ -45,37 +48,25 @@ const courseSchema = new Schema(
     gameType: {
       type: String,
       enum: [
-        "Action",
-        "Adventure",
-
-        "Metaverse",
-
-        "MMOG",
-
-        "Car Racing",
-
-        "Versus Fighting",
-
-        "FPS",
-
-        "RTS",
-
-        "RPG",
-
-        "Turn by Turn Strategy",
-
-        "Simulation",
-
-        "Sport",
-
-        "Trading card",
-
-        "Puzzle",
+        'Action',
+        'Adventure',
+        'Metaverse',
+        'MMOG',
+        'Car Racing',
+        'Versus Fighting',
+        'FPS',
+        'RTS',
+        'RPG',
+        'Turn by Turn Strategy',
+        'Simulation',
+        'Sport',
+        'Trading card',
+        'Puzzle',
       ],
     },
     student: {
       type: Schema.Types.ObjectId,
-      ref: "Users",
+      ref: 'Users',
     },
     description: {
       type: String,
@@ -83,13 +74,13 @@ const courseSchema = new Schema(
     plateform: {
       type: String,
       enum: [
-        "PC",
-        "Mobile Games",
-        "PS1/2/3/4/5",
-        "Xbox/360/One/X",
-        "Retro Consoles",
-        "Portable Consoles",
-        "Tablet",
+        'PC',
+        'Mobile Games',
+        'PS1/2/3/4/5',
+        'Xbox/360/One/X',
+        'Retro Consoles',
+        'Portable Consoles',
+        'Tablet',
       ],
     },
     thumbnail: {
@@ -97,7 +88,7 @@ const courseSchema = new Schema(
     },
     mode: {
       type: String,
-      enum: ["Single", "Multiplayer", "Both"],
+      enum: ['Single', 'Multiplayer', 'Both'],
     },
   },
   {
@@ -105,4 +96,4 @@ const courseSchema = new Schema(
   }
 );
 
-module.exports = model("Courses", courseSchema);
+module.exports = model('Courses', courseSchema);
