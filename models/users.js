@@ -39,6 +39,10 @@ const userSchema = new Schema(
       month: String,
       year: String,
     },
+    status: {
+      type: String,
+      enum: ['Active', 'Suspended', 'Deleted/Banned'],
+    },
     cvv: String,
     following: [
       {
