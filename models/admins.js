@@ -1,5 +1,5 @@
 // Init
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 // Admin Schema
 const adminSchema = new Schema(
@@ -21,8 +21,13 @@ const adminSchema = new Schema(
     },
     role: {
       type: String,
-      default: "admin",
+      default: 'admin',
     },
+
+    // status: {
+    //   type: String,
+    //   enum: ['Active', 'Suspended', 'Deleted/Banned'],
+    // },
     active: {
       type: Boolean,
       default: false,
@@ -34,4 +39,4 @@ const adminSchema = new Schema(
 );
 
 // Model
-module.exports = model("admins", adminSchema);
+module.exports = model('admins', adminSchema);
