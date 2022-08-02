@@ -1,21 +1,28 @@
-const bcrypt = require("bcryptjs");
-const User = require("../models/users");
-const { generateAuthToken } = require("../middleware/auth");
+const bcrypt = require('bcryptjs');
+const User = require('../models/users');
+const { generateAuthToken } = require('../middleware/auth');
 // const { sendMail } = require("../middleware/sendMail");
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     // Check User Exists
     let user = await User.findOne({ email: email }).populate({
-      path: "creator",
+      path: 'creator',
     });
     if (!user) {
-      return res.status(400).send({ message: "User Not Exists" });
+      return res.status(400).send({ message: 'User Not Exists' });
+    }
+    if (user.status === 'Banned') {
+      return res
+        .status(400)
+        .send({ message: 'This account was banned. You can not access your account.' });
+    } else if (user.status === 'Suspended') {
+      return res.status(400).send({ message: 'The account on this email is currently suspended' });
     }
     // Match Password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).send({ message: "Invalid Password" });
+      return res.status(400).send({ message: 'Invalid Password' });
     }
 
     const token = await generateAuthToken(user);
@@ -30,15 +37,11 @@ exports.updatePassword = async (req, res) => {
   try {
     let user = await User.findById(_id);
     if (!user) {
-      return res
-        .status(400)
-        .send({ success: false, message: "User Not Exists" });
+      return res.status(400).send({ success: false, message: 'User Not Exists' });
     }
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res
-        .status(400)
-        .send({ success: false, message: "Invalid Password" });
+      return res.status(400).send({ success: false, message: 'Invalid Password' });
     }
     if (isMatch) {
       const salt = await bcrypt.genSalt(10);
@@ -53,33 +56,33 @@ exports.getData = async (req, res) => {
     const _id = req.user?._id;
     const user = await User.findOne({ _id })
       .populate({
-        path: "wishlist_courses",
+        path: 'wishlist_courses',
         populate: {
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         },
       })
       .populate({
-        path: "enrolled_courses.course_id",
+        path: 'enrolled_courses.course_id',
         populate: {
-          path: "creator",
+          path: 'creator',
           populate: {
-            path: "user_id",
-            model: "Users",
+            path: 'user_id',
+            model: 'Users',
           },
         },
       });
 
     if (!user) {
-      return res.status(404).send("User Not Found");
+      return res.status(404).send('User Not Found');
     }
 
     res.status(200).send(user);
   } catch (error) {
-    console.log("Api error ---> ", error);
+    console.log('Api error ---> ', error);
     res.status(500).send(error);
   }
 };
@@ -90,7 +93,7 @@ exports.logoutUser = async (req, res) => {
       return token.token !== req.token;
     });
     await req.user.save();
-    res.send("Logout successfully");
+    res.send('Logout successfully');
   } catch (error) {
     res.status(500).send(error);
   }
@@ -100,7 +103,7 @@ exports.logoutAll = async (req, res) => {
   try {
     req.user.tokens = [];
     await req.user.save();
-    res.send("Logout from all devices successfully");
+    res.send('Logout from all devices successfully');
   } catch (error) {
     res.status(500).send(error);
   }

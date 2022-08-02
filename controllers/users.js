@@ -11,7 +11,18 @@ exports.createUser = async (req, res) => {
     const { username, email, password, role } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
-    if (user) return res.status(400).send({ message: 'Email is already exist' });
+
+    if (user.status === 'Banned') {
+      return res
+        .status(400)
+        .send('This email was banned, You can not create an account on this email');
+    } else if (user.status === 'Suspended') {
+      return res.status(400).send('The account on this email is currently suspended');
+    }
+
+    if (user) {
+      return res.status(400).send({ message: 'Email is already exist' });
+    }
 
     // Create User Object
     user = new User({
@@ -392,6 +403,19 @@ exports.updateOneUser = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+exports.getUserByIdAndUpdate = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const creator = await User.findByIdAndUpdate(_id, req.body, { new: true });
+    console.log('req.body', req.body);
+    res.json({ success: true, creator });
+  } catch (err) {
+    console.log('Error ---> ', err);
+    res.status(500).json({ success: false, message: 'Internal server error', error: err });
+  }
+};
+
 exports.deleteOneUser = async (req, res) => {
   try {
     const _id = req.params.id;

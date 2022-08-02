@@ -1,20 +1,20 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 const creatorSchema = new Schema(
   {
     user_id: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "Users",
+      ref: 'Users',
     },
     gameLevel: {
       type: String,
-      enum: ["initial", "medium", "pro"],
+      enum: ['initial', 'medium', 'pro'],
     },
     followers: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Users",
+        ref: 'Users',
       },
     ],
     bio: {
@@ -60,13 +60,13 @@ const creatorSchema = new Schema(
     courses: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Courses",
+        ref: 'Courses',
       },
     ],
     content_requests: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Content_Requests",
+        ref: 'Content_Requests',
       },
     ],
   },
@@ -75,4 +75,4 @@ const creatorSchema = new Schema(
   }
 );
 
-module.exports = model("Creators", creatorSchema);
+module.exports = model('Creators', creatorSchema);

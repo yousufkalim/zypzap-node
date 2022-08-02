@@ -19,7 +19,7 @@ const {
   setSubscription,
   basicInfo,
   basicInfoUserOnly,
-  editInfo,
+  getUserByIdAndUpdate,
   enrolledCourse,
   enrolledCourseAndStarted,
   addProfileInfo,
@@ -63,6 +63,7 @@ router.put('/uploadprofileimage', singleUpload, uploadProfileImage);
 // SignUp
 router.post('/', validateUsers, isValidated, createUser);
 router.get('/:id', getOneUser);
+router.put('/:id', getUserByIdAndUpdate);
 router.put('/:id', auth, updateOneUser);
 router.delete('/:id', auth, deleteOneUser);
 router.post('/login', loginUser);
