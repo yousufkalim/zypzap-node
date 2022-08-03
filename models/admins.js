@@ -24,13 +24,10 @@ const adminSchema = new Schema(
       default: 'admin',
     },
 
-    // status: {
-    //   type: String,
-    //   enum: ['Active', 'Suspended', 'Deleted/Banned'],
-    // },
-    active: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      enum: ['Inactive', 'Active', 'Suspended', 'Deleted'],
+      default: 'Inactive',
     },
   },
   {

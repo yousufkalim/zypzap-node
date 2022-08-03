@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
     // Creating User
     req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt)); // Hashing the password with salt 8
     const admin = await Admins.create(req.body); // Adding user in db
-
+    console.log('adminnew', admin);
     // Done
     res.json({ success: true, admin }); //Success
   } catch (err) {
@@ -47,11 +47,13 @@ exports.login = async (req, res) => {
     if (!admin) {
       // If admin not found
       return res.status(404).json({ success: false, message: 'Admin not found' });
-    } else if (!admin.active) {
+    } else if (admin.status === 'Inactive') {
       // If admin not found
       return res.status(400).json({ success: false, message: 'Your account is not activated' });
+    } else if (admin.status === 'Suspended') {
+      // If admin not found
+      return res.status(400).json({ success: false, message: 'Your account has been suspended' });
     }
-
     // Comparing password
     const isMatched = bcrypt.compareSync(password, admin.password);
 
@@ -105,19 +107,31 @@ exports.getAdminById = async (req, res) => {
   }
 };
 //updating profile
-exports.editProfile = async (req, res) => {
+exports.getAdminByIdAndUpdate = async (req, res) => {
   try {
     const _id = req.params.id;
-    // let admin1 = await Admins.findById(_id);
-    console.log('PASSword=========', req.body);
+
     if (req.body.password) {
       const salt = await bcrypt.genSalt(10);
       req.body.password = bcrypt.hashSync(req.body.password, salt);
     }
     const admin = await Admins.findByIdAndUpdate(_id, req.body, { new: true });
+    console.log('req.body', req.body);
     res.json({ success: true, admin });
   } catch (err) {
     console.log('Error ---> ', err);
     res.status(500).json({ success: false, message: 'Internal server error', error: err });
+  }
+};
+
+//delete one admin
+exports.deleteAdmin = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const admin = await Admins.findByIdAndDelete(_id);
+    if (!admin) return res.status(404).send('Admin Not Found');
+    res.json({ success: true, admin });
+  } catch (error) {
+    res.status(500).send(error);
   }
 };

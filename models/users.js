@@ -41,7 +41,8 @@ const userSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['Active', 'Suspended', 'Deleted/Banned'],
+      enum: ['Inactive', 'Active', 'Suspended', 'Banned'],
+      default: 'Active',
     },
     cvv: String,
     following: [

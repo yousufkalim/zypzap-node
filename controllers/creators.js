@@ -138,7 +138,11 @@ exports.addFollower = async (req, res) => {
       },
       { new: true }
     );
-    const creator1 = await Creator.findOneAndUpdate({ _id: creator_id }, { $push: { followers: user_id } }, { new: true });
+    const creator1 = await Creator.findOneAndUpdate(
+      { _id: creator_id },
+      { $push: { followers: user_id } },
+      { new: true }
+    );
     res.send({ user: updateUser, creator: creator1 });
   } catch (error) {
     res.status(500).send(error.message);

@@ -5,7 +5,8 @@ const {
   confirmAuth,
   getAllAdmins,
   getAdminById,
-  editProfile,
+  getAdminByIdAndUpdate,
+  deleteAdmin,
 } = require('../controllers/admins');
 const { checkAdminAuth } = require('../middleware/adminAuth');
 
@@ -13,7 +14,9 @@ const { checkAdminAuth } = require('../middleware/adminAuth');
 router.get('/', getAllAdmins);
 router.get('/auth', checkAdminAuth, confirmAuth);
 router.get('/:id', getAdminById);
-router.put('/:id', editProfile);
+router.put('/:id', getAdminByIdAndUpdate);
+
+router.delete('/:id', deleteAdmin);
 
 router.post('/', register);
 router.post('/login', login);
