@@ -11,17 +11,10 @@ exports.createUser = async (req, res) => {
     const { username, email, password, role } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
-
-    if (user.status === 'Banned') {
-      return res
-        .status(400)
-        .send('This email was banned, You can not create an account on this email');
-    } else if (user.status === 'Suspended') {
-      return res.status(400).send('The account on this email is currently suspended');
-    }
+    console.log('--------------------->', user);
 
     if (user) {
-      return res.status(400).send({ message: 'Email is already exist' });
+      return res.status(400).send({ message: 'Email already exists' });
     }
 
     // Create User Object
