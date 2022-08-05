@@ -11,14 +11,12 @@ exports.postCreator = async (req, res) => {
     if (creator) return res.status(400).send({ message: 'User is already a creator' });
     if (!user) return res.status(400).send('User Not Found');
     creator = await Creator.create({ user_id: req.params.id });
-    console.log('req.body', req.body);
 
     let newUser = {
       ...req.body,
       creator: creator._id,
       role: 'Creator',
     };
-    console.log('newUser', newUser);
     const newUsers = await User.findOneAndUpdate(
       { _id: req.params.id },
       {
