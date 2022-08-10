@@ -49,7 +49,7 @@ router.post('/enrolledCourse', auth, enrolledCourse);
 router.post('/enrolledCourseAndStarted', auth, enrolledCourseAndStarted);
 router.post('/setSubscription', auth, setSubscription);
 router.get('/getuserbytoken', auth, getData);
-router.get('/video-played/:userId/:courseId/:videoId', auth, videoPlayed);
+router.get('/video-played/:userId/:courseId/:videoId', videoPlayed);
 router.get('/', getAllUsers);
 router.post('/addToWishLists', auth, addToWishLists);
 router.put('/addProfileInfo/:id', addProfileInfo);
