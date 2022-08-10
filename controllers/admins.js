@@ -25,7 +25,6 @@ exports.register = async (req, res) => {
     // Creating User
     req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt)); // Hashing the password with salt 8
     const admin = await Admins.create(req.body); // Adding user in db
-    console.log('adminnew', admin);
     // Done
     res.json({ success: true, admin }); //Success
   } catch (err) {
@@ -116,7 +115,6 @@ exports.getAdminByIdAndUpdate = async (req, res) => {
       req.body.password = bcrypt.hashSync(req.body.password, salt);
     }
     const admin = await Admins.findByIdAndUpdate(_id, req.body, { new: true });
-    console.log('req.body', req.body);
     res.json({ success: true, admin });
   } catch (err) {
     console.log('Error ---> ', err);

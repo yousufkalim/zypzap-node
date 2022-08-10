@@ -11,7 +11,6 @@ exports.createUser = async (req, res) => {
     const { username, email, password, role } = req.body;
     // Check User Already Exists
     let user = await User.findOne({ email });
-    console.log('--------------------->', user);
 
     if (user) {
       return res.status(400).send({ message: 'Email already exists' });
@@ -401,7 +400,6 @@ exports.getUserByIdAndUpdate = async (req, res) => {
   try {
     const _id = req.params.id;
     const creator = await User.findByIdAndUpdate(_id, req.body, { new: true });
-    console.log('req.body', req.body);
     res.json({ success: true, creator });
   } catch (err) {
     console.log('Error ---> ', err);

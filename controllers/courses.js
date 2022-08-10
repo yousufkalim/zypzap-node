@@ -77,7 +77,6 @@ exports.createCourse = async (req, res) => {
       },
       { new: true }
     );
-    console.log('course=====================================>', course);
     res.send({ course, creator: newCreator });
   } catch (error) {
     res.status(500).send(error.message);
@@ -194,7 +193,6 @@ exports.getOneCourse = async (req, res) => {
       .populate('videos')
       .populate('game_id');
 
-    console.log('Course ---> ', course);
     if (!course) res.status(404).send('Not Found');
     res.send(course);
   } catch (error) {
@@ -300,9 +298,7 @@ exports.updateCourse = async (req, res) => {
 exports.deleteCourse = async (req, res) => {
   const courseId = req.params.id;
   try {
-    console.log('111111', courseId);
     const deletedCourse = await Course.findByIdAndDelete(courseId);
-    console.log('222222', deletedCourse);
     if (!deletedCourse) return res.status(404).send('Course not found');
     const Creator = await Creater.findById(deletedCourse.creator);
     if (!Creator) return res.status(404).send('Creator not found');
