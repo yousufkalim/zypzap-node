@@ -302,7 +302,7 @@ exports.videoPlayed = async (req, res) => {
     );
 
     let playedVideos =
-      user.enrolled_courses.filter((a) => a.course_id?.toString() === courseId)[0]?.played_videos
+      user?.enrolled_courses?.filter((a) => a.course_id?.toString() === courseId)[0]?.played_videos
         ?.length || 0;
     let courseVideos = course.videos.length;
 
