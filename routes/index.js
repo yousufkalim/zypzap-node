@@ -7,6 +7,7 @@ router.use('/users', require('./users'));
 router.use('/creators', require('./creators'));
 router.use('/videos', require('./videos'));
 router.use('/courses', require('./courses'));
+router.use('/draft', require('./draft'));
 router.use('/blogs', require('./blogs'));
 router.use('/games', require('./games'));
 router.use('/uploadImage', require('./uploadImage'));
