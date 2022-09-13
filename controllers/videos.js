@@ -1,5 +1,5 @@
 const path = require('path');
-const { getVideoDurationInSeconds } = require('get-video-duration');
+// const { getVideoDurationInSeconds } = require('get-video-duration');
 // const AWS = require("aws-sdk");
 // Note: All these need to be done
 const Video = require('../models/videos');
@@ -41,7 +41,7 @@ exports.watchVideo = async (req, res) => {
       'Content-Range': `bytes ${start}-${end}/${videoSize}`,
       'Accept-Ranges': 'bytes',
       'Content-Length': contentLength,
-      'Content-Type': 'video/mp4',
+      'Content-Type': 'video/mp4'
     };
     res.writeHead(206, headers);
 
@@ -70,13 +70,14 @@ exports.watchVideo = async (req, res) => {
 exports.postVideo = async (req, res) => {
   try {
     const files = req.body;
-    const videoDuration = await getVideoDurationInSeconds(files.path);
+    console.log('files', files);
+    // const videoDuration = await getVideoDurationInSeconds(files.path);
     const video = new Video({
       title: files.name,
       src_url: files.path,
       views: 0,
-      duration: videoDuration,
-      creator: files.creator,
+      duration: files.duration,
+      creator: files.creator
     });
     await video.save();
     res.send(video);
@@ -102,7 +103,7 @@ exports.updateVideo = async (req, res) => {
   try {
     const video = await Video.findByIdAndUpdate(_id, req.body, {
       new: true,
-      runValidators: true,
+      runValidators: true
     });
     if (!video) return res.status(404).send('Video Not Found');
     res.send(video);
