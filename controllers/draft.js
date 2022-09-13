@@ -47,8 +47,15 @@ exports.createDraft = async (req, res) => {
 };
 
 exports.updateDraft = async (req, res) => {
-  const { formDataOne, formDataTwo, formDataFive, formDataSix, id, draftId } =
-    req.body;
+  const {
+    formDataOne,
+    formDataTwo,
+    formDataFive,
+    formDataSix,
+    id,
+    draftId,
+    step
+  } = req.body;
 
   try {
     const {
@@ -72,9 +79,10 @@ exports.updateDraft = async (req, res) => {
         selectedGamename,
         formDataTwo,
         // plateform: gamePlateForm,
-        // description: description,
+        description: description,
         $push: { videos: formDataFive },
-        thumbnail: formDataSix
+        thumbnail: formDataSix,
+        step
       },
       { new: true }
     );
