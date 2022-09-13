@@ -5,7 +5,7 @@ const Notifications = require('../models/notifications');
 const Game = require('../models/games');
 const mongoose = require('mongoose');
 const path = require('path');
-const { getVideoDurationInSeconds } = require('get-video-duration');
+// const { getVideoDurationInSeconds } = require('get-video-duration');
 // const AWS = require("aws-sdk");
 // Note: All these need to be done
 const Video = require('../models/videos');
